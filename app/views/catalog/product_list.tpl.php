@@ -1,9 +1,6 @@
-<?php 
-/** @var App\Models\Product[] products List */
-$productList = $viewData['productList'];
-?>
+<!-- on n'a plus besoin d'appeler la variable via le viewData de notre fonction show grâce à extract($viewData) -->
 <div class="container my-4">
-        <a href="category_add.html" class="btn btn-success float-end">Ajouter</a>
+        <a href="<?= $router->generate('product-add') ?>" class="btn btn-success float-end">Ajouter</a>
         <h2>Liste des produits</h2>
         <table class="table table-hover mt-4">
             <thead>
@@ -21,7 +18,7 @@ $productList = $viewData['productList'];
                     <td><?= $element->getName(); ?></td>
                     <td><?= $element->getDescription(); ?></td>
                     <td class="text-end">
-                        <a href="" class="btn btn-sm btn-warning">
+                        <a href="<?= $router->generate('product-add') ?>" class="btn btn-sm btn-warning">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </a>
                         <!-- Example single danger button -->

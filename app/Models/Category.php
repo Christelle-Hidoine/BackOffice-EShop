@@ -123,6 +123,10 @@ class Category extends CoreModel
      * @return Category[]
      */
     public function findAll()
+    // On ajoute le mot-clé "static" pour rendre la méthode findAll() statique
+    // Avantage : on peut appeler la méthode directement sur la classe sans l'instancier
+    // Category::findAll()
+    // public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `category`';
@@ -133,16 +137,21 @@ class Category extends CoreModel
     }
 
     /**
-     * Récupérer les 3 catégories mises en avant sur la home
+     * Récupérer les 5 catégories mises en avant sur la home
      *
      * @return Category[]
      */
-    public function findAllHomepage()
+    public static function findAllHomepage()
     {
         // On peut appeler direcrement getPDO() sur la classe Database 
         // car getPDO() est une méthode statique (définie par : public static function ...)
         $pdo = Database::getPDO();
-        $sql = 'SELECT * FROM `category` LIMIT 3';
+        $sql = 'SELECT *
+        FROM `category`
+        WHERE `home_order` > 0
+        ORDER BY `home_order` ASC
+        LIMIT 5';
+        
         $pdoStatement = $pdo->query($sql);
         $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
 

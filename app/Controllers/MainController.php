@@ -21,13 +21,11 @@ class MainController extends CoreController
         // En argument, on fournit le fichier de Vue
         // Par convention, chaque fichier de vue sera dans un sous-dossier du nom du Controller
 
-        // affichage de la liste de 3 catégories
-        $categoryModel = new Category;
-        $categoryList = $categoryModel->findAllHomepage();
+        // affichage de la liste de 5 catégories
+        $categoryList = Category::findAllHomepage();
 
-        //affichage de la liste de 3 produits
-        $productModel = new Product;
-        $productList = $productModel->findAllHomepage();
+        //affichage de la liste de 5 produits
+        $productList = Product::findAllHomepage();
         $this->show('main/home', ['categoryList' => $categoryList, 'productList' => $productList]);
     }
 }

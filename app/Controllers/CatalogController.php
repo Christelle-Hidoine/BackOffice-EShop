@@ -15,6 +15,12 @@ class CatalogController extends CoreController
        //affichage de la liste des catégories 
        $categoryModel = new Category;
        $categoryList = $categoryModel->findAll();
+
+
+        // On veut appeler la méthode findAll() du Model Category
+        // Cette méthode findAll() étant à présent "static", on peut l'appeler directement
+        // via le model Category
+        //$categories = Category::findAll();
        
        $this->show('catalog/category_list', ['categoryList' => $categoryList]);
     }
