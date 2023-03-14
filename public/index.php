@@ -11,24 +11,34 @@ require_once '../vendor/autoload.php';
 /* ------------
 --- ROUTAGE ---
 -------------*/
+// On var dump pour savoir ce que contient $_SERVER
+// NB : si on avait un .htaccess, alors via la réécriture d'URL,
+// on aurait eu une clé BASE_URI
+// Ici, elle n'existe pas
 
+// D'où notre page en erreur 404
+// Solutions possibles :
+// - créer un .htaccess
+// - ou remplacer BASE_URI par REQUEST_URI
 
 // création de l'objet router
-// Cet objet va gérer les routes pour nous, et surtout il va
+// Cet objet va gérer les routes pour nous
 $router = new AltoRouter();
-
+//
 // le répertoire (après le nom de domaine) dans lequel on travaille est celui-ci
 // Mais on pourrait travailler sans sous-répertoire
 // Si il y a un sous-répertoire
 if (array_key_exists('BASE_URI', $_SERVER)) {
     // Alors on définit le basePath d'AltoRouter
     $router->setBasePath($_SERVER['BASE_URI']);
+    
     // ainsi, nos routes correspondront à l'URL, après la suite de sous-répertoire
 } else { // sinon
     // On donne une valeur par défaut à $_SERVER['BASE_URI'] car c'est utilisé dans le CoreController
     $_SERVER['BASE_URI'] = '/';
 }
-
+//dd($_SERVER);
+ 
 // On doit déclarer toutes les "routes" à AltoRouter,
 // afin qu'il puisse nous donner LA "route" correspondante à l'URL courante
 // On appelle cela "mapper" les routes
@@ -40,15 +50,62 @@ if (array_key_exists('BASE_URI', $_SERVER)) {
 // 4. Le nom de la route : pour identifier la route, on va suivre une convention
 //      - "NomDuController-NomDeLaMéthode"
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
+
+//home page route
 $router->map(
     'GET',
     '/',
     [
         'method' => 'home',
-        'controller' => '\App\Controllers\MainController' // On indique le FQCN de la classe
+        'controller' => '\App\Controllers\MainController' // On indique le FQCN de la classe (FQCN = namespace + nom_de_la_classe)
     ],
-    'main-home'
+    'main-home' 
 );
+
+// category list's route
+$router->map(
+    'GET',
+    '/category-list',
+    [
+        'method' => 'categoryList',
+        'controller' => '\App\Controllers\CatalogController'
+    ],
+    'category-list' 
+);
+
+//category add's route
+$router->map(
+    'GET',
+    '/category-add',
+    [
+        'method' => 'categoryAdd',
+        'controller' => '\App\Controllers\CatalogController'
+    ],
+    'category-add'
+);
+
+//product list' route
+$router->map(
+    'GET',
+    '/product-list',
+    [
+        'method' => 'productList',
+        'controller' => '\App\Controllers\CatalogController'
+    ],
+    'product-list'
+);
+
+//product add' route
+$router->map(
+    'GET',
+    '/product-add',
+    [
+        'method' => 'productAdd',
+        'controller' => '\App\Controllers\CatalogController'
+    ],
+    'product-add'
+);
+
 
 
 /* -------------
