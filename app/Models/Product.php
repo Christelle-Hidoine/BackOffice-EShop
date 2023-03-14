@@ -94,6 +94,23 @@ class Product extends CoreModel
     }
 
     /**
+     * Récupérer les 3 produits mis en avant sur la home
+     *
+     * @return Product[]
+     */
+    public function findAllHomepage()
+    {
+        // On peut appeler direcrement getPDO() sur la classe Database 
+        // car getPDO() est une méthode statique (définie par : public static function ...)
+        $pdo = Database::getPDO();
+        $sql = 'SELECT * FROM `product` LIMIT 3';
+        $pdoStatement = $pdo->query($sql);
+        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Product');
+
+        return $products;
+    }
+
+    /**
      * Get the value of name
      *
      * @return  string

@@ -133,19 +133,16 @@ class Category extends CoreModel
     }
 
     /**
-     * Récupérer les 5 catégories mises en avant sur la home
+     * Récupérer les 3 catégories mises en avant sur la home
      *
      * @return Category[]
      */
     public function findAllHomepage()
     {
+        // On peut appeler direcrement getPDO() sur la classe Database 
+        // car getPDO() est une méthode statique (définie par : public static function ...)
         $pdo = Database::getPDO();
-        $sql = '
-            SELECT *
-            FROM category
-            WHERE home_order > 0
-            ORDER BY home_order ASC
-        ';
+        $sql = 'SELECT * FROM `category` LIMIT 3';
         $pdoStatement = $pdo->query($sql);
         $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
 
