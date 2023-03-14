@@ -1,7 +1,4 @@
-<?php 
-$categoryList = $viewData['categoryList'];
-$productList = $viewData['productList'];
-?>
+<!-- on n'a plus besoin d'appeler la variable via le viewData de notre fonction show grâce à extract($viewData) -->
 <div class="container my-4">
         <p class="display-4">
             Bienvenue dans le backOffice <strong>Dans les shoe</strong>...
@@ -23,7 +20,7 @@ $productList = $viewData['productList'];
                             <tbody>
                                 <tr>
                                 <?php foreach($categoryList as $element) : ?>
-                                    <th scope="row"><?= $element->getId() ?></th>
+                                    <th scope="row"><?= $element->getHomeOrder() ?></th>
                                     <td><?= $element->getName() ?></td>
                                     <td class="text-end">
                                         <a href="" class="btn btn-sm btn-warning">

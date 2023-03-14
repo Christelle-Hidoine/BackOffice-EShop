@@ -18,7 +18,7 @@
         integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
 
     <!-- We can still have our own CSS file -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="<?= $assetsBaseUri?>css/style.css">
 </head>
 <body>
 
