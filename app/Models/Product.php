@@ -110,6 +110,34 @@ class Product extends CoreModel
         return $products;
     }
 
+    /** 
+     * Method to insert data from product_add template into DB oshop
+     */
+    public function insert()
+    {
+        // Récupération de l'objet PDO représentant la connexion à la DB
+        $pdo = Database::getPDO();
+
+        // Ecriture de la requête INSERT INTO
+        $sql = "INSERT INTO `product` (`name`, `description`, `picture`, `price`, `rate`, `status`, `brand_id`, `category_id`, `type_id`) VALUES ('{$this->name}', '{$this->description}', '{$this->picture}', {$this->price}, {$this->rate}, {$this->status}, {$this->brand_id}, {$this->category_id}, {$this->type_id})";
+
+        // Execution de la requête d'insertion (exec, pas query)
+        $insertedRows = $pdo->exec($sql);
+
+        // Si au moins une ligne ajoutée
+        if ($insertedRows > 0) {
+            // Alors on récupère l'id auto-incrémenté généré par MySQL
+            $this->id = $pdo->lastInsertId();
+
+            // On retourne VRAI car l'ajout a parfaitement fonctionné
+            return true;
+            // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
+        }
+
+        // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
+        return false;
+    }
+
     /**
      * Get the value of name
      *
@@ -163,9 +191,8 @@ class Product extends CoreModel
     /**
      * Set the value of picture
      *
-     * @param  string  $picture
      */
-    public function setPicture(string $picture)
+    public function setPicture($picture)
     {
         $this->picture = $picture;
     }

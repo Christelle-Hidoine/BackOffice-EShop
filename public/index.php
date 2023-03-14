@@ -6,6 +6,9 @@
 // inclusion des dépendances via Composer
 // autoload.php permet de charger d'un coup toutes les dépendances installées avec composer
 // mais aussi d'activer le chargement automatique des classes (convention PSR-4)
+
+use App\Controllers\CatalogController;
+
 require_once '../vendor/autoload.php';
 
 /* ------------
@@ -51,7 +54,7 @@ if (array_key_exists('BASE_URI', $_SERVER)) {
 //      - "NomDuController-NomDeLaMéthode"
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
 
-//home page route
+// home page route
 $router->map(
     'GET',
     '/',
@@ -61,6 +64,8 @@ $router->map(
     ],
     'main-home' 
 );
+
+// ------------------------- CATEGORY ROUTES --------------------------------
 
 // category list's route
 $router->map(
@@ -73,7 +78,7 @@ $router->map(
     'category-list' 
 );
 
-//category add's route
+// category add's route
 $router->map(
     'GET',
     '/category-add',
@@ -84,7 +89,31 @@ $router->map(
     'category-add'
 );
 
-//product list' route
+// category add's route form
+$router->map(
+    'POST',
+    '/category-add',
+    [
+        'method' => 'categoryCreate',
+        'controller' => CatalogController::class
+    ],
+    'category-add-form'
+);
+
+// category update's route
+$router->map(
+    'GET',
+    '/category-update/[i:categoryId]',
+    [
+        'method' => 'categoryUpdate',
+        'controller' => CatalogController::class
+    ],
+    'category-update'
+);
+
+// -------------------------------- PRODUCT ROUTES --------------------------------
+
+// product list' route
 $router->map(
     'GET',
     '/product-list',
@@ -95,7 +124,7 @@ $router->map(
     'product-list'
 );
 
-//product add' route
+// product add' route
 $router->map(
     'GET',
     '/product-add',
@@ -104,6 +133,17 @@ $router->map(
         'controller' => '\App\Controllers\CatalogController'
     ],
     'product-add'
+);
+
+// product add's route form
+$router->map(
+    'POST',
+    '/product-add',
+    [
+        'method' => 'productCreate',
+        'controller' => CatalogController::class
+    ],
+    'product-add-form'
 );
 
 
@@ -122,3 +162,6 @@ $match = $router->match();
 $dispatcher = new Dispatcher($match, '\App\Controllers\ErrorController::err404');
 // Une fois le "dispatcher" configuré, on lance le dispatch qui va exécuter la méthode du controller
 $dispatcher->dispatch();
+
+
+
