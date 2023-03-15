@@ -233,7 +233,16 @@ class Category extends CoreModel
         // $sql = "UPDATE `category` SET `name` = '{$this->name}', `subtitle` = '{$this->subtitle}', `picture` = '{$this->picture}'
             //         WHERE `id` =' . $categoryId";
 
-        $sql = 'UPDATE `category` SET `name` = :name, `subtitle` = :subtitle, `picture` = :picture WHERE `id` = :id';
+        $sql = 
+        '
+        UPDATE  `category` 
+        SET 
+            `name` = :name, 
+            `subtitle` = :subtitle,
+            `picture` = :picture, 
+            `updated_at` = NOW() 
+        WHERE `id` = :id
+        ';
 
         // on utilise la méthode prepare() pour faire des requêtes préparées
         $query = $pdo->prepare($sql);
@@ -248,6 +257,6 @@ class Category extends CoreModel
         ]);
         // dd($query);
         // On retourne VRAI, si au moins une ligne ajoutée
-        return ($query > 0);
+        return true; 
     }
 }

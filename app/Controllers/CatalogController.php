@@ -164,7 +164,7 @@ class CatalogController extends CoreController
         $categoryModel = new Category;
         $categoryById = $categoryModel->find($id);
         $this->show('catalog/category_update', ['categoryById' => $categoryById]);
-        dump($id, $categoryById);
+        
     }
 
     /**
@@ -174,7 +174,11 @@ class CatalogController extends CoreController
     public function categoryUpdate($id)
     {
 
-        if (!empty($_POST)) {
+        if (empty($_POST['name'])) {
+            echo '<script type="text/javascript">';
+            echo ' alert("Merci de remplir tous les champs obligatoires du formulaire")';
+            echo '</script>';
+        } else {
 
             $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
             $subtitle = filter_input(INPUT_POST, 'subtitle', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -189,13 +193,27 @@ class CatalogController extends CoreController
             $category->setPicture($picture);
 
             // on passe notre méthode update à notre objet category -> return un bool true or false
-            $category->update();
+            $isUpdate = $category->update();
 
+            if ($isUpdate) {
+                // Redirection vers category/list
+                // on redirige vers la page category-list une fois le formulaire soumis
+                header('Location: category-list');
+            } else {
+                echo '<script type="text/javascript">';
+                echo ' alert("Le formulaire n\'a pas été soumis, merci de compléter les champs obligatoires avec les bonnes données")';
+                echo '</script>';
+
+                // ---------------------------------- SUITE GESTION DES ERREURS via un tableau--------------------------------
+                    // Sinon => message d'erreur et redirection vers le form (pas besoin ici car notre attribut action du form est vide, et donc on reste sur la page)
+                // $errorList[] = 'La création de la catégorie a échoué';
+            };
+            
             
         }
         
         $this->show('catalog/category_update', ['category' => $category]);
-        dump($_POST);
+       
     }
 
 
