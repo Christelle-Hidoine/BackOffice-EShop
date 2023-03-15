@@ -1,3 +1,4 @@
+<?php dump($categoryList, $brandList, $typeList)?>
 <div class="container my-4">
         <a href="<?= $router->generate('product-list') ?>" class="btn btn-success float-end">Retour</a>
         <h2>Ajouter un produit</h2>
@@ -13,7 +14,7 @@
             </div>
             <div class="mb-3">
                 <label for="picture" class="form-label">Image</label>
-                <input type="text" class="form-control" id="picture" placeholder="image jpg, gif, svg, png" aria-describedby="pictureHelpBlock">
+                <input type="text" class="form-control" id="picture" name="picture" placeholder="image jpg, gif, svg, png" aria-describedby="pictureHelpBlock">
                 <small id="pictureHelpBlock" class="form-text text-muted">
                     URL relative d'une image (jpg, gif, svg ou png) fournie sur <a href="https://benoclock.github.io/S06-images/" target="_blank">cette page</a>
                 </small>

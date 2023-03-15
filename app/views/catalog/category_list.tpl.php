@@ -24,7 +24,7 @@
 
                     <td class="text-end">
                           
-                        <a href="<?= $router->generate('category-update', ['categoryId' => $element->getId()]) ?>" class="btn btn-sm btn-warning">
+                        <a href="<?= $router->generate('category-edit', ['categoryId' => $element->getId()]) ?>" class="btn btn-sm btn-warning">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </a>
                         <!-- Example single danger button -->

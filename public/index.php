@@ -103,18 +103,18 @@ $router->map(
 // category update's route
 $router->map(
     'GET',
-    '/category-update/[i:categoryId]',
+    '/category-edit/[i:categoryId]',
     [
-        'method' => 'categoryUpdateDisplay',
+        'method' => 'categoryEdit',
         'controller' => CatalogController::class
     ],
-    'category-update'
+    'category-edit'
 );
 
 // category update's route form
 $router->map(
     'POST',
-    '/category-update/[i:categoryId]',
+    '/category-edit/[i:categoryId]',
     [
         'method' => 'categoryUpdate',
         'controller' => CatalogController::class
@@ -157,6 +157,27 @@ $router->map(
     'product-add-form'
 );
 
+// product edit's route
+$router->map(
+    'GET',
+    '/product-edit/[i:productId]',
+    [
+        'method' => 'productEdit',
+        'controller' => CatalogController::class
+    ],
+    'product-edit'
+);
+
+// product edit's route form
+$router->map(
+    'POST',
+    '/product-edit/[i:productId]',
+    [
+        'method' => 'productUpdate',
+        'controller' => CatalogController::class
+    ],
+    'product-update-form'
+);
 
 
 /* -------------

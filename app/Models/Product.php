@@ -150,6 +150,59 @@ class Product extends CoreModel
         return false;
     }
 
+    /** 
+     * Method to update data from product_edit template into DB oshop
+     */
+    public function update()
+    {
+        // Récupération de l'objet PDO représentant la connexion à la DB
+        $pdo = Database::getPDO();
+
+        // $sql = "UPDATE `product` SET `name` = '{$this->name}', `description` = '{$this->description}', `picture` = '{$this->picture}'
+            //         WHERE `id` =' . $productId";
+
+        $sql = 
+        '
+        UPDATE  `product` 
+        SET 
+            `name` = :name, 
+            `description` = :description,
+            `picture` = :picture, 
+            `price` = :price,
+            `rate` = :rate,
+            `status` = :status,
+            `brand_id` = :brand_id,
+            `category_id` = :category_id,
+            `type_id` = :type_id,
+            `updated_at` = NOW() 
+        WHERE `id` = :id
+        ';
+
+        // on utilise la méthode prepare() pour faire des requêtes préparées
+        $query = $pdo->prepare($sql);
+
+        // On exécute la requête préparée en passant les données attendues
+        // Les données attendues sont passées via un array associatif
+        $query->execute([
+                ':id' => $this->id,
+                ':name' => $this->name,
+                ':description' => $this->description,
+                ':picture' => $this->picture,
+                ':price' => $this->price,
+                ':rate' => $this->rate,
+                ':status' => $this->status,
+                ':brand_id' => $this->brand_id,
+                ':category_id' => $this->category_id,
+                ':type_id' => $this->type_id
+        ]);
+        // dd($query);
+        // On retourne VRAI, si au moins une ligne ajoutée
+        if ($query->rowCount() > 0) {
+            return true; 
+        }
+        return false;
+    }
+
     /**
      * Get the value of name
      *

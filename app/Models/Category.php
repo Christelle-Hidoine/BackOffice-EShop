@@ -223,7 +223,7 @@ class Category extends CoreModel
     }
 
     /** 
-     * Method to update data from category_update template into DB oshop
+     * Method to update data from category_edit template into DB oshop
      */
     public function update()
     {
@@ -240,6 +240,7 @@ class Category extends CoreModel
             `name` = :name, 
             `subtitle` = :subtitle,
             `picture` = :picture, 
+            `home_order` = :home_order,
             `updated_at` = NOW() 
         WHERE `id` = :id
         ';
@@ -253,10 +254,14 @@ class Category extends CoreModel
                 ':name' => $this->name,
                 ':subtitle' => $this->subtitle,
                 ':picture' => $this->picture,
+                ':home_order' => $this->home_order,
                 ':id' => $this->id
         ]);
         // dd($query);
         // On retourne VRAI, si au moins une ligne ajoutée
-        return true; 
+        if ($query->rowCount() > 0) {
+            return true; 
+        }
+        return false;
     }
 }
