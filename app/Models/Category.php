@@ -122,7 +122,7 @@ class Category extends CoreModel
      *
      * @return Category[]
      */
-    public function findAll()
+    public static function findAll()
     // On ajoute le mot-clé "static" pour rendre la méthode findAll() statique
     // Avantage : on peut appeler la méthode directement sur la classe sans l'instancier
     // Category::findAll()
@@ -166,14 +166,54 @@ class Category extends CoreModel
         // Récupération de l'objet PDO représentant la connexion à la DB
         $pdo = Database::getPDO();
 
+        // V1 sans sécurisation
         // Ecriture de la requête INSERT INTO
-        $sql = "INSERT INTO `category` (`name`, `subtitle`, `picture`) VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}')";
+        // $sql = "INSERT INTO `category` (`name`, `subtitle`, `picture`) VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}')";
+
+        // On passe maintenant (V2) sur deux requêtes pour ne pas avoir 1 seule requête contenant la query string et les données
+        // - 1ère requête : prepare()
+        // - 2nd requête : execute()
+
+        // Important pour se prémunir des injections SQL
+        // @see https://www.php.net/manual/fr/pdo.prepared-statements.php
+        // @see https://portswigger.net/web-security/sql-injection (exemples avec SELECT)
+        // @see https://stackoverflow.com/questions/681583/sql-injection-on-insert (exemples avec INSERT INTO)
+
+
+            // Version avec marqueurs non nommés
+        // $sql = '
+        //     INSERT INTO `category`
+        //     (`name`, `subtitle`, `picture`)
+        //     VALUES (?, ?, ?)
+        // ';
+
+            // Version avec marqueurs nommés
+            // Les marqueurs seront remplacés par des données que l'on récupérera via la 2nde requête (execute)
+        $sql = '
+            INSERT INTO `category`
+            (`name`, `subtitle`, `picture`)
+            VALUES (:name, :subtitle, :picture)
+        ';
 
         // Execution de la requête d'insertion (exec, pas query)
-        $insertedRows = $pdo->exec($sql);
+        // $insertedRows = $pdo->exec($sql);
+        // V2 : on utilise la méthode prepare() pour faire des requêtes préparées
+        $query = $pdo->prepare($sql);
+
+        // On exécute la requête préparée en passant les données attendues
+        // Les données attendues sont passées via un array associatif
+        $query->execute([
+            ':name' => $this->name,
+            ':subtitle' => $this->subtitle,
+            ':picture' => $this->picture
+        ]);
 
         // Si au moins une ligne ajoutée
-        if ($insertedRows > 0) {
+        // if ($insertedRows > 0) {
+            // V2 : on n'utilise plus $pdo->exec($sql) mais une requête préparée
+            // => on n'a plus accès à insertedRows
+        // On va utilser la méthode rowCount() sur la query
+        if ($query->rowCount() > 0) {
             // Alors on récupère l'id auto-incrémenté généré par MySQL
             $this->id = $pdo->lastInsertId();
 
