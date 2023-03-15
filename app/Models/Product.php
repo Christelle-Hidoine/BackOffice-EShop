@@ -83,7 +83,7 @@ class Product extends CoreModel
      *
      * @return Product[]
      */
-    public function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `product`';
@@ -118,14 +118,26 @@ class Product extends CoreModel
         // Récupération de l'objet PDO représentant la connexion à la DB
         $pdo = Database::getPDO();
 
-        // Ecriture de la requête INSERT INTO
-        $sql = "INSERT INTO `product` (`name`, `description`, `picture`, `price`, `rate`, `status`, `brand_id`, `category_id`, `type_id`) VALUES ('{$this->name}', '{$this->description}', '{$this->picture}', {$this->price}, {$this->rate}, {$this->status}, {$this->brand_id}, {$this->category_id}, {$this->type_id})";
+        // on utilise la méthode prepare() pour faire des requêtes préparées
+        $query = $pdo->prepare("INSERT INTO `product` (`name`, `description`, `picture`, `price`, `rate`, `status`, `brand_id`, `category_id`, `type_id`) VALUES (:name, :description, :picture, :price, :rate, :status, :brand_id, :category_id, :type_id)");
 
-        // Execution de la requête d'insertion (exec, pas query)
-        $insertedRows = $pdo->exec($sql);
+        // On exécute la requête préparée en passant les données attendues
+        // Les données attendues sont passées via un array associatif
+        $query->execute([
+            ':name' => $this->name,
+            ':description' => $this->description,
+            ':picture' => $this->picture,
+            ':price' => $this->price,
+            ':rate' => $this->rate,
+            ':status' => $this->status,
+            ':brand_id' => $this->brand_id,
+            ':category_id' => $this->category_id,
+            ':type_id' => $this->type_id
+        ]);
 
-        // Si au moins une ligne ajoutée
-        if ($insertedRows > 0) {
+        // On va utilser la méthode rowCount() sur la query
+        // On vérifie si la requête a retourné 1 résultat (cad si on a bien inséré 1 novelle catégorie dans la table category)
+        if ($query->rowCount() > 0) {
             // Alors on récupère l'id auto-incrémenté généré par MySQL
             $this->id = $pdo->lastInsertId();
 

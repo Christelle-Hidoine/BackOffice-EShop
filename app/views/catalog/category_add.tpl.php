@@ -5,7 +5,8 @@
         <form action="" method="POST" class="mt-5">
             <div class="mb-3">
                 <label for="name" class="form-label">*Nom</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Nom de la catégorie">
+                <!-- l'attribut required permet d'indiquer qu'ils sont obligatoires avec un message en survolant les champs -->
+                <input type="text" class="form-control" id="name" name="name" placeholder="Nom de la catégorie" required>
             </div>
             <div class="mb-3">
                 <label for="subtitle" class="form-label">Sous-titre</label>

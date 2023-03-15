@@ -5,7 +5,7 @@
         <form action="" method="POST" class="mt-5">
             <div class="mb-3">
                 <label for="name" class="form-label">*Nom</label>
-                <input type="text" class="form-control" id="name" name='name' placeholder="Nom du produit">
+                <input type="text" class="form-control" id="name" name='name' placeholder="Nom du produit" required>
             </div>
             <div class="mb-3">
                 <label for="subtitle" class="form-label">Description</label>
@@ -20,10 +20,10 @@
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">*Prix</label>
-                <input type="text" class="form-control" id="price" name='price' placeholder="Prix du produit">
+                <input type="text" class="form-control" id="price" name='price' placeholder="Prix du produit" required>
             </div>
             <div class="mb-3">
-                <label for="rate" class="form-label">*Avis</label>
+                <label for="rate" class="form-label" required>*Avis</label>
                 <select name='rate' id="rate">
                     <option value="1">1 étoile</option>
                     <option value="2">2 étoiles</option>
@@ -33,53 +33,36 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="status" class="form-label">*Statut</label>
+                <label for="status" class="form-label" required>*Statut</label>
                 <select name="status" id="status">
                     <option value="1">Disponible</option>
                     <option value="2">Pas disponible</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="brand" class="form-label">*Marque</label>
+                <label for="brand" class="form-label" required>*Marque</label>
                 <select name="brand" id="brand">
-                    <option value="1">oCirage</option>
-                    <option value="2">BOOTstrap</option>
-                    <option value="3">Talonette</option>
-                    <option value="4">Shossures</option>
-                    <option value="5">O'shoes</option>
-                    <option value="6">Pattes d'eph</option>
-                    <option value="7">PHPieds</option>
-                    <option value="8">oPompes</option>
-                    
+                    <?php foreach ($brandList as $brand): ?>
+                    <option value="<?=$brand->getId() ?>"><?=$brand->getName() ?></option>
+                    <?php endforeach; ?>
                 </select>
+
             </div>
             <div class="mb-3">
                 <label for="category" class="form-label">Catégorie</label>
                 <select name="category" id="category">
-                    <option value="1">Détente</option>
-                    <option value="2">Au travail</option>
-                    <option value="3">Cérémonie</option>
-                    <option value="4">Sortir</option>
-                    <option value="5">Vintage</option>
-                    <option value="6">Piscine et bains</option>
-                    <option value="7">Sport</option>
-                    <option value="8">Hipster</option>
-                    
+                    <option value="">Default</option>
+                    <?php foreach ($categoryList as $category): ?>
+                    <option value="<?=$category->getId() ?>"><?=$category->getName() ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="type" class="form-label">*Type</label>
+                <label for="type" class="form-label" required>*Type</label>
                 <select name="type" id="type">
-                    <option value="0">Default</option>
-                    <option value="1">Chaussures de ville</option>
-                    <option value="2">Chaussures de sport</option>
-                    <option value="3">Tongs</option>
-                    <option value="4">Chaussures ouvertes</option>
-                    <option value="5">Talons éguilles</option>
-                    <option value="6">Talons</option>
-                    <option value="7">Pantoufles</option>
-                    <option value="8">Chaussons</option>
-                    
+                    <?php foreach ($typeList as $type): ?>
+                    <option value="<?=$type->getId() ?>"><?=$type->getName() ?></option>
+                    <?php endforeach; ?> 
                 </select>
             </div>
             <div class="d-grid gap-2">
