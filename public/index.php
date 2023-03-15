@@ -105,10 +105,21 @@ $router->map(
     'GET',
     '/category-update/[i:categoryId]',
     [
-        'method' => 'categoryUpdate',
+        'method' => 'categoryUpdateDisplay',
         'controller' => CatalogController::class
     ],
     'category-update'
+);
+
+// category update's route form
+$router->map(
+    'POST',
+    '/category-update/[i:categoryId]',
+    [
+        'method' => 'categoryUpdate',
+        'controller' => CatalogController::class
+    ],
+    'category-update-form'
 );
 
 // -------------------------------- PRODUCT ROUTES --------------------------------
@@ -160,8 +171,11 @@ $match = $router->match();
 // 1er argument : la variable $match retournée par AltoRouter
 // 2e argument : le "target" (controller & méthode) pour afficher la page 404
 $dispatcher = new Dispatcher($match, '\App\Controllers\ErrorController::err404');
+
 // Une fois le "dispatcher" configuré, on lance le dispatch qui va exécuter la méthode du controller
 $dispatcher->dispatch();
+
+
 
 
 

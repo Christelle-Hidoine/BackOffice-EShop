@@ -8,8 +8,8 @@
 | `/category-list` | `GET` | `CatalogController` | `categoryList` | Liste des Catégories | display all categories | - |
 | `/category-add` | `GET` | `CatalogController` | `categoryAdd` | Ajouter une catégorie | form to add new categories | - |
 | `/category-add` | `POST` | `CatalogController` | `categoryCreate` | Ajouter une catégorie | retrieve and send form field completed to DB oshop | - |
-| `/category-update/[i:categoryId]` | `GET`| `CatalogController` | `CategoryUpdate` | Éditer une catégorie | Form to update a category | [i:categoryId] is the category to update |
-| `/category-delete/[i:categoryId]` | `GET`| `CatalogController` | `CategoryDelete` | Supprimer une catégorie | Category delete | [i:categoryId] is the category to delete |
+| `/category-update/[i:categoryId]` | `GET`| `CatalogController` | `categoryUpdate` | Éditer une catégorie | Form to update a category | [i:categoryId] is the category to update |
+| `/category-delete/[i:categoryId]` | `GET`| `CatalogController` | `categoryDelete` | Supprimer une catégorie | Category delete | [i:categoryId] is the category to delete |
 | `/product-list` | `GET` | `CatalogController` | `productList` | Liste des Produits | display all products | - |
 | `/product-add` | `GET` | `CatalogController` | `productAdd` | Ajouter un produit | form to add new products | - |
 | `/product-add` | `POST` | `CatalogController` | `productCreate` | Ajouter un produit | retrieve and send form field completed to DB oshop | - |

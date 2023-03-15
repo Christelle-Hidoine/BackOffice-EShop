@@ -9,7 +9,7 @@ use App\Models\Type;
 class CatalogController extends CoreController
 {
 
-    //----------------------------- CATEGORY -------------------------------
+    //----------------------------- CATEGORY ---------------------------------------
 
     /**
      * Method to display the category_list's template
@@ -154,6 +154,52 @@ class CatalogController extends CoreController
                 $this->show('catalog/category_add');
     }
 
+    /**
+     * Method to display the category_update's template
+     *
+     * @param [int] $id
+     */
+    public function categoryUpdateDisplay($id)
+    {
+        $categoryModel = new Category;
+        $categoryById = $categoryModel->find($id);
+        $this->show('catalog/category_update', ['categoryById' => $categoryById]);
+        dump($id, $categoryById);
+    }
+
+    /**
+     * Method to retrieve data from template category_update with the form
+     * 
+     */
+    public function categoryUpdate($id)
+    {
+
+        if (!empty($_POST)) {
+
+            $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+            $subtitle = filter_input(INPUT_POST, 'subtitle', FILTER_SANITIZE_SPECIAL_CHARS);
+            $picture = filter_input(INPUT_POST, 'picture', FILTER_SANITIZE_SPECIAL_CHARS);
+            
+
+            // on modifie les valeurs des propriétés correspondantes dans notre model
+            $categoryModel = new Category;
+            $category = $categoryModel->find($id);
+            $category->setName($name);
+            $category->setSubtitle($subtitle);
+            $category->setPicture($picture);
+
+            // on passe notre méthode update à notre objet category -> return un bool true or false
+            $category->update();
+
+            
+        }
+        
+        $this->show('catalog/category_update', ['category' => $category]);
+        dump($_POST);
+    }
+
+
+    // ----------------------------------- PRODUCT -----------------------------
 
     /**
      * Method to display the product_list's template
@@ -178,9 +224,7 @@ class CatalogController extends CoreController
 
         $this->show('catalog/product_add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList]);
     }
-
-    // ----------------------------------- PRODUCT -----------------------------
-
+    
     /** 
      * Method to retrieve data from template product_add's form
      */

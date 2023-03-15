@@ -1,12 +1,16 @@
+
+<?php 
+
+?>
 <div class="container my-4">
-        <a href="<?= $router->generate('category-list')?>" class="btn btn-success float-end">Retour</a>
-        <h2>Ajouter une catégorie</h2>
+        <a href="#" class="btn btn-success float-end">Retour</a>
+        <h2>Mettre à jour une catégorie</h2>
         
         <form action="" method="POST" class="mt-5">
             <div class="mb-3">
                 <label for="name" class="form-label">*Nom</label>
                 <!-- l'attribut required permet d'indiquer qu'ils sont obligatoires avec un message en survolant les champs -->
-                <input type="text" class="form-control" id="name" name="name" value="" placeholder="Nom de la catégorie" required>
+                <input liste="name" type="text" class="form-control" id="name" name="name" value="" placeholder="Nom de la catégorie" required>
             </div>
             <div class="mb-3">
                 <label for="subtitle" class="form-label">Sous-titre</label>
