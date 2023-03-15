@@ -9,7 +9,7 @@ use App\Models\Type;
 class CatalogController extends CoreController
 {
 
-    //----------------------------- CATEGORY -------------------------------
+    //----------------------------- CATEGORY ---------------------------------------
 
     /**
      * Method to display the category_list's template
@@ -154,6 +154,56 @@ class CatalogController extends CoreController
                 $this->show('catalog/category_add');
     }
 
+    /**
+     * Method to display the category_edit's template
+     *
+     * @param [int] $id
+     */
+    public function categoryEdit($id)
+    {
+        $categoryModel = new Category;
+        $category = $categoryModel->find($id);
+        $this->show('catalog/category_edit', ['category' => $category]);
+        
+    }
+
+    /**
+     * Method to retrieve data from template category_update with the form
+     * 
+     */
+    public function categoryUpdate($id)
+    {
+        $categoryModel = new Category;
+        $category = $categoryModel->find($id);
+
+        if (!empty($_POST)) {
+            
+            $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+            $subtitle = filter_input(INPUT_POST, 'subtitle', FILTER_SANITIZE_SPECIAL_CHARS);
+            $picture = filter_input(INPUT_POST, 'picture', FILTER_SANITIZE_SPECIAL_CHARS);
+            $home_order = filter_input(INPUT_POST, 'home_order', FILTER_VALIDATE_INT);
+            
+
+            // on modifie les valeurs des propriétés correspondantes dans notre model
+            $categoryModel = new Category;
+            $category = $categoryModel->find($id);
+            $category->setName($name);
+            $category->setSubtitle($subtitle);
+            $category->setPicture($picture);
+            $category->setHomeOrder($home_order);
+
+            // on passe notre méthode update à notre objet category -> return un bool true or false
+            $category->update();
+            
+                // on redirige vers la page category-list une fois le formulaire soumis
+                
+            }
+        
+       
+    }
+
+
+    // ----------------------------------- PRODUCT -----------------------------
 
     /**
      * Method to display the product_list's template
@@ -178,9 +228,7 @@ class CatalogController extends CoreController
 
         $this->show('catalog/product_add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList]);
     }
-
-    // ----------------------------------- PRODUCT -----------------------------
-
+    
     /** 
      * Method to retrieve data from template product_add's form
      */
@@ -223,5 +271,87 @@ class CatalogController extends CoreController
 
         $this->show('catalog/product_add');
     }
-    
+
+
+    /**
+     * Method to display the product_edit's template
+     *
+     * @param [int] $id
+     */
+    public function productEdit($id)
+    {
+
+        $productModel = new Product;
+        $product = $productModel->find($id);
+        $productList = Product::findAll();
+        $brandList = Brand::findAll();
+        $categoryList = Category::findAll();
+        $typeList = Type::findAll();
+
+        $typeListById = [];
+        foreach ($typeList as $typeElement) {
+            $typeListById[$typeElement->getId()] = $typeElement;
+        }
+
+        $categoryListById = [];
+        foreach ($categoryList as $categoryElement) {
+            $categoryListById[$categoryElement->getId()] = $categoryElement;
+        }
+
+        $brandListById = [];
+        foreach ($brandList as $brandElement) {
+            $brandListById[$brandElement->getId()] = $brandElement;
+        }
+
+        $this->show('catalog/product_edit', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'typeListById' => $typeListById, 'categoryListById' => $categoryListById, 'brandListById' => $brandListById ]);
+    }
+
+    /**
+     * Method to retrieve data from product_edit's template with the form
+     * 
+     */
+    public function productUpdate($id)
+    {
+        $productModel = new Product;
+        $product = $productModel->find($id);
+
+        if (!empty($_POST)) {
+            
+            $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+            $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_ADD_SLASHES);
+            $picture = filter_input(INPUT_POST, 'picture', FILTER_SANITIZE_SPECIAL_CHARS);
+            $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
+            $rate = filter_input(INPUT_POST, 'rate', FILTER_VALIDATE_INT);
+            $status = filter_input(INPUT_POST, 'status', FILTER_VALIDATE_INT);
+            $brand_id = filter_input(INPUT_POST, 'brand', FILTER_VALIDATE_INT);
+            $category_id = filter_input(INPUT_POST, 'category', FILTER_VALIDATE_INT);
+            $type_id = filter_input(INPUT_POST, 'type', FILTER_VALIDATE_INT);
+            
+
+            // on modifie les valeurs des propriétés correspondantes dans notre model
+            $productModel = new Product;
+            $product = $productModel->find($id);
+            $product->setName($name);
+            $product->setDescription($description);
+            $product->setPicture($picture);
+            $product->setPrice($price);
+            $product->setRate($rate);
+            $product->setStatus($status);
+            $product->setBrandId($brand_id);
+            $product->setCategoryId($category_id);
+            $product->setTypeId($type_id);
+
+            // on passe notre méthode update à notre objet product -> return un bool true or false
+            $product->update();
+            
+                // on redirige vers la page product-list une fois le formulaire soumis
+                
+            
+            header('Location: product-list');
+            exit();
+        }
+
+        $this->show('catalog/product_edit');
+       
+    }
 };

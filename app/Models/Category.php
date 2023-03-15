@@ -111,7 +111,7 @@ class Category extends CoreModel
         $pdoStatement = $pdo->query($sql);
 
         // un seul résultat => fetchObject
-        $category = $pdoStatement->fetchObject('App\Models\Category');
+        $category = $pdoStatement->fetchObject(Category::class);
 
         // retourner le résultat
         return $category;
@@ -189,11 +189,7 @@ class Category extends CoreModel
 
             // Version avec marqueurs nommés
             // Les marqueurs seront remplacés par des données que l'on récupérera via la 2nde requête (execute)
-        $sql = '
-            INSERT INTO `category`
-            (`name`, `subtitle`, `picture`)
-            VALUES (:name, :subtitle, :picture)
-        ';
+        $sql = 'INSERT INTO `category` (`name`, `subtitle`, `picture`) VALUES (:name, :subtitle, :picture)';
 
         // Execution de la requête d'insertion (exec, pas query)
         // $insertedRows = $pdo->exec($sql);
@@ -223,6 +219,49 @@ class Category extends CoreModel
         }
 
         // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
+        return false;
+    }
+
+    /** 
+     * Method to update data from category_edit template into DB oshop
+     */
+    public function update()
+    {
+        // Récupération de l'objet PDO représentant la connexion à la DB
+        $pdo = Database::getPDO();
+
+        // $sql = "UPDATE `category` SET `name` = '{$this->name}', `subtitle` = '{$this->subtitle}', `picture` = '{$this->picture}'
+            //         WHERE `id` =' . $categoryId";
+
+        $sql = 
+        '
+        UPDATE  `category` 
+        SET 
+            `name` = :name, 
+            `subtitle` = :subtitle,
+            `picture` = :picture, 
+            `home_order` = :home_order,
+            `updated_at` = NOW() 
+        WHERE `id` = :id
+        ';
+
+        // on utilise la méthode prepare() pour faire des requêtes préparées
+        $query = $pdo->prepare($sql);
+
+        // On exécute la requête préparée en passant les données attendues
+        // Les données attendues sont passées via un array associatif
+        $query->execute([
+                ':name' => $this->name,
+                ':subtitle' => $this->subtitle,
+                ':picture' => $this->picture,
+                ':home_order' => $this->home_order,
+                ':id' => $this->id
+        ]);
+        // dd($query);
+        // On retourne VRAI, si au moins une ligne ajoutée
+        if ($query->rowCount() > 0) {
+            return true; 
+        }
         return false;
     }
 }

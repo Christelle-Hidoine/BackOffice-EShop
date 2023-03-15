@@ -23,7 +23,7 @@
                                     <th scope="row"><?= $element->getHomeOrder() ?></th>
                                     <td><?= $element->getName() ?></td>
                                     <td class="text-end">
-                                        <a href="" class="btn btn-sm btn-warning">
+                                        <a href="<?= $router->generate('category-edit', ['categoryId' => $element->getId()]) ?>" class="btn btn-sm btn-warning">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                         </a>
                                         <!-- Example single danger button -->
@@ -68,7 +68,7 @@
                                     <th scope="row"><?= $element->getId() ?></th>
                                     <td><?= $element->getName() ?></td>
                                     <td class="text-end">
-                                        <a href="" class="btn btn-sm btn-warning">
+                                        <a href="<?= $router->generate('product-edit', ['productId' => $element->getId()]) ?>" class="btn btn-sm btn-warning">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                         </a>
                                         <!-- Example single danger button -->

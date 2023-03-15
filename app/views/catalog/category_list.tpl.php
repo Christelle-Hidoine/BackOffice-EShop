@@ -15,13 +15,16 @@
             </thead>
             <tbody>
                 <tr>
-                <?php foreach($categoryList as $element) : ?>
+                <?php foreach($categoryList as $element) : 
+                    // dd($element); 
+                    // $router->generate("category-update/{$element->getId()}") ?>
                     <th scope="row"><?= $element->getId() ?></th>
                     <td><?= $element->getName() ?></td>
                     <td><?= $element->getSubtitle() ?></td>
 
                     <td class="text-end">
-                        <a href="<?= $router->generate('category-add') ?>" class="btn btn-sm btn-warning">
+                          
+                        <a href="<?= $router->generate('category-edit', ['categoryId' => $element->getId()]) ?>" class="btn btn-sm btn-warning">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </a>
                         <!-- Example single danger button -->

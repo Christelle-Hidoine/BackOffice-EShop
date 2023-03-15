@@ -18,7 +18,7 @@
                     <td><?= $element->getName(); ?></td>
                     <td><?= $element->getDescription(); ?></td>
                     <td class="text-end">
-                        <a href="<?= $router->generate('product-add') ?>" class="btn btn-sm btn-warning">
+                        <a href="<?= $router->generate('product-edit', ['productId' => $element->getId()]) ?>" class="btn btn-sm btn-warning">
                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                         </a>
                         <!-- Example single danger button -->
