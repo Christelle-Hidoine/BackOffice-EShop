@@ -159,15 +159,26 @@ $router->map(
   'product-create'
 );
 
+// Affiche Modifie Produit
+$router->map(
+  'GET',
+  '/product/[i:id]/update',
+  [
+    'method' => 'edit',
+    'controller' => ProductController::class
+  ],
+  'product-edit'
+);
+
 // Traite Modifie Produit
 $router->map(
   'POST',
   '/product/[i:id]/update',
   [
-    'method' => 'edit',
-    'controller' => CategoryController::class
+    'method' => 'update',
+    'controller' => ProductController::class
   ],
-  'product-edit'
+  'product-update'
 );
 
 // Traite Supprime Produit
@@ -176,7 +187,7 @@ $router->map(
   '/product/[i:id]/delete',
   [
     'method' => 'delete',
-    'controller' => CategoryController::class
+    'controller' => ProductController::class
   ],
   'product-delete'
 );

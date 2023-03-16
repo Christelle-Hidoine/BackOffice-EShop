@@ -16,7 +16,7 @@
         </thead>
         <tbody>
 
-          <?php foreach( $allCategories as $categoryObject ) : ?>
+          <?php foreach($category as $categoryObject) : ?>
             <tr>
                 <th scope="row">
                   <?= $categoryObject->getId() ?>

@@ -55,7 +55,7 @@ class Product extends CoreModel
      * @param int $productId ID du produit
      * @return Product
      */
-    static public function find($productId)
+    static public function find($id)
     {
         // récupérer un objet PDO = connexion à la BDD
         $pdo = Database::getPDO();
@@ -64,7 +64,7 @@ class Product extends CoreModel
         $sql = '
             SELECT *
             FROM product
-            WHERE id = ' . $productId;
+            WHERE id = ' . $id;
 
         // query ? exec ?
         // On fait de la LECTURE = une récupration => query()
@@ -149,6 +149,7 @@ class Product extends CoreModel
       $query->bindValue(':brand_id',    $this->brand_id,    PDO::PARAM_INT);
       $query->bindValue(':category_id', $this->category_id, PDO::PARAM_INT);
       $query->bindValue(':type_id',     $this->type_id,     PDO::PARAM_INT);
+      
 
       // Le 3e argument permet de préciser "valeur numérique" (PDO::PARAM_STR) ou "autre" (PDO::PARAM_STR)
       // Puis exécuter la requête SQL préparée
@@ -168,6 +169,94 @@ class Product extends CoreModel
       // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
       return false;
     }
+
+    // Enregistre en BDD les modif effectuées sur l'instance actuelle
+    public function update()
+    {
+      $pdo = Database::getPDO();
+
+      $sql = "
+      UPDATE `product` SET 
+                `name`       = :name,
+                `description`= :description,
+                `picture`    = :picture,
+                `price`      = :price,
+                `rate`       = :rate,
+                `status`     = :status,
+                `brand_id`   = :brand_id,
+                `category_id`= :category_id,
+                `type_id`    = :type_id,
+                `updated_at` = NOW()
+              WHERE `id` = :id";
+
+      $pdoStatement = $pdo->prepare($sql);
+
+      $pdoStatement->bindValue(':name',        $this->name,        PDO::PARAM_STR);
+      $pdoStatement->bindValue(':description', $this->description, PDO::PARAM_STR);
+      $pdoStatement->bindValue(':picture',     $this->picture,     PDO::PARAM_STR);
+      $pdoStatement->bindValue(':price',       $this->price,       PDO::PARAM_STR);
+      $pdoStatement->bindValue(':rate',        $this->rate,        PDO::PARAM_INT);
+      $pdoStatement->bindValue(':status',      $this->status,      PDO::PARAM_INT);
+      $pdoStatement->bindValue(':brand_id',    $this->brand_id,    PDO::PARAM_INT);
+      $pdoStatement->bindValue(':category_id', $this->category_id, PDO::PARAM_INT);
+      $pdoStatement->bindValue(':type_id',     $this->type_id,     PDO::PARAM_INT);
+      $pdoStatement->bindValue(":id",          $this->id,          PDO::PARAM_INT);
+
+      $pdoStatement->execute();
+
+      if($pdoStatement->rowCount() > 0)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    // Méthode qui va appeller insert() ou update()
+    // selon si l'objet actuel possède ou non une propriété id
+    public function save()
+    {
+      if($this->id)
+      {
+        return $this->update();
+      }
+      else
+      {
+        return $this->insert();
+      }
+    }
+
+     // Fonction qui supprime l'enregistrement de la table product
+     public function delete()
+     {
+       $pdo = Database::getPDO();
+ 
+       $sql = "DELETE FROM `product` WHERE `id` = :id";
+ 
+       $pdoStatement = $pdo->prepare($sql);
+ 
+       // Version alternative a binvalue + execute
+       // Fait le bindValue et le execute en une ligne en passant un tableau
+       // en premier argument de
+       $pdoStatement->execute([
+         ":id" => $this->id
+       ]);
+ 
+       if($pdoStatement->rowCount() === 1)
+       {
+         return true;
+       }
+       else
+       {
+         return false;
+       }
+ 
+       // Version raccourcie du bloc if/else du dessus
+       return $pdoStatement->rowCount() === 1;
+     }
+
 
     /**
      * Get the value of name

@@ -17,12 +17,12 @@ class MainController extends CoreController
   public function home()
   {
     // Récupération des données grace au model
-    $allCategories = Category::findAll();
-    $allProducts   = Product::findAll();
+    $category = Category::findAll();
+    $product   = Product::findAll();
 
     // Bonus : n'afficher que les 5 premiers éléments de chaque tableau
-    $allCategories = array_slice($allCategories, 0, 5);
-    $allProducts   = array_slice($allProducts,   0, 5);
+    $category = array_slice($category, 0, 5);
+    $product   = array_slice($product,   0, 5);
 
     // Je tente d'instancier un CoreModel ce qui n'a aucun sens 
     // car ça ne correspond a aucune "vraie" entité de notre MCD
@@ -33,8 +33,8 @@ class MainController extends CoreController
     // En argument, on fournit le fichier de Vue
     // Par convention, chaque fichier de vue sera dans un sous-dossier du nom du Controller
     $this->show('main/home', [
-      "categories" => $allCategories,
-      "products"   => $allProducts,
+      "category" => $category,
+      "product"   => $product,
     ]);
   }
 }

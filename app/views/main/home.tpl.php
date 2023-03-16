@@ -18,7 +18,7 @@
                         </thead>
                         <tbody>
 
-                          <?php foreach( $categories as $categoryObject ) : ?>
+                          <?php foreach($category as $categoryObject) : ?>
                             <tr>
                                 <th scope="row">
                                   <?= $categoryObject->getId() ?>
@@ -69,7 +69,7 @@
                         </thead>
                         <tbody>                            
 
-                          <?php foreach( $products as $productObject ) : ?>
+                          <?php foreach($product as $productObject) : ?>
                             <tr>
                                 <th scope="row">
                                   <?= $productObject->getId() ?>
@@ -78,7 +78,7 @@
                                   <?= $productObject->getName() ?>
                                 </td>
                                 <td class="text-end">
-                                    <a href="" class="btn btn-sm btn-warning">
+                                    <a href="<?= $router->generate('product-edit', ['id' => $productObject->getId()]) ?>" class="btn btn-sm btn-warning">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </a>
                                     <!-- Example single danger button -->

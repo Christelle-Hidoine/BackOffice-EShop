@@ -11,15 +11,10 @@ class CategoryController extends CoreController
   public function list()
   {
     // Récupérer les données grace au Model
-    $allCategories = Category::findAll();
-
-    // Préparation des données à envoyer a la vue => mise en tableau assoc
-    $data = [
-      "allCategories" => $allCategories
-    ];
+    $category = Category::findAll();
 
     // Les transmettre à la vue
-    $this->show("category/list", $data);
+    $this->show("category/list", ["category" => $category]);
 
     // On peut aussi transmettre directement le tableau en argument : même résultat !
       // $this->show( "category/list", [
@@ -73,7 +68,7 @@ class CategoryController extends CoreController
       $category->setName($name);
       $category->setSubtitle($subtitle);
       $category->setPicture($picture);
-      $category->setHomeOrder( 0 );
+      $category->setHomeOrder(0);
 
       // Ensuite on appelle une méthode "insert" qui va faire l'ajout en BDD
       // elle va renvoyer un booléen selon si l'ajout a fonctionné ou non
@@ -108,7 +103,7 @@ class CategoryController extends CoreController
   {    
     $categoryObject = Category::find($id);
 
-    // dump( $categoryObject );
+    // dump($categoryObject);
 
     $this->show("category/edit", [ 
       "categoryObject" => $categoryObject
@@ -149,10 +144,10 @@ class CategoryController extends CoreController
       $category->setName($name);
       $category->setSubtitle($subtitle);
       $category->setPicture($picture);
-      $category->setHomeOrder( 0 );
+      $category->setHomeOrder(0);
 
       // Il nous reste a sauvegarder ces modif en BDD
-      if( $category->save() )
+      if($category->save())
       {
         header( "Location: /category/list" );
         exit;

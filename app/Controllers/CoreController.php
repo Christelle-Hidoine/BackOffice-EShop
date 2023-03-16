@@ -23,7 +23,7 @@ abstract class CoreController
         $viewData['currentPage'] = $viewName;
 
         // définir l'url absolue pour nos assets
-        $viewData['assetsBaseUri'] = $_SERVER['BASE_URI'] . '/'.'assets/';
+        $viewData['assetsBaseUri'] = $_SERVER['BASE_URI'] .'assets/';
         // définir l'url absolue pour la racine du site
         // /!\ != racine projet, ici on parle du répertoire public/
         $viewData['baseUri'] = $_SERVER['BASE_URI'];

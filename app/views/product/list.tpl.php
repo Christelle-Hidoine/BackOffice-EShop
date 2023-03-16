@@ -20,7 +20,7 @@
                 <td><?=$product->getName()?></td>
                 <td><?=$product->getDescription()?></td>
                 <td class="text-end">
-                    <a href="" class="btn btn-sm btn-warning">
+                    <a href="<?= $router->generate('product-edit', ['id' => $product->getId()]) ?>" class="btn btn-sm btn-warning">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </a>
                     <!-- Example single danger button -->
@@ -30,7 +30,7 @@
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Oui, je veux supprimer</a>
+                            <a class="dropdown-item" href="<?= $router->generate('product-delete', ['id' => $product->getId()]) ?>">Oui, je veux supprimer</a>
                             <a class="dropdown-item" href="#" data-bs-toggle="dropdown">Oups !</a>
                         </div>
                     </div>
