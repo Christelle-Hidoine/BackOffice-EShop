@@ -12,11 +12,11 @@ abstract class CoreModel
     // implémenter une méthode find qui doit etre statique
     // Attention, elle n'oblige rien au niveau du CONTENU de la méthode
 
-    // abstract static function find( $id );
-    // abstract static function findAll();
-    // abstract static function insert();
-    // abstract static function update();
-    // abstract static function delete();
+    abstract static function find($id);
+    abstract static function findAll();
+    abstract function insert();
+    abstract function update();
+    abstract function delete();
 
 
     /**

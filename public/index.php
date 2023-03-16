@@ -8,9 +8,11 @@
 // mais aussi d'activer le chargement automatique des classes (convention PSR-4)
 require_once '../vendor/autoload.php';
 
+use App\Controllers\AppUserController;
 use App\Controllers\MainController;
 use App\Controllers\CategoryController;
 use App\Controllers\ProductController;
+
 
 /* ------------
 --- ROUTAGE ---
@@ -190,6 +192,75 @@ $router->map(
     'controller' => ProductController::class
   ],
   'product-delete'
+);
+
+// Routes AppUser==========================================================================
+
+// Affiche Connexion User
+$router->map(
+  'GET',
+  '/user/connection',
+  [
+    'method' => 'connect',
+    'controller' => AppUserController::class
+  ],
+  'user-connection'
+);
+
+// Traite Connexion User
+$router->map(
+  'POST',
+  '/user/connection',
+  [
+    'method' => 'check',
+    'controller' => AppUserController::class
+  ],
+  'user-check'
+);
+
+
+// Affiche Ajout User
+$router->map(
+  'GET',
+  '/user/add',
+  [
+    'method' => 'add',
+    'controller' => AppUserController::class
+  ],
+  'user-add'
+);
+
+// Traite Ajout User
+$router->map(
+  'POST',
+  '/user/add',
+  [
+    'method' => 'create',
+    'controller' => AppUserController::class
+  ],
+  'user-create'
+);
+
+// Traite Modifie User
+$router->map(
+  'POST',
+  '/user/[i:id]/update',
+  [
+    'method' => 'update',
+    'controller' => AppUserController::class
+  ],
+  'user-update'
+);
+
+// Traite Supprime User
+$router->map(
+  'GET',
+  '/user/[i:id]/delete',
+  [
+    'method' => 'delete',
+    'controller' => AppUserController::class
+  ],
+  'user-delete'
 );
 
 /* -------------
