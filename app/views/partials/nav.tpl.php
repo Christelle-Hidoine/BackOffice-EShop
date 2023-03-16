@@ -9,22 +9,22 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link <?= $viewName === "main/home" ? "active" : ""?>" href="<?= $router->generate('main-home') ?>">Accueil <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="<?= $router->generate('main-home') ?>">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $viewName === "catalog/category_list" ? "active" : "" ?>" href="<?= $router->generate('category-list') ?>">Catégories</a>
+                        <a class="nav-link active" href="<?= $router->generate('category-list') ?>">Catégories <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $viewName === "catalog/product_list" ? "active" : "" ?>" href="<?= $router->generate('product-list') ?>">Produits</a>
+                        <a class="nav-link" href="<?= $router->generate('product-list') ?>">Produits</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $viewName === "type" ? "active" : "" ?>" href="#">Types</a>
+                        <a class="nav-link" href="#">Types</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $viewName === "brand" ? "active" : "" ?>" href="#">Marques</a>
+                        <a class="nav-link" href="#">Marques</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <?= $viewName === "tag" ? "active" : "" ?>" href="#">Tags</a>
+                        <a class="nav-link" href="#">Tags</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Sélection Accueil</a>

@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>oShop BackOffice</title>
+    <title>oShop BackOffice | Catégories</title>
 
     <!-- Getting bootstrap (and reboot.css) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
@@ -18,7 +17,7 @@
         integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
 
     <!-- We can still have our own CSS file -->
-    <link rel="stylesheet" href="<?= $assetsBaseUri?>css/style.css">
+    <link rel="stylesheet" href="../../../public/assets/css/style.css">
 </head>
 <body>
 

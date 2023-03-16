@@ -1,5 +1,9 @@
-<!-- on n'a plus besoin d'appeler la variable via le viewData de notre fonction show grâce à extract($viewData) -->
-<div class="container my-4">
+<h1>Page d'accueil</h1>
+
+  <?php //dump($categories); ?>
+  <?php //dump($products); ?>
+
+  <div class="container my-4">
         <p class="display-4">
             Bienvenue dans le backOffice <strong>Dans les shoe</strong>...
         </p>
@@ -18,12 +22,12 @@
                                 </tr>
                             </thead>
                             <tbody>
+                              <?php foreach($categories as $category) : ?>
                                 <tr>
-                                <?php foreach($categoryList as $element) : ?>
-                                    <th scope="row"><?= $element->getHomeOrder() ?></th>
-                                    <td><?= $element->getName() ?></td>
+                                    <th scope="row"><?= $category->getId() ?></th>
+                                    <td><?= $category->getName() ?></td>
                                     <td class="text-end">
-                                        <a href="<?= $router->generate('category-edit', ['categoryId' => $element->getId()]) ?>" class="btn btn-sm btn-warning">
+                                        <a href="" class="btn btn-sm btn-warning">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                         </a>
                                         <!-- Example single danger button -->
@@ -40,8 +44,6 @@
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
-                              
-                                </tr>
                             </tbody>
                         </table>
                         <div class="d-grid gap-2">
@@ -63,12 +65,12 @@
                                 </tr>
                             </thead>
                             <tbody>
+                              <?php foreach($products as $product) : ?>
                                 <tr>
-                                <?php foreach($productList as $element) : ?>
-                                    <th scope="row"><?= $element->getId() ?></th>
-                                    <td><?= $element->getName() ?></td>
+                                    <th scope="row"><?= $product->getId() ?></th>
+                                    <td><?= $product->getName() ?></td>
                                     <td class="text-end">
-                                        <a href="<?= $router->generate('product-edit', ['productId' => $element->getId()]) ?>" class="btn btn-sm btn-warning">
+                                        <a href="" class="btn btn-sm btn-warning">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                         </a>
                                         <!-- Example single danger button -->
@@ -85,7 +87,6 @@
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
-                                
                             </tbody>
                         </table>
                         <div class="d-grid gap-2">

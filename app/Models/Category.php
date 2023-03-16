@@ -99,7 +99,7 @@ class Category extends CoreModel
      * @param int $categoryId ID de la catégorie
      * @return Category
      */
-    public function find($categoryId)
+    public static function find($categoryId)
     {
         // se connecter à la BDD
         $pdo = Database::getPDO();
@@ -111,7 +111,7 @@ class Category extends CoreModel
         $pdoStatement = $pdo->query($sql);
 
         // un seul résultat => fetchObject
-        $category = $pdoStatement->fetchObject(Category::class);
+        $category = $pdoStatement->fetchObject('App\Models\Category');
 
         // retourner le résultat
         return $category;
@@ -122,16 +122,17 @@ class Category extends CoreModel
      *
      * @return Category[]
      */
-    public static function findAll()
     // On ajoute le mot-clé "static" pour rendre la méthode findAll() statique
     // Avantage : on peut appeler la méthode directement sur la classe sans l'instancier
     // Category::findAll()
-    // public static function findAll()
+    public static function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `category`';
         $pdoStatement = $pdo->query($sql);
         $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
+        // Autre manière
+        // $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'Category::class');
 
         return $results;
     }
@@ -146,50 +147,69 @@ class Category extends CoreModel
         // On peut appeler direcrement getPDO() sur la classe Database 
         // car getPDO() est une méthode statique (définie par : public static function ...)
         $pdo = Database::getPDO();
-        $sql = 'SELECT *
-        FROM `category`
-        WHERE `home_order` > 0
-        ORDER BY `home_order` ASC
-        LIMIT 5';
-        
+
+        // Sinon, on aurait dû faire :
+        // $database = new Database();
+        // $database->getPDO();
+
+        $sql = '
+            SELECT *
+            FROM `category`
+            WHERE `home_order` > 0
+            ORDER BY `home_order` ASC
+            LIMIT 5
+        ';
         $pdoStatement = $pdo->query($sql);
         $categories = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Category');
 
         return $categories;
     }
 
-    /** 
-     * Method to insert data from category_add template into DB oshop
+    /**
+     * Méthode permettant d'ajouter un enregistrement dans la table category
+     * L'objet courant doit contenir toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+     *
+     * @return bool
      */
     public function insert()
     {
         // Récupération de l'objet PDO représentant la connexion à la DB
         $pdo = Database::getPDO();
 
-        // V1 sans sécurisation
+        // V2 : on a récupéré la méthode déjà codée dans le model Category
+        // On va modifier la requete et son exécution pour ajouter une sécurité
         // Ecriture de la requête INSERT INTO
-        // $sql = "INSERT INTO `category` (`name`, `subtitle`, `picture`) VALUES ('{$this->name}', '{$this->subtitle}', '{$this->picture}')";
+        /*
+        $sql = "
+            INSERT INTO `category` (name)
+            VALUES ('{$this->name}')
+        ";
+        */
 
         // On passe maintenant (V2) sur deux requêtes pour ne pas avoir 1 seule requête contenant la query string et les données
         // - 1ère requête : prepare()
         // - 2nd requête : execute()
-
         // Important pour se prémunir des injections SQL
         // @see https://www.php.net/manual/fr/pdo.prepared-statements.php
         // @see https://portswigger.net/web-security/sql-injection (exemples avec SELECT)
         // @see https://stackoverflow.com/questions/681583/sql-injection-on-insert (exemples avec INSERT INTO)
 
+        // Version avec marqueurs non nommés
+        /*
+        $sql = '
+            INSERT INTO `category`
+            (name, subtitle, picture)
+            VALUES (?, ?, ?)
+        ';
+        */
 
-            // Version avec marqueurs non nommés
-        // $sql = '
-        //     INSERT INTO `category`
-        //     (`name`, `subtitle`, `picture`)
-        //     VALUES (?, ?, ?)
-        // ';
-
-            // Version avec marqueurs nommés
-            // Les marqueurs seront remplacés par des données que l'on récupérera via la 2nde requête (execute)
-        $sql = 'INSERT INTO `category` (`name`, `subtitle`, `picture`) VALUES (:name, :subtitle, :picture)';
+        // Version avec marqueurs nommés (un marqueur nommé sera de la forme : ':string')
+        // Les marqueurs seront remplacés par des données que l'on récupérera via la 2nde requête (execute)
+        $sql = '
+            INSERT INTO `category`
+            (`name`, `subtitle`, `picture`)
+            VALUES (:name, :subtitle, :picture)
+        ';
 
         // Execution de la requête d'insertion (exec, pas query)
         // $insertedRows = $pdo->exec($sql);
@@ -206,9 +226,10 @@ class Category extends CoreModel
 
         // Si au moins une ligne ajoutée
         // if ($insertedRows > 0) {
-            // V2 : on n'utilise plus $pdo->exec($sql) mais une requête préparée
-            // => on n'a plus accès à insertedRows
+        // V2 : on n'utilise plus $pdo->exec($sql) mais une requête préparée
+        // => on n'a plus accès à insertedRows
         // On va utilser la méthode rowCount() sur la query
+        // On vérifie si la requête a retourné 1 résultat (cad si on a bien inséré 1 novelle catégorie dans la table category)
         if ($query->rowCount() > 0) {
             // Alors on récupère l'id auto-incrémenté généré par MySQL
             $this->id = $pdo->lastInsertId();
@@ -222,46 +243,37 @@ class Category extends CoreModel
         return false;
     }
 
-    /** 
-     * Method to update data from category_edit template into DB oshop
-     */
     public function update()
     {
-        // Récupération de l'objet PDO représentant la connexion à la DB
         $pdo = Database::getPDO();
 
-        // $sql = "UPDATE `category` SET `name` = '{$this->name}', `subtitle` = '{$this->subtitle}', `picture` = '{$this->picture}'
-            //         WHERE `id` =' . $categoryId";
+        $sql = "
+            UPDATE `category`
+            SET
+            name = :name,
+            subtitle = :subtitle,
+            picture = :picture,
+            updated_at = NOW()
+            WHERE id = :id
+        ";
 
-        $sql = 
-        '
-        UPDATE  `category` 
-        SET 
-            `name` = :name, 
-            `subtitle` = :subtitle,
-            `picture` = :picture, 
-            `home_order` = :home_order,
-            `updated_at` = NOW() 
-        WHERE `id` = :id
-        ';
+        $pdoStatement = $pdo->prepare($sql);
 
-        // on utilise la méthode prepare() pour faire des requêtes préparées
-        $query = $pdo->prepare($sql);
+        $pdoStatement->bindValue(':name', $this->name);
+        $pdoStatement->bindValue(':subtitle', $this->subtitle);
+        $pdoStatement->bindValue(':picture', $this->picture);
+        $pdoStatement->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        // On exécute la requête préparée en passant les données attendues
-        // Les données attendues sont passées via un array associatif
-        $query->execute([
-                ':name' => $this->name,
-                ':subtitle' => $this->subtitle,
-                ':picture' => $this->picture,
-                ':home_order' => $this->home_order,
-                ':id' => $this->id
-        ]);
-        // dd($query);
-        // On retourne VRAI, si au moins une ligne ajoutée
-        if ($query->rowCount() > 0) {
-            return true; 
+        $pdoStatement->execute();
+
+        if ($pdoStatement->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
+
+        // Version plus courte
+        // retourne true si la condition est vraie, sinon false
+        // return ($pdoStatement->rowCount() > 0);
     }
 }

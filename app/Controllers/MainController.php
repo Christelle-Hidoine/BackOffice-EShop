@@ -2,11 +2,9 @@
 
 namespace App\Controllers;
 
+// Si j'ai besoin du Model Category
 use App\Models\Category;
 use App\Models\Product;
-
-// Si j'ai besoin du Model Category
-// use App\Models\Category;
 
 class MainController extends CoreController
 {
@@ -17,15 +15,18 @@ class MainController extends CoreController
      */
     public function home()
     {
+        // On utilise le Model Category pour afficher les 5 catégories à mettre en avant
+        $categories = Category::findAllHomepage();
+
+        // Idem au niveau des products
+        $products = Product::findAllHomepage();
+
         // On appelle la méthode show() de l'objet courant
         // En argument, on fournit le fichier de Vue
         // Par convention, chaque fichier de vue sera dans un sous-dossier du nom du Controller
-
-        // affichage de la liste de 5 catégories
-        $categoryList = Category::findAllHomepage();
-
-        //affichage de la liste de 5 produits
-        $productList = Product::findAllHomepage();
-        $this->show('main/home', ['categoryList' => $categoryList, 'productList' => $productList]);
+        $this->show('main/home', [
+            'categories' => $categories,
+            'products' => $products
+        ]);
     }
 }

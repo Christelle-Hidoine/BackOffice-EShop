@@ -93,8 +93,8 @@ class Product extends CoreModel
         return $results;
     }
 
-    /**
-     * Récupérer les 5 produits mis en avant sur la home
+     /**
+     * Récupérer les 5 produits mises en avant sur la home
      *
      * @return Product[]
      */
@@ -103,23 +103,56 @@ class Product extends CoreModel
         // On peut appeler direcrement getPDO() sur la classe Database 
         // car getPDO() est une méthode statique (définie par : public static function ...)
         $pdo = Database::getPDO();
-        $sql = 'SELECT * FROM `product` LIMIT 5';
+
+        // Sinon, on aurait dû faire :
+        // $database = new Database();
+        // $database->getPDO();
+
+        $sql = '
+            SELECT *
+            FROM `product`
+            ORDER BY `id`
+            LIMIT 5
+        ';
         $pdoStatement = $pdo->query($sql);
         $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Product');
 
         return $products;
     }
 
-    /** 
-     * Method to insert data from product_add template into DB oshop
+        /**
+     * Méthode permettant d'ajouter un enregistrement dans la table category
+     * L'objet courant doit contenir toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+     *
+     * @return bool
      */
     public function insert()
     {
         // Récupération de l'objet PDO représentant la connexion à la DB
         $pdo = Database::getPDO();
 
-        // on utilise la méthode prepare() pour faire des requêtes préparées
-        $query = $pdo->prepare("INSERT INTO `product` (`name`, `description`, `picture`, `price`, `rate`, `status`, `brand_id`, `category_id`, `type_id`) VALUES (:name, :description, :picture, :price, :rate, :status, :brand_id, :category_id, :type_id)");
+        // V2 : on a récupéré la méthode déjà codée dans le model Category
+
+        // On passe maintenant (V2) sur deux requêtes pour ne pas avoir 1 seule requête contenant la query string et les données
+        // - 1ère requête : prepare()
+        // - 2nd requête : execute()
+        // Important pour se prémunir des injections SQL
+        // @see https://www.php.net/manual/fr/pdo.prepared-statements.php
+        // @see https://portswigger.net/web-security/sql-injection (exemples avec SELECT)
+        // @see https://stackoverflow.com/questions/681583/sql-injection-on-insert (exemples avec INSERT INTO)
+
+        // Version avec marqueurs nommés (un marqueur nommé sera de la forme : ':string')
+        // Les marqueurs seront remplacés par des données que l'on récupérera via la 2nde requête (execute)
+        $sql = '
+            INSERT INTO `product`
+            (`name`, `description`, `picture`, `price`, `rate`, `status`, `category_id`, `brand_id`, `type_id`)
+            VALUES (:name, :description, :picture, :price, :rate, :status, :category_id, :brand_id, :type_id)
+        ';
+
+        // Execution de la requête d'insertion (exec, pas query)
+        // $insertedRows = $pdo->exec($sql);
+        // V2 : on utilise la méthode prepare() pour faire des requêtes préparées
+        $query = $pdo->prepare($sql);
 
         // On exécute la requête préparée en passant les données attendues
         // Les données attendues sont passées via un array associatif
@@ -130,11 +163,15 @@ class Product extends CoreModel
             ':price' => $this->price,
             ':rate' => $this->rate,
             ':status' => $this->status,
-            ':brand_id' => $this->brand_id,
             ':category_id' => $this->category_id,
-            ':type_id' => $this->type_id
+            ':brand_id' => $this->brand_id,
+            ':type_id' => $this->type_id,
         ]);
 
+        // Si au moins une ligne ajoutée
+        // if ($insertedRows > 0) {
+        // V2 : on n'utilise plus $pdo->exec($sql) mais une requête préparée
+        // => on n'a plus accès à insertedRows
         // On va utilser la méthode rowCount() sur la query
         // On vérifie si la requête a retourné 1 résultat (cad si on a bien inséré 1 novelle catégorie dans la table category)
         if ($query->rowCount() > 0) {
@@ -147,59 +184,6 @@ class Product extends CoreModel
         }
 
         // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
-        return false;
-    }
-
-    /** 
-     * Method to update data from product_edit template into DB oshop
-     */
-    public function update()
-    {
-        // Récupération de l'objet PDO représentant la connexion à la DB
-        $pdo = Database::getPDO();
-
-        // $sql = "UPDATE `product` SET `name` = '{$this->name}', `description` = '{$this->description}', `picture` = '{$this->picture}'
-            //         WHERE `id` =' . $productId";
-
-        $sql = 
-        '
-        UPDATE  `product` 
-        SET 
-            `name` = :name, 
-            `description` = :description,
-            `picture` = :picture, 
-            `price` = :price,
-            `rate` = :rate,
-            `status` = :status,
-            `brand_id` = :brand_id,
-            `category_id` = :category_id,
-            `type_id` = :type_id,
-            `updated_at` = NOW() 
-        WHERE `id` = :id
-        ';
-
-        // on utilise la méthode prepare() pour faire des requêtes préparées
-        $query = $pdo->prepare($sql);
-
-        // On exécute la requête préparée en passant les données attendues
-        // Les données attendues sont passées via un array associatif
-        $query->execute([
-                ':id' => $this->id,
-                ':name' => $this->name,
-                ':description' => $this->description,
-                ':picture' => $this->picture,
-                ':price' => $this->price,
-                ':rate' => $this->rate,
-                ':status' => $this->status,
-                ':brand_id' => $this->brand_id,
-                ':category_id' => $this->category_id,
-                ':type_id' => $this->type_id
-        ]);
-        // dd($query);
-        // On retourne VRAI, si au moins une ligne ajoutée
-        if ($query->rowCount() > 0) {
-            return true; 
-        }
         return false;
     }
 
@@ -256,8 +240,9 @@ class Product extends CoreModel
     /**
      * Set the value of picture
      *
+     * @param  string  $picture
      */
-    public function setPicture($picture)
+    public function setPicture(string $picture)
     {
         $this->picture = $picture;
     }

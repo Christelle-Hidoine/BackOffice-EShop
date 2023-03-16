@@ -52,7 +52,7 @@ class Brand extends CoreModel
      *
      * @return Brand[]
      */
-    public static function findAll()
+    public function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `brand`';
