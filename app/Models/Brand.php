@@ -123,6 +123,7 @@ class Brand extends CoreModel
         return ($updatedRows > 0);
     }
 
+    
     /**
      * Get the value of name
      *

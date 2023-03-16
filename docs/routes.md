@@ -1,17 +1,27 @@
 # Routes
 
-## Sprint 1
+## Sprint 2
 
 | URL | HTTP Method | Controller | Method | Title | Content | Comment |
 |--|--|--|--|--|--|--|
-| `/` | `GET` | `MainController` | `home` | oShop BackOffice | display 3 categories and 3 products | - |
-| `/category-list` | `GET` | `CatalogController` | `categoryList` | Liste des Catégories | display all categories | - |
-| `/category-add` | `GET` | `CatalogController` | `categoryAdd` | Ajouter une catégorie | form to add new categories | - |
-| `/category-add` | `POST` | `CatalogController` | `categoryCreate` | Ajouter une catégorie | retrieve and send form field completed to DB oshop | - |
-| `/category-update/[i:categoryId]` | `GET`| `CatalogController` | `categoryUpdate` | Éditer une catégorie | Form to update a category | [i:categoryId] is the category to update |
-| `/category-delete/[i:categoryId]` | `GET`| `CatalogController` | `categoryDelete` | Supprimer une catégorie | Category delete | [i:categoryId] is the category to delete |
-| `/product-list` | `GET` | `CatalogController` | `productList` | Liste des Produits | display all products | - |
-| `/product-add` | `GET` | `CatalogController` | `productAdd` | Ajouter un produit | form to add new products | - |
-| `/product-add` | `POST` | `CatalogController` | `productCreate` | Ajouter un produit | retrieve and send form field completed to DB oshop | - |
-| `/product-update/[i:productId]` | `GET`| `CatalogController` | `update` | Éditer un produit | Form to update a product | [i:productId] is the product to update |
-| `/product-delete/[i:productId]` | `GET`| `CatalogController` | `delete` | Supprimer un produit | Product delete | [i:productId] is the product to delete |
+| `/` | `GET` | `MainController` | `home` | Backoffice oShop | Backoffice dashboard | - |
+| `/category/list` | `GET`| `CategoryController` | `list` | Liste des catégories | Categories list | - |
+| `/category/add` | `GET`| `CategoryController` | `add` | Ajouter une catégorie | Form to add a category | - |
+| `/category/[i:id]/update` | `GET`| `CategoryController` | `update` | Éditer une catégorie | Form to update a category | [i:id] is the category to update |
+| `/category/[i:id]/delete` | `GET`| `CategoryController` | `delete` | Supprimer une catégorie | Category delete | [i:id] is the category to delete |
+| `/brand/list` | `GET`| `BrandController` | `list` | Liste des marques | Categories list | - |
+| `/brand/add` | `GET`| `BrandController` | `add` | Ajouter une marque | Form to add a brand | - |
+| `/brand/[i:id]/update` | `GET`| `BrandController` | `update` | Éditer une marque | Form to update a brand | [i:id] is the brand to update |
+| `/brand/[i:id]/delete` | `GET`| `BrandController` | `delete` | Supprimer une marque | Brand delete | [i:id] is the brand to delete |
+| `/product/list` | `GET`| `ProductController` | `list` | Liste des produits | Categories list | - |
+| `/product/add` | `GET`| `ProductController` | `add` | Ajouter un produit | Form to add a product | - |
+| `/product/[i:id]/update` | `GET`| `ProductController` | `update` | Éditer un produit | Form to update a product | [i:id] is the product to update |
+| `/product/[i:id]/delete` | `GET`| `ProductController` | `delete` | Supprimer un produit | Product delete | [i:id] is the product to delete |
+| `/type/list` | `GET`| `TypeController` | `list` | Liste des types | Types list | - |
+| `/type/add` | `GET`| `TypeController` | `add` | Ajouter un type | Form to add a type | - |
+| `/type/[i:id]/update` | `GET`| `TypeController` | `update` | Éditer un type | Form to update a type | [i:id] is the type to update |
+| `/type/[i:id]/delete` | `GET`| `TypeController` | `delete` | Supprimer un type | Type delete | [i:id] is the type to delete |
+| `/user/list` | `GET`| `UserController` | `list` | Liste des utilisateurs | Users list | - |
+| `/user/add` | `GET`| `UserController` | `add` | Ajouter un utilisateur | Form to add a user | - |
+| `/user/[i:id]/update` | `GET`| `UserController` | `update` | Éditer un utilisateur | Form to update a user | [i:id] is the user to update |
+| `/user/[i:id]/delete` | `GET`| `UserController` | `delete` | Supprimer un utilisateur | User delete | [i:id] is the user to delete |

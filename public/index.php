@@ -6,42 +6,33 @@
 // inclusion des dépendances via Composer
 // autoload.php permet de charger d'un coup toutes les dépendances installées avec composer
 // mais aussi d'activer le chargement automatique des classes (convention PSR-4)
-
-use App\Controllers\CatalogController;
-
 require_once '../vendor/autoload.php';
+
+use App\Controllers\MainController;
+use App\Controllers\CategoryController;
+use App\Controllers\ProductController;
 
 /* ------------
 --- ROUTAGE ---
 -------------*/
-// On var dump pour savoir ce que contient $_SERVER
-// NB : si on avait un .htaccess, alors via la réécriture d'URL,
-// on aurait eu une clé BASE_URI
-// Ici, elle n'existe pas
 
-// D'où notre page en erreur 404
-// Solutions possibles :
-// - créer un .htaccess
-// - ou remplacer BASE_URI par REQUEST_URI
 
 // création de l'objet router
-// Cet objet va gérer les routes pour nous
+// Cet objet va gérer les routes pour nous, et surtout il va
 $router = new AltoRouter();
-//
+
 // le répertoire (après le nom de domaine) dans lequel on travaille est celui-ci
 // Mais on pourrait travailler sans sous-répertoire
 // Si il y a un sous-répertoire
 if (array_key_exists('BASE_URI', $_SERVER)) {
     // Alors on définit le basePath d'AltoRouter
     $router->setBasePath($_SERVER['BASE_URI']);
-    
     // ainsi, nos routes correspondront à l'URL, après la suite de sous-répertoire
 } else { // sinon
     // On donne une valeur par défaut à $_SERVER['BASE_URI'] car c'est utilisé dans le CoreController
     $_SERVER['BASE_URI'] = '/';
 }
-//dd($_SERVER);
- 
+
 // On doit déclarer toutes les "routes" à AltoRouter,
 // afin qu'il puisse nous donner LA "route" correspondante à l'URL courante
 // On appelle cela "mapper" les routes
@@ -54,131 +45,152 @@ if (array_key_exists('BASE_URI', $_SERVER)) {
 //      - "NomDuController-NomDeLaMéthode"
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
 
-// home page route
+// Routes Home ==========================================================================
+
 $router->map(
-    'GET',
-    '/',
-    [
-        'method' => 'home',
-        'controller' => '\App\Controllers\MainController' // On indique le FQCN de la classe (FQCN = namespace + nom_de_la_classe)
-    ],
-    'main-home' 
+  'GET',
+  '/',
+  [
+    'method' => 'home',
+    'controller' => MainController::class // On indique le FQCN de la classe
+  ],
+  'main-home'
 );
 
-// ------------------------- CATEGORY ROUTES --------------------------------
+// Routes Category ==========================================================================
 
-// category list's route
 $router->map(
-    'GET',
-    '/category-list',
-    [
-        'method' => 'categoryList',
-        'controller' => '\App\Controllers\CatalogController'
-    ],
-    'category-list' 
+  'GET',
+  '/category/list',
+  [
+    'method' => 'list',
+    'controller' => CategoryController::class // On indique le FQCN de la classe
+  ],
+  'category-list'
 );
 
-// category add's route
+// Affiche Ajout Catégorie
 $router->map(
-    'GET',
-    '/category-add',
-    [
-        'method' => 'categoryAdd',
-        'controller' => '\App\Controllers\CatalogController'
-    ],
-    'category-add'
+  'GET',
+  '/category/add',
+  [
+    'method' => 'add',
+    'controller' => CategoryController::class // On indique le FQCN de la classe
+  ],
+  'category-add'
 );
 
-// category add's route form
+// Traite Ajout Catégorie
 $router->map(
-    'POST',
-    '/category-add',
-    [
-        'method' => 'categoryCreate',
-        'controller' => CatalogController::class
-    ],
-    'category-add-form'
+  'POST',
+  '/category/add',
+  [
+    'method' => 'create',
+    'controller' => CategoryController::class // On indique le FQCN de la classe
+  ],
+  'category-create'
 );
 
-// category update's route
+// Affiche Modifie Catégorie
 $router->map(
-    'GET',
-    '/category-edit/[i:categoryId]',
-    [
-        'method' => 'categoryEdit',
-        'controller' => CatalogController::class
-    ],
-    'category-edit'
+  'GET',
+  '/category/[i:id]/update',
+  [
+    'method' => 'edit',
+    'controller' => CategoryController::class
+  ],
+  'category-edit'
 );
 
-// category update's route form
+// Traite Modifie Catégorie
 $router->map(
-    'POST',
-    '/category-edit/[i:categoryId]',
-    [
-        'method' => 'categoryUpdate',
-        'controller' => CatalogController::class
-    ],
-    'category-update-form'
+  'POST',
+  '/category/[i:id]/update',
+  [
+    'method' => 'update',
+    'controller' => CategoryController::class
+  ],
+  'category-update'
 );
 
-// -------------------------------- PRODUCT ROUTES --------------------------------
-
-// product list' route
+// Traite Supprime Catégorie
 $router->map(
-    'GET',
-    '/product-list',
-    [
-        'method' => 'productList',
-        'controller' => '\App\Controllers\CatalogController'
-    ],
-    'product-list'
+  'GET',
+  '/category/[i:id]/delete',
+  [
+    'method' => 'delete',
+    'controller' => CategoryController::class
+  ],
+  'category-delete'
 );
 
-// product add' route
+// Routes Produits==========================================================================
+
+// Liste des produits
 $router->map(
-    'GET',
-    '/product-add',
-    [
-        'method' => 'productAdd',
-        'controller' => '\App\Controllers\CatalogController'
-    ],
-    'product-add'
+  'GET',
+  '/product/list',
+  [
+    'method' => 'list',
+    'controller' => ProductController::class
+  ],
+  'product-list'
 );
 
-// product add's route form
+// Affiche Ajout produit
 $router->map(
-    'POST',
-    '/product-add',
-    [
-        'method' => 'productCreate',
-        'controller' => CatalogController::class
-    ],
-    'product-add-form'
+  'GET',
+  '/product/add',
+  [
+    'method' => 'add',
+    'controller' => ProductController::class
+  ],
+  'product-add'
 );
 
-// product edit's route
+// Traite Ajout produit
 $router->map(
-    'GET',
-    '/product-edit/[i:productId]',
-    [
-        'method' => 'productEdit',
-        'controller' => CatalogController::class
-    ],
-    'product-edit'
+  'POST',
+  '/product/add',
+  [
+    'method' => 'create',
+    'controller' => ProductController::class
+  ],
+  'product-create'
 );
 
-// product edit's route form
+// Affiche Modifie Produit
 $router->map(
-    'POST',
-    '/product-edit/[i:productId]',
-    [
-        'method' => 'productUpdate',
-        'controller' => CatalogController::class
-    ],
-    'product-update-form'
+  'GET',
+  '/product/[i:id]/update',
+  [
+    'method' => 'edit',
+    'controller' => ProductController::class
+  ],
+  'product-edit'
 );
 
+// Traite Modifie Produit
+$router->map(
+  'POST',
+  '/product/[i:id]/update',
+  [
+    'method' => 'update',
+    'controller' => ProductController::class
+  ],
+  'product-update'
+);
+
+// Traite Supprime Produit
+$router->map(
+  'GET',
+  '/product/[i:id]/delete',
+  [
+    'method' => 'delete',
+    'controller' => ProductController::class
+  ],
+  'product-delete'
+);
 
 /* -------------
 --- DISPATCH ---
@@ -192,11 +204,5 @@ $match = $router->match();
 // 1er argument : la variable $match retournée par AltoRouter
 // 2e argument : le "target" (controller & méthode) pour afficher la page 404
 $dispatcher = new Dispatcher($match, '\App\Controllers\ErrorController::err404');
-
 // Une fois le "dispatcher" configuré, on lance le dispatch qui va exécuter la méthode du controller
 $dispatcher->dispatch();
-
-
-
-
-

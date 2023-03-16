@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -8,8 +8,8 @@
     <title>oShop BackOffice</title>
 
     <!-- Getting bootstrap (and reboot.css) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://bootswatch.com/5/darkly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+   
     <!--
         And getting Font Awesome 4.7 (free)
         To get HTML code icons : https://fontawesome.com/v4.7.0/icons/
@@ -18,9 +18,10 @@
         integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
 
     <!-- We can still have our own CSS file -->
-    <link rel="stylesheet" href="<?= $assetsBaseUri?>css/style.css">
+    <link rel="stylesheet" href="<?= $assetsBaseUri ?>css/style.css">
 </head>
-<body>
+
+<body> 
 
 <?php
 // On inclut des sous-vues => "partials"
