@@ -99,7 +99,7 @@ class Category extends CoreModel
      * @param int $categoryId ID de la catégorie
      * @return Category
      */
-    static public function find($id)
+    public static function find($id)
     {
         // se connecter à la BDD
         $pdo = Database::getPDO();
@@ -131,7 +131,7 @@ class Category extends CoreModel
      *
      * @return Category[]
      */
-    static public function findAll()
+    public static function findAll()
     {
         $pdo          = Database::getPDO();
         $sql          = 'SELECT * FROM `category`';
@@ -201,7 +201,12 @@ class Category extends CoreModel
       }
     }
 
-    // Enregistre en BDD les modif effectuées sur l'instance actuelle
+    /**
+     * Méthode permettant de mettre à jour un enregistrement dans la table product
+     * L'objet courant doit contenir l'id, et toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+     *
+     * @return bool
+     */
     public function update()
     {
       $pdo = Database::getPDO();
@@ -234,8 +239,11 @@ class Category extends CoreModel
       }
     }
 
-    // Méthode qui va appeller insert() ou update()
-    // selon si l'objet actuel possède ou non une propriété id
+    /**
+     * Méthode qui va appeller insert() ou update() selon la présence d'un id
+     *
+     * @return void
+     */
     public function save()
     {
       if($this->id)
@@ -248,7 +256,12 @@ class Category extends CoreModel
       }
     }
 
-    // Fonction qui supprime l'enregistrement de la table category
+    
+    /**
+     * Méthode qui supprime un enregistrement de la table
+     *
+     * @return bool
+     */
     public function delete()
     {
       $pdo = Database::getPDO();
