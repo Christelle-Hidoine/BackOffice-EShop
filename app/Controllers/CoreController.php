@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-class CoreController
+abstract class CoreController
 {
     /**
      * Méthode permettant d'afficher du code HTML en se basant sur les views
@@ -23,7 +23,7 @@ class CoreController
         $viewData['currentPage'] = $viewName;
 
         // définir l'url absolue pour nos assets
-        $viewData['assetsBaseUri'] = $_SERVER['BASE_URI'] . 'assets/';
+        $viewData['assetsBaseUri'] = $_SERVER['BASE_URI'] . '/'.'assets/';
         // définir l'url absolue pour la racine du site
         // /!\ != racine projet, ici on parle du répertoire public/
         $viewData['baseUri'] = $_SERVER['BASE_URI'];
@@ -35,6 +35,10 @@ class CoreController
         // => la variable $assetsBaseUri existe désormais, et sa valeur est $_SERVER['BASE_URI'] . '/assets/'
         // => la variable $baseUri existe désormais, et sa valeur est $_SERVER['BASE_URI']
         // => il en va de même pour chaque élément du tableau
+
+        // Astuce pour voir les variables disponibles dans nos vues
+        // A ne pas laisser en PROD !
+        dump(get_defined_vars());
 
         // $viewData est disponible dans chaque fichier de vue
         require_once __DIR__ . '/../views/layout/header.tpl.php';

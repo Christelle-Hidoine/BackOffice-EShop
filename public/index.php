@@ -8,23 +8,17 @@
 // mais aussi d'activer le chargement automatique des classes (convention PSR-4)
 require_once '../vendor/autoload.php';
 
+use App\Controllers\MainController;
+use App\Controllers\CategoryController;
+use App\Controllers\ProductController;
+
 /* ------------
 --- ROUTAGE ---
 -------------*/
 
-// On var dump pour savoir ce que contient $_SERVER
-// NB : si on avait un .htaccess, alors via la réécriture d'URL,
-// on aurait eu une clé BASE_URI
-// Ici, elle n'existe pas
-// var_dump($_SERVER);
-
-// D'où notre page en erreur 404
-// Solutions possibles :
-// - créer un .htaccess
-// - ou remplacer BASE_URI par REQUEST_URI
 
 // création de l'objet router
-// Cet objet va gérer les routes pour nous
+// Cet objet va gérer les routes pour nous, et surtout il va
 $router = new AltoRouter();
 
 // le répertoire (après le nom de domaine) dans lequel on travaille est celui-ci
@@ -50,100 +44,141 @@ if (array_key_exists('BASE_URI', $_SERVER)) {
 // 4. Le nom de la route : pour identifier la route, on va suivre une convention
 //      - "NomDuController-NomDeLaMéthode"
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
-$router->map(
-    'GET',
-    '/',
-    [
-        'method' => 'home',
-        'controller' => '\App\Controllers\MainController' // On indique le FQCN de la classe (FQCN = namespace + nom_de_la_classe)
-    ],
-    'main-home'
-);
+
+// Routes Home ==========================================================================
 
 $router->map(
-    'GET',
-    '/category/list',
-    [
-        'method' => 'listCategories',
-        'controller' => '\App\Controllers\CategoryController'
-    ],
-    'category-list'
+  'GET',
+  '/',
+  [
+    'method' => 'home',
+    'controller' => MainController::class // On indique le FQCN de la classe
+  ],
+  'main-home'
 );
 
-// Route pour afficher le formulaire d'ajout d'une catégorie
-$router->map(
-    'GET',
-    '/category/add-update',
-    [
-        'method' => 'addCategory',
-        'controller' => '\App\Controllers\CategoryController'
-    ],
-    'category-add'
-);
-
-// Route pour faire le traitement du formulaire et créer une nouvelle catégorie
-$router->map(
-    'POST',
-    '/category/add-update',
-    [
-        'method' => 'createOrUpdateCategory',
-        'controller' => '\App\Controllers\CategoryController'
-    ],
-    'category-create'
-);
-
-// Route pour afficher le formulaire de modification d'une catégorie
-$router->map(
-    'GET',
-    '/category/add-update/[i:id]',
-    [
-        'method' => 'editCategory',
-        'controller' => '\App\Controllers\CategoryController'
-    ],
-    'category-edit'
-);
-
-// Route pour faire le traitement du formulaire et créer une nouvelle catégorie
-$router->map(
-    'POST',
-    '/category/add-update/[i:id]',
-    [
-        'method' => 'createOrUpdateCategory',
-        'controller' => '\App\Controllers\CategoryController'
-    ],
-    'category-update'
-);
+// Routes Category ==========================================================================
 
 $router->map(
-    'GET',
-    '/product/list',
-    [
-        'method' => 'listProducts',
-        'controller' => '\App\Controllers\ProductController'
-    ],
-    'product-list'
+  'GET',
+  '/category/list',
+  [
+    'method' => 'list',
+    'controller' => CategoryController::class // On indique le FQCN de la classe
+  ],
+  'category-list'
 );
 
-// Affichage du form
+// Affiche Ajout Catégorie
 $router->map(
-    'GET',
-    '/product/add',
-    [
-        'method' => 'addProduct',
-        'controller' => '\App\Controllers\ProductController'
-    ],
-    'product-add'
+  'GET',
+  '/category/add',
+  [
+    'method' => 'add',
+    'controller' => CategoryController::class // On indique le FQCN de la classe
+  ],
+  'category-add'
 );
 
-// Traitement du form
+// Traite Ajout Catégorie
 $router->map(
-    'POST',
-    '/product/add',
-    [
-        'method' => 'createProduct',
-        'controller' => '\App\Controllers\ProductController'
-    ],
-    'product-create'
+  'POST',
+  '/category/add',
+  [
+    'method' => 'create',
+    'controller' => CategoryController::class // On indique le FQCN de la classe
+  ],
+  'category-create'
+);
+
+// Affiche Modifie Catégorie
+$router->map(
+  'GET',
+  '/category/[i:id]/update',
+  [
+    'method' => 'edit',
+    'controller' => CategoryController::class
+  ],
+  'category-edit'
+);
+
+// Traite Modifie Catégorie
+$router->map(
+  'POST',
+  '/category/[i:id]/update',
+  [
+    'method' => 'update',
+    'controller' => CategoryController::class
+  ],
+  'category-update'
+);
+
+// Traite Supprime Catégorie
+$router->map(
+  'GET',
+  '/category/[i:id]/delete',
+  [
+    'method' => 'delete',
+    'controller' => CategoryController::class
+  ],
+  'category-delete'
+);
+
+// Routes Produits==========================================================================
+
+// Liste des produits
+$router->map(
+  'GET',
+  '/product/list',
+  [
+    'method' => 'list',
+    'controller' => ProductController::class
+  ],
+  'product-list'
+);
+
+// Affiche Ajout produit
+$router->map(
+  'GET',
+  '/product/add',
+  [
+    'method' => 'add',
+    'controller' => ProductController::class
+  ],
+  'product-add'
+);
+
+// Traite Ajout produit
+$router->map(
+  'POST',
+  '/product/add',
+  [
+    'method' => 'create',
+    'controller' => ProductController::class
+  ],
+  'product-create'
+);
+
+// Traite Modifie Produit
+$router->map(
+  'POST',
+  '/product/[i:id]/update',
+  [
+    'method' => 'edit',
+    'controller' => CategoryController::class
+  ],
+  'product-edit'
+);
+
+// Traite Supprime Produit
+$router->map(
+  'GET',
+  '/product/[i:id]/delete',
+  [
+    'method' => 'delete',
+    'controller' => CategoryController::class
+  ],
+  'product-delete'
 );
 
 /* -------------
@@ -152,8 +187,6 @@ $router->map(
 
 // On demande à AltoRouter de trouver une route qui correspond à l'URL courante
 $match = $router->match();
-
-//dump($match);
 
 // Ensuite, pour dispatcher le code dans la bonne méthode, du bon Controller
 // On délègue à une librairie externe : https://packagist.org/packages/benoclock/alto-dispatcher

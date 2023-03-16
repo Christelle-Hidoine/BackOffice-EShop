@@ -4,13 +4,21 @@ namespace App\Models;
 
 // Classe mère de tous les Models
 // On centralise ici toutes les propriétés et méthodes utiles pour TOUS les Models
-
-// V2 : On ajoute le mot-clé abstract pour indiquer que CoreModel
-// est une classe abstraite
-// classe abstraite = classe qui a une ou plusieurs méthodes non implémentées (cad pas codées ici)
-// Ces méthodes devront être codées dans les classes filles
+// La classe est définie comme abstract => il est INTERDIT de l'instancier sinon fatal error
 abstract class CoreModel
 {
+
+    // J'indique que toute classe qui hérite de CoreModel DOIT IMPERATIVEMENT
+    // implémenter une méthode find qui doit etre statique
+    // Attention, elle n'oblige rien au niveau du CONTENU de la méthode
+
+    // abstract static function find( $id );
+    // abstract static function findAll();
+    // abstract static function insert();
+    // abstract static function update();
+    // abstract static function delete();
+
+
     /**
      * @var int
      */
@@ -23,11 +31,6 @@ abstract class CoreModel
      * @var string
      */
     protected $updated_at;
-
-    // On déclare ici la (ou les) méthode(s) abstraites
-    // Les classes enfants devront implémenter ces méthdes là
-    abstract public function find($id);
-
 
 
     /**

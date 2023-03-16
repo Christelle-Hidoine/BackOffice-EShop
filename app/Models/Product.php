@@ -55,7 +55,7 @@ class Product extends CoreModel
      * @param int $productId ID du produit
      * @return Product
      */
-    public function find($productId)
+    static public function find($productId)
     {
         // récupérer un objet PDO = connexion à la BDD
         $pdo = Database::getPDO();
@@ -73,7 +73,7 @@ class Product extends CoreModel
 
         // fetchObject() pour récupérer un seul résultat
         // si j'en avais eu plusieurs => fetchAll
-        $result = $pdoStatement->fetchObject('App\Models\Product');
+        $result = $pdoStatement->fetchObject(self::class);
 
         return $result;
     }
@@ -83,108 +83,90 @@ class Product extends CoreModel
      *
      * @return Product[]
      */
-    public static function findAll()
+    static public function findAll()
     {
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `product`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Product');
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
 
         return $results;
     }
 
-     /**
-     * Récupérer les 5 produits mises en avant sur la home
-     *
-     * @return Product[]
-     */
-    public static function findAllHomepage()
-    {
-        // On peut appeler direcrement getPDO() sur la classe Database 
-        // car getPDO() est une méthode statique (définie par : public static function ...)
-        $pdo = Database::getPDO();
-
-        // Sinon, on aurait dû faire :
-        // $database = new Database();
-        // $database->getPDO();
-
-        $sql = '
-            SELECT *
-            FROM `product`
-            ORDER BY `id`
-            LIMIT 5
-        ';
-        $pdoStatement = $pdo->query($sql);
-        $products = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Product');
-
-        return $products;
-    }
-
-        /**
-     * Méthode permettant d'ajouter un enregistrement dans la table category
+    /**
+     * Méthode permettant d'ajouter un enregistrement dans la table product.
      * L'objet courant doit contenir toutes les données à ajouter : 1 propriété => 1 colonne dans la table
-     *
+     * 
      * @return bool
      */
     public function insert()
     {
-        // Récupération de l'objet PDO représentant la connexion à la DB
-        $pdo = Database::getPDO();
+      // Récupération de l'objet PDO représentant la connexion à la DB
+      $pdo = Database::getPDO();
 
-        // V2 : on a récupéré la méthode déjà codée dans le model Category
+      // Ecriture de la requête INSERT INTO
+      $sql = "
+          INSERT INTO `product` (
+            name,
+            description,
+            picture,
+            price,
+            rate,
+            status,
+            brand_id,
+            category_id,
+            type_id
+          )
+          VALUES (
+            :name,
+            :description,
+            :picture,
+            :price,
+            :rate,
+            :status,
+            :brand_id,
+            :category_id,
+            :type_id
+          )
+      ";
 
-        // On passe maintenant (V2) sur deux requêtes pour ne pas avoir 1 seule requête contenant la query string et les données
-        // - 1ère requête : prepare()
-        // - 2nd requête : execute()
-        // Important pour se prémunir des injections SQL
-        // @see https://www.php.net/manual/fr/pdo.prepared-statements.php
-        // @see https://portswigger.net/web-security/sql-injection (exemples avec SELECT)
-        // @see https://stackoverflow.com/questions/681583/sql-injection-on-insert (exemples avec INSERT INTO)
+      // Préparation de la requête d'insertion (+ sécurisé que exec directement)
+      // @see https://www.php.net/manual/fr/pdo.prepared-statements.php
 
-        // Version avec marqueurs nommés (un marqueur nommé sera de la forme : ':string')
-        // Les marqueurs seront remplacés par des données que l'on récupérera via la 2nde requête (execute)
-        $sql = '
-            INSERT INTO `product`
-            (`name`, `description`, `picture`, `price`, `rate`, `status`, `category_id`, `brand_id`, `type_id`)
-            VALUES (:name, :description, :picture, :price, :rate, :status, :category_id, :brand_id, :type_id)
-        ';
+      // Permet de lutter contre les injections SQL
+      // @see https://portswigger.net/web-security/sql-injection (exemples avec SELECT)
+      // @see https://stackoverflow.com/questions/681583/sql-injection-on-insert (exemples avec INSERT INTO)
+      $query = $pdo->prepare($sql);
 
-        // Execution de la requête d'insertion (exec, pas query)
-        // $insertedRows = $pdo->exec($sql);
-        // V2 : on utilise la méthode prepare() pour faire des requêtes préparées
-        $query = $pdo->prepare($sql);
+      // Execution de la requête d'insertion
+      // Ou bien utiliser la méthode bindValue pour chaque token/jeton/placeholder
+      $query->bindValue(':name',        $this->name,        PDO::PARAM_STR);
+      $query->bindValue(':description', $this->description, PDO::PARAM_STR);
+      $query->bindValue(':picture',     $this->picture,     PDO::PARAM_STR);
+      $query->bindValue(':price',       $this->price,       PDO::PARAM_STR);
+      $query->bindValue(':rate',        $this->rate,        PDO::PARAM_INT);
+      $query->bindValue(':status',      $this->status,      PDO::PARAM_INT);
+      $query->bindValue(':brand_id',    $this->brand_id,    PDO::PARAM_INT);
+      $query->bindValue(':category_id', $this->category_id, PDO::PARAM_INT);
+      $query->bindValue(':type_id',     $this->type_id,     PDO::PARAM_INT);
 
-        // On exécute la requête préparée en passant les données attendues
-        // Les données attendues sont passées via un array associatif
-        $query->execute([
-            ':name' => $this->name,
-            ':description' => $this->description,
-            ':picture' => $this->picture,
-            ':price' => $this->price,
-            ':rate' => $this->rate,
-            ':status' => $this->status,
-            ':category_id' => $this->category_id,
-            ':brand_id' => $this->brand_id,
-            ':type_id' => $this->type_id,
-        ]);
+      // Le 3e argument permet de préciser "valeur numérique" (PDO::PARAM_STR) ou "autre" (PDO::PARAM_STR)
+      // Puis exécuter la requête SQL préparée
+      $query->execute();
 
-        // Si au moins une ligne ajoutée
-        // if ($insertedRows > 0) {
-        // V2 : on n'utilise plus $pdo->exec($sql) mais une requête préparée
-        // => on n'a plus accès à insertedRows
-        // On va utilser la méthode rowCount() sur la query
-        // On vérifie si la requête a retourné 1 résultat (cad si on a bien inséré 1 novelle catégorie dans la table category)
-        if ($query->rowCount() > 0) {
-            // Alors on récupère l'id auto-incrémenté généré par MySQL
-            $this->id = $pdo->lastInsertId();
+      // Si au moins une ligne ajoutée
+      if( $query->rowCount() > 0 ) 
+      {
+        // Alors on récupère l'id auto-incrémenté généré par MySQL
+        $this->id = $pdo->lastInsertId();
 
-            // On retourne VRAI car l'ajout a parfaitement fonctionné
-            return true;
-            // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
-        }
-
-        // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
-        return false;
+        // On retourne VRAI car l'ajout a parfaitement fonctionné
+        return true;
+        // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
+      }
+      
+      // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
+      return false;
     }
 
     /**
