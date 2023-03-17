@@ -56,6 +56,11 @@
                       Utilisateurs
                     </a>
                 </li>
+                <li class="nav-item float-end">
+                    <a class="nav-link" href=" <?= $router->generate('user-logout') ?>">
+                      Déconnexion
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

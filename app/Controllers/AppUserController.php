@@ -127,7 +127,6 @@ class AppUserController extends CoreController
     public function check()
 
     {
-        $this->checkAuthorization(['admin']);
 
         $email    = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
         $password = filter_input(INPUT_POST, "password");
@@ -185,4 +184,16 @@ class AppUserController extends CoreController
             dump($error);
         }
     }
+
+    public function logout()
+        {
+            if (isset($_SESSION['UserId']))
+            {
+                return session_unset($_SESSION);
+                header("Location: /user/connection");
+            }
+            session_destroy();
+            header("Location: /user/connection");
+        }
+    
 }
