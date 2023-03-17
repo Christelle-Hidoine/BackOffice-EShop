@@ -39,7 +39,7 @@ class AppUserController extends CoreController
         $errorList = [];
 
         if (empty($email)) {
-            $errorList[] = "L'adresse email est vide";
+            $errorList[] = "L'adresse email doit être indiquée";
         }
 
         if (empty($password)) {
@@ -50,33 +50,37 @@ class AppUserController extends CoreController
         if (empty($errorList)) {
 
             // on récupère l'email correspondant dans la BDD
-            $appUserEmail = AppUser::findByEmail($email);
+            $user = AppUser::findByEmail($email);
             // dump($appUserEmail);
 
             // on vérifie qu'il correspond à notre BDD = return true ou false
-            if ($appUserEmail === false) {
-                // si false = message d'erreur sur l'email
-                echo "Email et/ou mot de passe incorrect";
-            } else {
-                // on le compare au password saisi dans le formulaire
-                $appUserPassword = $appUserEmail->getPassword();
+            if ($user !== false) {
 
-                if ($appUserPassword !== $password) {
-                    // si différent = message d'erreur sur le mdp
-                    echo "Email et/ou mot de passe incorrect";
-                    // sinon affiche message succès 
-                } else {
-                    
-                    $_SESSION['userId'] = $appUserEmail->getId();
-                    $_SESSION['userObject'] = $appUserEmail;
-                    $_SESSION['userName'] = $appUserEmail->getFirstName();
+                // V2 : on doit modifier le if précédent car à présent tous les password sont hashés
+                // https://www.php.net/manual/fr/function.password-verify.php
+                if (password_verify($password, $user->getPassword())) {
+
+                // Email et password associé sont bons
+                // on le compare au password saisi dans le formulaire
+
+                    $_SESSION['userId'] = $user->getId();
+                    $_SESSION['userObject'] = $user;
+                    $_SESSION['userName'] = $user->getFirstName();
 
                     echo "Bravo {$_SESSION['userName']}, Vous êtes bien connecté(e)";
+                    dump($user);
+
+                } else {
+                    // si mdp différent = message d'erreur sur le mdp
+                    echo "Email et/ou mot de passe incorrect";
+                    
                 }
+            } else {
+                // si user n'existe pas = message d'erreur
+                echo "Email et/ou mot de passe incorrects";
             }
         } else {
-            
-            // On affiche les erreurs
+            // Si une errorList existe = message avec les erreurs concernées par les champs vides
             foreach($errorList as $error)
             {
                 echo "<p>{$error}</p>";
