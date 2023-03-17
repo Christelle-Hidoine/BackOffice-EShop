@@ -7,13 +7,108 @@ use App\Models\AppUser;
 class AppUserController extends CoreController
 
 {
+    /** 
+     * Méthode pour afficher la liste des users
+     *
+     */
+    public function list()
+    {
+        $this->checkAuthorization(['admin']);
+
+        $users = AppUser::findAll();
+
+        $this->show("appUser/list", ['users' => $users]);
+    }
+
+
+
     /**
      * Méthode pour afficher le formulaire d'ajout
      *
      */
     public function add()
     {
+        $this->checkAuthorization(['admin']);
         $this->show("appUser/add");
+    }
+
+
+    /**
+     * Méthode pour traiter l'ajout d'un user
+     *
+     */
+    public function create()
+    {
+        $this->checkAuthorization(['admin']);
+        // dump( $_POST );
+
+        $firstname = filter_input(INPUT_POST, "firstname", FILTER_SANITIZE_SPECIAL_CHARS);
+        $lastname = filter_input(INPUT_POST, "lastname", FILTER_SANITIZE_SPECIAL_CHARS);
+        $email  = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+        $password = filter_input(INPUT_POST, "password");
+        $role = filter_input(INPUT_POST, "role");
+        $status = filter_input(INPUT_POST, "status", FILTER_VALIDATE_INT);
+
+
+        // On vérifie les valeurs de ces variables "filtrées"
+        $errorList = [];
+
+        if(empty($firstname)) 
+        {
+            $errorList[] = 'Merci de compléter le champs prénom';
+        }
+
+        if(empty($lastname)) 
+        {
+            $errorList[] = 'Merci de compléter le champs nom';
+        }
+
+        if(empty($email)) 
+        {
+            $errorList[] = 'Merci de compléter l\'email';
+        }
+
+        if(empty($password)) 
+        {
+            $errorList[] = 'Merci d\'indiquer un mot de passe';
+        }
+
+        // Si on a rencontré aucune erreur => si $errorList est vide donc
+        if(empty($errorList))
+        {
+            $user = new AppUser; 
+
+            // on hash le mdp 
+            $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
+
+            // On met à jour ses propriétés avec les données du formulaire (nettoyées)
+            $user->setFirstName($firstname);
+            $user->setLastName($lastname);
+            $user->setEmail($email);
+            $user->setPassword($passwordHashed);
+            $user->setRole($role);
+            $user->setStatus($status);
+
+            // ajout en BDD
+            if($user->save())
+            {
+                // Si la sauvegarde a fonctionné
+                header( "Location: /user/list" );
+                exit;
+            }
+            else
+            {
+                echo "Echec de la sauvegarde en BDD";
+            }
+        }
+        else // Sinon, on affiche les erreurs 
+        {
+        // On affiche chaque erreurs rencontrée
+        foreach($errorList as $error)
+        {
+            echo $error . "<br>";
+        }
+        }
     }
 
     /**
@@ -32,6 +127,8 @@ class AppUserController extends CoreController
     public function check()
 
     {
+        $this->checkAuthorization(['admin']);
+
         $email    = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
         $password = filter_input(INPUT_POST, "password");
 
@@ -80,11 +177,12 @@ class AppUserController extends CoreController
                 echo "Email et/ou mot de passe incorrects";
             }
         } else {
-            // Si une errorList existe = message avec les erreurs concernées par les champs vides
+            header('Location: /user/add');
             foreach($errorList as $error)
             {
                 echo "<p>{$error}</p>";
             }
+            dump($error);
         }
     }
 }

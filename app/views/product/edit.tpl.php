@@ -5,7 +5,7 @@
         <a href="<?= $router->generate('product-list') ?>" class="btn btn-success float-end">Retour</a>
         <h2>Modifier un produit</h2>
         
-        <form action="<?= $router->generate('product-edit', ['id' => $product->getId()]); ?>" method="POST" class="mt-5">
+        <form action="<?= $router->generate('product-edit', ['id' => $product->getId()]); ?>" method="POST" class="col-5 m-auto">
         <div class="mb-3">
                 <label for="name" class="form-label">Nom</label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="Nom du produit" value="<?= $product->getName() ?>" required>
@@ -13,9 +13,6 @@
             <div class="mb-3">
                 <label for="descrition" class="form-label">Description</label>
                 <input type="text" class="form-control" id="description" name="description" placeholder="Description" aria-describedby="subtitleHelpBlock" value="<?= $product->getDescription() ?>" required>
-                <small id="subtitleHelpBlock" class="form-text text-muted">
-                    Sera affiché sur la page d'accueil comme bouton devant l'image
-                </small>
             </div>
             <div class="mb-3">
                 <label for="picture" class="form-label">Image</label>
@@ -27,9 +24,6 @@
             <div class="mb-3">
                 <label for="price" class="form-label">Prix</label>
                 <input type="text" class="form-control" id="price" name="price" placeholder="Ex: 45.90" aria-describedby="subtitleHelpBlock" value="<?= $product->getPrice() ?>" required>
-                <small id="subtitleHelpBlock" class="form-text text-muted">
-                    Sera affiché sur la page d'accueil comme bouton devant l'image
-                </small>
             </div>
             <div class="mb-3">
                 <label for="rate" class="form-label">Note</label>

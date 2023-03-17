@@ -14,11 +14,10 @@ class CategoryController extends CoreController
    */
   public function list()
   {
-
     // On utilise la méthode checkAuthorization() pour vérifier si le user a les droits (permissions) pour accéder à la page
     // On doit lui passer en argument un array des roles authorisés pour cette page
     // Ici, les rôles admin et catalog-manager auront les permissions
-    $this->checkAuthorization(['catalog-manager']);
+    // $this->checkAuthorization(['admin', 'catalog-manager']);
 
     // Récupérer les données grace au Model
     $category = Category::findAll();
@@ -31,12 +30,14 @@ class CategoryController extends CoreController
   // Page d'affichage du formulaire
   public function add()
   {
+    $this->checkAuthorization(['admin', 'catalog-manager']);
     $this->show("category/add");
   }
 
   // Page de traitement du formulaire
   public function create()
   {
+    $this->checkAuthorization(['admin', 'catalog-manager']);
     // dump( $_POST );
 
     // On reçoit les données du formulaire
@@ -106,7 +107,8 @@ class CategoryController extends CoreController
 
   // Page d'affichage du formulaire d'ajout
   public function edit($id)
-  {    
+  { 
+    $this->checkAuthorization(['admin', 'catalog-manager']);   
     $categoryObject = Category::find($id);
 
     // dump($categoryObject);
@@ -241,6 +243,7 @@ class CategoryController extends CoreController
 
   public function delete($id)
   {
+    $this->checkAuthorization(['admin', 'catalog-manager']);
     $categoryObject = Category::find($id);  
 
     if( $categoryObject->delete() )

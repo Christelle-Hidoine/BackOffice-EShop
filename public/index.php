@@ -228,6 +228,17 @@ $router->map(
 
 // ---------------------------------------- Routes APPUSER  ----------------------------------------
 
+// Liste des Users
+$router->map(
+  'GET',
+  '/user/list',
+  [
+    'method' => 'list',
+    'controller' => AppUserController::class
+  ],
+  'user-list'
+);
+
 // Affiche Connexion User
 $router->map(
   'GET',
