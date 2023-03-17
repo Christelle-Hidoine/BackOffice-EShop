@@ -5,7 +5,7 @@
 
   <h2>Ajouter une catégorie</h2>
   
-  <form action="<?= $router->generate('category-create'); ?>" method="POST" class="mt-5">
+  <form action="<?= $router->generate('category-create'); ?>" method="POST" class="col-3 m-auto">
     <div class="mb-3">
       <label for="name" class="form-label">
         Nom

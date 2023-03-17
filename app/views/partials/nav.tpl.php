@@ -51,6 +51,11 @@
                       Connexion Utilisateur
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $viewName === "appUser/list" ? "active" : ""?>" href="<?= $router->generate('user-list') ?>">
+                      Utilisateurs
+                    </a>
+                </li>
             </ul>
         </div>
     </div>

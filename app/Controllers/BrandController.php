@@ -11,6 +11,7 @@ class BrandController extends CoreController
 {
   public function list()
   {
+
     // Récupérer les données grace au Model
     $brand = Brand::findAll();
 

@@ -6,7 +6,7 @@
     
     <h2>Ajouter un produit</h2>
 
-    <form action="" method="POST" class="mt-5">
+    <form action="" method="POST" class="col-3 m-auto">
         <div class="mb-3">
             <label for="name">Nom</label>
             <input type="text" class="form-control" id="name" name="name" placeholder="Nom du produit">

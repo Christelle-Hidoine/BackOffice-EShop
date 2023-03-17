@@ -11,7 +11,7 @@
     <button type="submit" class="btn btn-primary">Se connecter</button>
     </form>
     <div class="col-3 m-auto mt-3">   
-        <a href="<?= $router->generate('main-home') ?>" class="btn btn-primary float-center">
+        <a href="<?= $router->generate('main-home') ?>" class="btn btn-primary">
             Retour
         </a>
     </div> 

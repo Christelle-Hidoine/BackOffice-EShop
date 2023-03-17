@@ -16,6 +16,7 @@ class MainController extends CoreController
    */
   public function home()
   {
+    
     // Récupération des données grace au model
     $category = Category::findAll();
     $product   = Product::findAll();

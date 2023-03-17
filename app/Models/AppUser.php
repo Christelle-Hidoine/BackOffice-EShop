@@ -123,15 +123,13 @@ class AppUser extends CoreModel
     {
       $pdo = Database::getPDO();
 
-      $sql = "INSERT INTO `app_user` (`name`, `email`, `password`, `firstname`,`lastname`, `role`, `status`)
-              VALUES (:name, :email, :password, :firstname, :lastname, : role, :status)";
+      $sql = "INSERT INTO `app_user` (`email`, `password`, `firstname`,`lastname`, `role`, `status`)
+              VALUES (:email, :password, :firstname, :lastname, :role, :status)";
 
-      // On stocke notre requete préparée (attention à ce stade elle n'est pas encore executée !)
+      // On stocke notre requete préparée 
       $pdoStatement = $pdo->prepare($sql);
 
-      // Ensuite, je vais remplacer chaque "valeur" précédée d'un : par sa vraie valeur
-      // En quelque sorte, les :name, :subtitle etc.. sont juste des "emplacements" pour les valeurs
-      $pdoStatement->bindValue(":name",        $this->name,        PDO::PARAM_STR);
+      // remplacer chaque "valeur" précédée d'un : par sa vraie valeur
       $pdoStatement->bindValue(":email",       $this->email,       PDO::PARAM_STR);
       $pdoStatement->bindValue(":password",    $this->password,    PDO::PARAM_STR);
       $pdoStatement->bindValue(":firstname",   $this->firstname,   PDO::PARAM_STR);
@@ -172,7 +170,6 @@ class AppUser extends CoreModel
       $pdo = Database::getPDO();
 
       $sql = "UPDATE `app_user` SET 
-                `name`       = :name,
                 `email`      = :email, 
                 `password`   = :password,
                 `firstname`  = :firstname,
@@ -184,7 +181,6 @@ class AppUser extends CoreModel
 
       $pdoStatement = $pdo->prepare($sql);
 
-      $pdoStatement->bindValue(":name",        $this->name,        PDO::PARAM_STR);
       $pdoStatement->bindValue(":email",       $this->email,       PDO::PARAM_STR);
       $pdoStatement->bindValue(":password",    $this->password,    PDO::PARAM_STR);
       $pdoStatement->bindValue(":firstname",   $this->firstname,   PDO::PARAM_STR);
