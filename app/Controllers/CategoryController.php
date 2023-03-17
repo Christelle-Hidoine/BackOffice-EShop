@@ -8,8 +8,18 @@ use App\Models\Category;
 class CategoryController extends CoreController
 
 {
+  /**
+   * Method to display category's list
+   *
+   */
   public function list()
   {
+
+    // On utilise la méthode checkAuthorization() pour vérifier si le user a les droits (permissions) pour accéder à la page
+    // On doit lui passer en argument un array des roles authorisés pour cette page
+    // Ici, les rôles admin et catalog-manager auront les permissions
+    $this->checkAuthorization(['catalog-manager']);
+
     // Récupérer les données grace au Model
     $category = Category::findAll();
 

@@ -45,4 +45,39 @@ abstract class CoreController
         require_once __DIR__ . '/../views/' . $viewName . '.tpl.php';
         require_once __DIR__ . '/../views/layout/footer.tpl.php';
     }
+
+    /**
+     * Méthode ("helper" = méthode public) pour vérifier les autorisations des users via les controllers
+     *
+     * @param [array] $authorizedRoles
+     * @return void
+     */
+    protected function checkAuthorization($authorizedRoles)
+    {
+        // vérification si user connecté
+        if (isset($_SESSION['userId'])) {
+            // récupération du User via la $_SESSION
+            $user = $_SESSION['userObject'];
+
+            // vérification de son rôle
+            $role = $user->getRole();
+
+            // Vérification si son rôle permet d'accéder à la page demandée ()
+            if (in_array($role, $authorizedRoles)) {
+                // si son rôle le permet => ok : on retourne true
+                return true;
+            } else {
+                // sinon => ko : on renvoie une 403 "Forbidden"
+                // On envoie le code 403 dans le header
+                // Amélioration possible : créer un template 403 et rediriger vers cette page dédiée
+                http_response_code(403);
+                echo '403';
+                exit();
+            }
+        } else {
+            // si User pas connecté redirection vers page de connexion
+            header('Location : /user/connection');
+            exit();
+        }   
+    }
 }
