@@ -38,7 +38,7 @@ class Type extends CoreModel
         $pdoStatement = $pdo->query($sql);
 
         // un seul résultat => fetchObject
-        $type = $pdoStatement->fetchObject('App\Models\Type');
+        $type = $pdoStatement->fetchObject(Type::class);
 
         // retourner le résultat
         return $type;
@@ -54,7 +54,7 @@ class Type extends CoreModel
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `type`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, 'App\Models\Type');
+        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, Type::class);
 
         return $results;
     }

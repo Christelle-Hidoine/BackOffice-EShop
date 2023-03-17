@@ -16,10 +16,6 @@ class CategoryController extends CoreController
     // Les transmettre à la vue
     $this->show("category/list", ["category" => $category]);
 
-    // On peut aussi transmettre directement le tableau en argument : même résultat !
-      // $this->show( "category/list", [
-      //   "allCategories" => $allCategories
-      // ] );
   }
 
   // Page d'affichage du formulaire

@@ -27,12 +27,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                <a class="nav-link <?= $viewName === "type/list" ? "active" : ""?>" href="<?= $router->generate('type-list') ?>">
                       Types
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                <a class="nav-link <?= $viewName === "brand/list" ? "active" : ""?>" href="<?= $router->generate('brand-list') ?>">
                       Marques
                     </a>
                 </li>

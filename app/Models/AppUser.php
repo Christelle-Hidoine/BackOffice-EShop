@@ -83,7 +83,7 @@ class AppUser extends CoreModel
 
 
     /**
-     * Méthode qui récupère un email d'un utilisateur
+     * Méthode qui récupère les données d'un utilisateur selon son email
      *
      * @param [string] $email email du user
      * @return AppUser
@@ -91,24 +91,27 @@ class AppUser extends CoreModel
     public static function findByEmail($email)
     {
         $pdo = Database::getPDO();
-
         
-        $sql = "SELECT * FROM `app_user` WHERE `email` = '$email'";
+        // on prépare la requête avec un marqueur
+        $sql = "SELECT * FROM `app_user` WHERE `email` = :email";
 
-        $pdoStatement = $pdo->query($sql);
-    
+        $pdoStatement = $pdo->prepare($sql);
 
-        if ($pdoStatement->rowCount() > 0)
+        // si static function = on récupère la propriété elle-même = pas $this->email donc $email
+        $pdoStatement->execute([':email' => $email]);
+
+        $user = $pdoStatement->fetchObject(AppUser::class);
+
+        if ($user)
         {
-
-          return $pdoStatement->fetchObject(AppUser::class);
-
+          return $user;
         } else {
-
           return false;
-      }
-    }
+        }
 
+        // condition en ternaire
+        // return ($user) ? $user : false;
+    }
 
     /**
      * Méthode permettant d'ajouter un enregistrement dans la table app_user

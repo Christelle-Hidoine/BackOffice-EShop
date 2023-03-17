@@ -26,14 +26,14 @@
             </div>
             <div class="mb-3">
                 <label for="price" class="form-label">Prix</label>
-                <input type="text" class="form-control" id="price" name="price" placeholder="Ex : 45,90" aria-describedby="subtitleHelpBlock" value="<?= $product->getPrice() ?>" required>
+                <input type="text" class="form-control" id="price" name="price" placeholder="Ex: 45.90" aria-describedby="subtitleHelpBlock" value="<?= $product->getPrice() ?>" required>
                 <small id="subtitleHelpBlock" class="form-text text-muted">
                     Sera affiché sur la page d'accueil comme bouton devant l'image
                 </small>
             </div>
             <div class="mb-3">
                 <label for="rate" class="form-label">Note</label>
-                <select  name="rate" id="rate" value="<?= $product->getRate() ?>" required>
+                <select class='form-control' name="rate" id="rate" value="<?= $product->getRate() ?>" required>
                     <?php for ($i = 1; $i <= 5; $i++) : ?>
                     <option value="<?= $i ?>"><?= $i ?></option>
                     <?php endfor; ?>
@@ -47,7 +47,7 @@
                     <?php endfor; ?>
                 </select>
                 <small id="subtitleHelpBlock" class="form-text text-muted">
-                    1 = disponible, 2 = pas disponible
+                    1 = Actif, 2 = Inactif
                 </small>
             </div>
             <div class="mb-3">

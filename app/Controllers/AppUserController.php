@@ -33,7 +33,7 @@ class AppUserController extends CoreController
 
     {
         $email    = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
-        $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
+        $password = filter_input(INPUT_POST, "password");
 
 
         $errorList = [];
@@ -56,27 +56,30 @@ class AppUserController extends CoreController
             // on vérifie qu'il correspond à notre BDD = return true ou false
             if ($appUserEmail === false) {
                 // si false = message d'erreur sur l'email
-                echo "Votre email n'est pas enregistré";
+                echo "Email et/ou mot de passe incorrect";
             } else {
                 // on le compare au password saisi dans le formulaire
                 $appUserPassword = $appUserEmail->getPassword();
 
                 if ($appUserPassword !== $password) {
                     // si différent = message d'erreur sur le mdp
-                    echo "Votre mot de passe est incorrect";
+                    echo "Email et/ou mot de passe incorrect";
                     // sinon affiche message succès 
                 } else {
-                    echo '<script type="text/javascript">';
-                    echo ' alert("Vous êtes connectés")';
-                    echo '</script>';
+                    
+                    $_SESSION['userId'] = $appUserEmail->getId();
+                    $_SESSION['userObject'] = $appUserEmail;
+                    $_SESSION['userName'] = $appUserEmail->getFirstName();
+
+                    echo "Bravo {$_SESSION['userName']}, Vous êtes bien connecté(e)";
                 }
             }
         } else {
             
-            // On affiche chaque erreurs rencontrée
+            // On affiche les erreurs
             foreach($errorList as $error)
             {
-                echo $error . "<br>";
+                echo "<p>{$error}</p>";
             }
         }
     }

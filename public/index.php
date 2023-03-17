@@ -9,10 +9,17 @@
 require_once '../vendor/autoload.php';
 
 use App\Controllers\AppUserController;
+use App\Controllers\BrandController;
 use App\Controllers\MainController;
 use App\Controllers\CategoryController;
 use App\Controllers\ProductController;
+use App\Controllers\TypeController;
 
+/* -------------------
+--- SESSION STORAGE---
+--------------------*/
+
+session_start();
 
 /* ------------
 --- ROUTAGE ---
@@ -47,7 +54,7 @@ if (array_key_exists('BASE_URI', $_SERVER)) {
 //      - "NomDuController-NomDeLaMéthode"
 //      - ainsi pour la route /, méthode "home" du MainController => "main-home"
 
-// Routes Home ==========================================================================
+// ----------------------------------------Routes HOME ----------------------------------------
 
 $router->map(
   'GET',
@@ -59,7 +66,7 @@ $router->map(
   'main-home'
 );
 
-// Routes Category ==========================================================================
+// ---------------------------------------- Routes CATEGORY  ----------------------------------------
 
 $router->map(
   'GET',
@@ -126,7 +133,7 @@ $router->map(
   'category-delete'
 );
 
-// Routes Produits==========================================================================
+// ---------------------------------------- Routes PRODUCT  ----------------------------------------
 
 // Liste des produits
 $router->map(
@@ -194,7 +201,32 @@ $router->map(
   'product-delete'
 );
 
-// Routes AppUser==========================================================================
+// ---------------------------------------- Routes BRAND -------------------------------------------
+
+// Liste des Marques
+$router->map(
+  'GET',
+  '/brand/list',
+  [
+    'method' => 'list',
+    'controller' => BrandController::class 
+  ],
+  'brand-list'
+);
+// ---------------------------------------- Routes TYPE  -------------------------------------------
+
+// Liste des Types
+$router->map(
+  'GET',
+  '/type/list',
+  [
+    'method' => 'list',
+    'controller' => TypeController::class 
+  ],
+  'type-list'
+);
+
+// ---------------------------------------- Routes APPUSER  ----------------------------------------
 
 // Affiche Connexion User
 $router->map(
