@@ -39,6 +39,7 @@ abstract class CoreController
         // Astuce pour voir les variables disponibles dans nos vues
         // A ne pas laisser en PROD !
         dump(get_defined_vars());
+        dump($_SESSION);
 
         // $viewData est disponible dans chaque fichier de vue
         require_once __DIR__ . '/../views/layout/header.tpl.php';

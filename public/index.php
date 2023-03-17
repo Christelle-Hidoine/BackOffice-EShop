@@ -306,6 +306,17 @@ $router->map(
   'user-delete'
 );
 
+// Deconnecte le User
+$router->map(
+  'GET',
+  '/user/logout',
+  [
+    'method' => 'logout',
+    'controller' => AppUserController::class
+  ],
+  'user-logout'
+);
+
 /* -------------
 --- DISPATCH ---
 --------------*/
