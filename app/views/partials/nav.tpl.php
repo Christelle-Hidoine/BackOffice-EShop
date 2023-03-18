@@ -9,7 +9,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                   <a class="nav-link <?= $viewName === "main/home" ? "active" : ""?>" href="<?= $router->generate('main-home') ?>">
@@ -47,21 +47,23 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <?= $viewName === "appUser/connection" ? "active" : ""?>" href="<?= $router->generate('user-connection') ?>">
-                      Connexion Utilisateur
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link <?= $viewName === "appUser/list" ? "active" : ""?>" href="<?= $router->generate('user-list') ?>">
                       Utilisateurs
                     </a>
                 </li>
-                <li class="nav-item float-end">
-                    <a class="nav-link" href=" <?= $router->generate('user-logout') ?>">
-                      Déconnexion
-                    </a>
-                </li>
             </ul>
+            <div class="d-flex">
+              <div class="nav-item me-auto">
+                <a class="nav-link <?= $viewName === "appUser/connection" ? "active" : ""?>" href="<?= $router->generate('user-connection') ?>">
+                  <button type="button" class="btn btn-primary">Login</button>
+                </a>
+              </div>
+              <div class="nav-item me-auto">
+                <a class="nav-link" href=" <?= $router->generate('user-logout') ?>">
+                  <button type="button" class="btn btn-primary">Logout</button>
+                </a>
+              </div>
+            </div>
         </div>
     </div>
 </nav>

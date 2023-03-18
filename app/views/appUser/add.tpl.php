@@ -1,3 +1,6 @@
+
+ 
+
 <div class="container my-4">
   <a href="<?= $router->generate('user-list') ?>" class="btn btn-success float-end">
     Retour
@@ -5,8 +8,17 @@
 
   <h2>Ajouter un utilisateur</h2>
   
-  <!-- affichage en haut du formulaire de la liste des erreurs = TODO -->
-  <form action="<?= $router->generate('user-create'); ?>" method="POST" class="col-3 m-auto">
+  
+  <!-- affichage en haut du formulaire de la liste des erreurs  -->
+  <form action="" method="POST" class="col-3 m-auto">
+    <?php 
+    if (isset($error)) : 
+      foreach($error as $message) :?>
+      <div class="alert alert-warning" role="alert">
+        <?= $message ?>
+      </div>
+    <?php endforeach; endif; ?>
+
     <div class="mb-3">
       <label for="lastname" class="form-label">
             Nom
@@ -36,8 +48,8 @@
             Rôle
         </label>
             <select class='form-control' name="role" id="role">
-                <option value="catalog-manager">catalog-manager</option>
-                <option value="admin">admin</option>
+              <option value="catalog-manager">catalog-manager</option>
+              <option value="admin">admin</option>
             </select>
         </label>
     </div>
@@ -45,10 +57,10 @@
         <label for="status" class="form-label">
             Statut
         </label>
-        <select class='form-control' name="status" id="status">
-                <option value="1">actif</option>
-                <option value="2">désactivé</option>
-            </select>
+          <select class='form-control' name="status" id="status">
+              <option value="1">actif</option>
+              <option value="2">désactivé</option>
+          </select>
     </div>
 
     <input type="hidden" name="token" value="">

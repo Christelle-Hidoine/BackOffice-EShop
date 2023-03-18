@@ -76,7 +76,6 @@ abstract class CoreController
                 exit();
             }
             // si User pas connecté redirection vers page de connexion
-            // ATTENTION REDIRECTION NE FONCTIONNE PAS SI PAS CONNECTE ! retourne 403 et reste sur page list
         } else { 
             header("Location: /user/connection");
             exit();
