@@ -251,4 +251,33 @@ class CategoryController extends CoreController
       echo "Echec de la suppression de la catégorie";
     }
   }
+
+  public function homeList()
+  {
+    $homeOrder = Category::findAllHomepage();
+
+    $categoryByHomeOrder = [];
+        foreach ($homeOrder as $category) {
+            $categoryByHomeOrder[$category->getHomeOrder()] = $category;
+        }
+    $this->show('category/home', ['homeOrder' => $homeOrder, 'categoryByHomeOrder' => $categoryByHomeOrder]);
+  }
+
+  public function homeSelect()
+  {
+    // On récupère du form un tableau emplacement['key' => 'home_order à modifier']
+    $emplacement = $_POST["emplacement"];
+    dump($emplacement);
+
+        // on parcourt le tableau récupéré sur le form avec les home_order à modifier
+        foreach ($emplacement as $home_order) {
+            // On récupère la liste de toutes les category selon leur home_order
+            $categoryByHomeOrder = Category::findByHomeOrder($home_order);
+            dump($categoryByHomeOrder);
+        }
+          foreach ($categoryByHomeOrder as $category)
+        {
+          dump($category);
+        }      
+}
 }

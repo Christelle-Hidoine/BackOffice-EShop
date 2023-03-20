@@ -61,21 +61,44 @@ $router->map(
   '/',
   [
     'method' => 'home',
-    'controller' => MainController::class // On indique le FQCN de la classe
+    'controller' => MainController::class
   ],
   'main-home'
 );
 
 // ---------------------------------------- Routes CATEGORY  ----------------------------------------
 
+// Liste les catégories
 $router->map(
   'GET',
   '/category/list',
   [
     'method' => 'list',
-    'controller' => CategoryController::class // On indique le FQCN de la classe
+    'controller' => CategoryController::class 
   ],
   'category-list'
+);
+
+// Affiche sélection Catégorie Home
+$router->map(
+  'GET',
+  '/category/home',
+  [
+    'method' => 'homeList',
+    'controller' => CategoryController::class
+  ],
+  'category-home'
+);
+
+// Traite sélection Catégorie Home
+$router->map(
+  'POST',
+  '/category/home',
+  [
+    'method' => 'homeSelect',
+    'controller' => CategoryController::class
+  ],
+  'category-homeSelect'
 );
 
 // Affiche Ajout Catégorie
@@ -84,7 +107,7 @@ $router->map(
   '/category/add',
   [
     'method' => 'add',
-    'controller' => CategoryController::class // On indique le FQCN de la classe
+    'controller' => CategoryController::class 
   ],
   'category-add'
 );
@@ -95,7 +118,7 @@ $router->map(
   '/category/add',
   [
     'method' => 'create',
-    'controller' => CategoryController::class // On indique le FQCN de la classe
+    'controller' => CategoryController::class 
   ],
   'category-create'
 );

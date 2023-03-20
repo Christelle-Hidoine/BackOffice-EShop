@@ -42,7 +42,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link <?= $viewName === "category/home" ? "active" : ""?>" href="<?= $router->generate('category-home') ?>">
                       Sélection Accueil
                     </a>
                 </li>

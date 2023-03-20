@@ -141,6 +141,29 @@ class Category extends CoreModel
     }
 
     /**
+     * Méthode pour récupérer une catégorie selon son $home_order
+     *
+     * @return void
+     */
+    public static function findByHomeOrder($home_order)
+    {
+      $pdo = Database::getPDO();
+      $sql = 'SELECT * FROM category WHERE `home_order` = :home_order';
+
+      // préparer notre requête
+      $pdoStatement = $pdo->prepare($sql);
+
+      // remplacer les placeholders/étiquettes
+      $pdoStatement->bindValue(":home_order", $home_order, PDO::PARAM_INT);
+
+      // Executer la requete
+      $pdoStatement->execute();
+
+      $results      = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+      return $results;
+    }
+
+    /**
      * Récupérer les 5 catégories mises en avant sur la home
      *
      * @return Category[]
