@@ -13,8 +13,6 @@ class AppUserController extends CoreController
      */
     public function list()
     {
-        $this->checkAuthorization(['admin']);
-
         $users = AppUser::findAll();
 
         $this->show("appUser/list", ['users' => $users]);
@@ -26,8 +24,7 @@ class AppUserController extends CoreController
      */
     public function add()
     {
-        $this->checkAuthorization(['admin']);
-        $this->show("appUser/add");
+        $this->show("appUser/add", ['user' => new AppUser]);
     }
 
     /**
@@ -36,9 +33,6 @@ class AppUserController extends CoreController
      */
     public function create()
     {
-        $this->checkAuthorization(['admin']);
-        // dump( $_POST );
-
         $firstname = filter_input(INPUT_POST, "firstname", FILTER_SANITIZE_SPECIAL_CHARS);
         $lastname = filter_input(INPUT_POST, "lastname", FILTER_SANITIZE_SPECIAL_CHARS);
         $email  = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
@@ -93,10 +87,19 @@ class AppUserController extends CoreController
                     $this->show("appUser/add", ['error' => $message]);
                 }
             } else { 
+                $user = new AppUser();
+                $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
+
+                $user->setFirstName($firstname);
+                $user->setLastName($lastname);
+                $user->setEmail($email);
+                $user->setPassword($passwordHashed);
+                $user->setRole($role);
+                $user->setStatus($status);
                 // Sinon, on affiche les erreurs
                 // On affiche chaque erreurs rencontrée et renvoi vers la page formulaire create
                 $message = $errorList;
-                $this->show("appUser/add", ['error' => $message]);
+                $this->show("appUser/add", ['error' => $message, 'user' => $user]);
             } 
             // si le mot de passe n'est pas suffisamment sécurisé = message d'erreur  
         // } else {
@@ -119,9 +122,7 @@ class AppUserController extends CoreController
      *
      */
     public function check()
-
     {
-
         $email    = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
         $password = filter_input(INPUT_POST, "password");
 
@@ -162,7 +163,6 @@ class AppUserController extends CoreController
                 } else {
                     // si mdp différent = message d'erreur sur le mdp
                     echo "Email et/ou mot de passe incorrect";
-                    
                 }
             } else {
                 // si user n'existe pas = message d'erreur
@@ -176,6 +176,95 @@ class AppUserController extends CoreController
             }
             dump($error);
         }
+    }
+
+    /**
+     * Méthode pour afficher la page de mise à jour des users
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function edit($id)
+    { 
+        $user = AppUser::find($id);
+
+        $this->show("appUser/edit", ["user" => $user]);
+    }
+
+    // Page de traitement du formulaire d'édition
+    public function update($id)
+    {    
+        $firstname = filter_input(INPUT_POST, "firstname", FILTER_SANITIZE_SPECIAL_CHARS);
+        $lastname = filter_input(INPUT_POST, "lastname", FILTER_SANITIZE_SPECIAL_CHARS);
+        $email  = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
+        $password = filter_input(INPUT_POST, "password");
+        $role = filter_input(INPUT_POST, "role");
+        $status = filter_input(INPUT_POST, "status", FILTER_VALIDATE_INT);
+
+        // Maintenant on vérifie les valeurs de ces variables "filtrées"
+        // Pour ça on créé un tableau qui va contenir toutes les erreurs rencontrées
+        $errorList = [];
+
+        if (empty($firstname)) {
+            $errorList[] = 'Merci de compléter le champs prénom';
+        }
+
+        if (empty($lastname)) {
+            $errorList[] = 'Merci de compléter le champs nom';
+        }
+
+        if (empty($email)) {
+            $errorList[] = 'Merci de compléter l\'email';
+        }
+
+        if (empty($password)) {
+            $errorList[] = 'Merci d\'indiquer un mot de passe';
+        }
+
+        // Si je n'ai rencontré aucune erreur, $errorList est vide
+        if(empty($errorList))
+        {
+            // On commence par récupérer la catégorie actuellement en BDD
+            $user = AppUser::find($id);
+
+            $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
+
+            // On modifie ses propriétés grace aux setters      
+            $user->setFirstName($firstname);
+            $user->setLastName($lastname);
+            $user->setEmail($email);
+            $user->setPassword($passwordHashed);
+            $user->setRole($role);
+            $user->setStatus($status);
+
+
+            if ($user->save()) {
+                // Si la sauvegarde a fonctionné
+                header("Location: /user/list");
+                exit;
+            } else {
+                $message = "Echec de la sauvegarde en BDD";
+                $this->show("appUser/add", ['error' => $message]);
+            }
+        } else { 
+
+            $user = AppUser::find($id);
+
+            $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
+
+            // On modifie ses propriétés grace aux setters      
+            $user->setFirstName($firstname);
+            $user->setLastName($lastname);
+            $user->setEmail($email);
+            $user->setPassword($passwordHashed);
+            $user->setRole($role);
+            $user->setStatus($status);
+
+            // Sinon, on affiche les erreurs
+            // On affiche chaque erreur rencontrée et renvoi vers la page formulaire create
+            $message = $errorList;
+            $this->show("appUser/add", ['error' => $message, 'user' => $user]);
+        } 
     }
 
     public function logout()
@@ -233,4 +322,18 @@ class AppUserController extends CoreController
         return $message;
     }
 
+    public function delete($id)
+  {
+    $user = AppUser::find($id);  
+
+    if( $user->delete() )
+    {
+      header( "Location: /user/list" );
+      exit;
+    }
+    else
+    {
+      echo "Echec de la suppression de l'utilisateur";
+    }
+  }
 }

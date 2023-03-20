@@ -6,7 +6,7 @@
     Retour
   </a>
 
-  <h2>Ajouter un utilisateur</h2>
+  <h2>Modifier un utilisateur</h2>
   
   
   <!-- affichage en haut du formulaire de la liste des erreurs  -->
@@ -17,7 +17,7 @@
       <div class="alert alert-warning" role="alert">
         <?= $message ?>
       </div>
-    <?php endforeach; endif; ?> 
+    <?php endforeach; endif; ?>
 
     <div class="mb-3">
       <label for="lastname" class="form-label">
@@ -29,27 +29,27 @@
       <label for="firstname" class="form-label">
             Prénom
       </label>
-      <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom de l'utilisateur" value="<?= $user->getFirstName() ?>" required>
+      <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Prénom de l'utilisateur" value="<?= $user->getFirstName() ?>">
     </div>
     <div class="mb-3">
       <label for="email" class="form-label">
             Email
       </label>
-      <input type="email" class="form-control" id="email" name="email" placeholder="adresse email" value="<?= $user->getEmail() ?>" required>
+      <input type="email" class="form-control" id="email" name="email" placeholder="adresse email" value="<?= $user->getEmail() ?>">
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">
             Password
         </label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="mot de passe" required>
+        <input type="password" class="form-control" id="password" name="password" placeholder="mot de passe" value="">
     </div>
     <div class="mb-3">
         <label for="role" class="form-label">
             Rôle
         </label>
-            <select class='form-control' name="role" id="role" value="<?= $user->getRole() ?>">
-              <option value="catalog-manager">catalog-manager</option>
-              <option value="admin">admin</option>
+            <select class="form-control" name="role" id="role" required>
+                <option value="catalog-manager" <?= $user->getRole() === 'catalog-manager' ? 'selected' : '' ?>>catalog-manager</option>
+                <option value="admin" <?= $user->getRole() === 'admin' ? 'selected' : '' ?>>admin</option>
             </select>
         </label>
     </div>
@@ -57,11 +57,12 @@
         <label for="status" class="form-label">
             Statut
         </label>
-          <select class='form-control' name="status" id="status" value="<?= $user->getStatus() ?>">
-              <option value="<?= $user->getStatus() ? $user->getStatus() : 1 ?>">Actif</option>
-              <option value="<?= $user->getStatus() ? $user->getStatus() : 2 ?>">Désactivé/Bloqué</option>
-          </select>
+            <select class="form-control" name="status" id="status" required>
+                <option value="1" <?= $user->getStatus() === "1" ? 'selected' : '' ?>>Actif</option>
+                <option value="2" <?= $user->getStatus() === "2" ? 'selected' : '' ?>>Désactivé/Bloqué</option>
+            </select>
     </div>
+
     <input type="hidden" name="token" value="">
 
     <div class="d-grid gap-2">

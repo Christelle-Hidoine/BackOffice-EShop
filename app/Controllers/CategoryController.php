@@ -30,15 +30,12 @@ class CategoryController extends CoreController
   // Page d'affichage du formulaire
   public function add()
   {
-    $this->checkAuthorization(['admin', 'catalog-manager']);
     $this->show("category/add");
   }
 
   // Page de traitement du formulaire
   public function create()
   {
-    $this->checkAuthorization(['admin', 'catalog-manager']);
-    // dump( $_POST );
 
     // On reçoit les données du formulaire
     // DOC : https://www.php.net/manual/fr/function.filter-input.php
@@ -105,10 +102,9 @@ class CategoryController extends CoreController
     }
   }
 
-  // Page d'affichage du formulaire d'ajout
+  // Page d'affichage du formulaire d'update
   public function edit($id)
-  { 
-    $this->checkAuthorization(['admin', 'catalog-manager']);   
+  {   
     $categoryObject = Category::find($id);
 
     // dump($categoryObject);
@@ -243,7 +239,6 @@ class CategoryController extends CoreController
 
   public function delete($id)
   {
-    $this->checkAuthorization(['admin', 'catalog-manager']);
     $categoryObject = Category::find($id);  
 
     if( $categoryObject->delete() )

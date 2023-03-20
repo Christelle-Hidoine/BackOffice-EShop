@@ -56,10 +56,12 @@ class AppUser extends CoreModel
             FROM app_user
             WHERE id = ' . $id;
 
-        // exécuter notre requête
-        $pdoStatement = $pdo->query($sql);
+        $pdoStatement = $pdo->prepare($sql);
 
-        // un seul résultat => fetchObject
+        $pdoStatement->bindValue(":id", $id, PDO::PARAM_INT);
+
+        $pdoStatement->execute();
+
         $result = $pdoStatement->fetchObject(AppUser::class);
 
         // retourner le résultat
@@ -191,14 +193,7 @@ class AppUser extends CoreModel
 
       $pdoStatement->execute();
 
-      if($pdoStatement->rowCount() === 1)
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
+      return $pdoStatement->rowCount() === 1;
     }
 
     /**
