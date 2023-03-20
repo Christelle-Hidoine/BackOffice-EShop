@@ -4,6 +4,41 @@ namespace App\Controllers;
 
 abstract class CoreController
 {
+
+    public function __construct()
+    {
+        // on définit une liste des permissions ACL (access control list)
+        $acl = [
+            'user-list' => ['admin', 'catalog-manager'],
+            'user-add' => ['admin'],
+            'user-create' => ['admin'],
+            'user-edit' => ['admin'],
+            'user-update' => ['admin'],
+            'user-delete' => ['admin']
+        ];
+
+        // on vérifie si l'url demandée (nom de la route) nécessite une autorisation ($acl)
+        // On a donc besoin de la route actuelle : $match['name']
+        // ==> On doit donc récupérer $match
+        global $match;
+        // On récupère le nom de la route
+        $routeName = $match['name'];
+        
+        // si la route existe dans $acl 
+        if (array_key_exists($routeName,$acl))
+        {
+            // les roles autorisés sont les valeurs de chaque clé ($match['name]) de $acl
+            $authorizedRoles = $acl[$routeName];
+
+            // si oui = checkAuthorization();
+            $this->checkAuthorization($authorizedRoles);
+        }
+        
+        // else ? ==> pas besoin de else car si on ne rentre pas dans le if, ca signifie 
+        // que la route n'est pas dans la liste $acl des routes à vérifier
+        // cad toute le monde peut accéder librement et directement à cete route
+    }
+
     /**
      * Méthode permettant d'afficher du code HTML en se basant sur les views
      *
@@ -72,7 +107,7 @@ abstract class CoreController
                 // On envoie le code 403 dans le header
                 // Amélioration possible : créer un template 403 et rediriger vers cette page dédiée
                 http_response_code(403);
-                echo '403';
+                $this->show('error/err403');
                 exit();
             }
             // si User pas connecté redirection vers page de connexion

@@ -42,7 +42,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/category/home">
+                    <a class="nav-link" href="#">
                       Sélection Accueil
                     </a>
                 </li>

@@ -32,10 +32,14 @@
                   <?= $user->getRole() ?>
                 </td>
                 <td>
-                  <?= $user->getStatus() ?>
+                    <?php if (($user->getStatus()) == 1) {
+                        echo "actif";
+                    } else {
+                        echo "désactivé/bloqué";
+                    } ?>
                 </td>
                 <td class="text-end">
-                    <a href="#" class="btn btn-sm btn-warning">
+                    <a href="<?= $router->generate('user-edit', ['id' => $user->getId()]) ?>" class="btn btn-sm btn-warning">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </a>
                     <!-- Example single danger button -->
@@ -45,7 +49,7 @@
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="<?= $router->generate('user-delete', ['id' => $user->getId()]) ?>">
                               Oui, je veux supprimer
                             </a>
                             <a class="dropdown-item" href="#" data-toggle="dropdown">

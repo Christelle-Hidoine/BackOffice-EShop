@@ -226,7 +226,7 @@ $router->map(
   'type-list'
 );
 
-// ---------------------------------------- Routes APPUSER  ----------------------------------------
+// ---------------------------------------- Routes APP_USER  ----------------------------------------
 
 // Liste des Users
 $router->map(
@@ -282,6 +282,17 @@ $router->map(
     'controller' => AppUserController::class
   ],
   'user-create'
+);
+
+// Affiche Modifie User
+$router->map(
+  'GET',
+  '/user/[i:id]/update',
+  [
+    'method' => 'edit',
+    'controller' => AppUserController::class
+  ],
+  'user-edit'
 );
 
 // Traite Modifie User

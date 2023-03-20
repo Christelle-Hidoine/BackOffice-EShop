@@ -37,7 +37,6 @@ class ProductController extends CoreController
    */
   public function add()
   {
-    $this->checkAuthorization(['admin', 'catalog-manager']);
     $productList = Product::findAll();
     $brandList = Brand::findAll();
     $categoryList = Category::findAll();
@@ -51,7 +50,6 @@ class ProductController extends CoreController
 
   public function create()
   {
-    $this->checkAuthorization(['admin', 'catalog-manager']);
     // On tente de récupèrer les données venant du formulaire.
     $name        = filter_input(INPUT_POST, 'name',        FILTER_SANITIZE_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -144,7 +142,6 @@ class ProductController extends CoreController
   // Page d'affichage du formulaire d'ajout
   public function edit($id)
   {    
-    $this->checkAuthorization(['admin', 'catalog-manager']);
     $product = Product::find($id);
     $productList = Product::findAll();
     $brandList = Brand::findAll();
@@ -174,7 +171,6 @@ class ProductController extends CoreController
   // Page de traitement du formulaire d'édition
   public function update($id)
   {    
-    $this->checkAuthorization(['admin', 'catalog-manager']);
 
     $name        = filter_input(INPUT_POST, 'name',        FILTER_SANITIZE_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -265,7 +261,6 @@ class ProductController extends CoreController
 
   public function delete($id)
   {
-    $this->checkAuthorization(['admin', 'catalog-manager']);
     $product = Product::find($id);  
 
     if( $product->delete() )
