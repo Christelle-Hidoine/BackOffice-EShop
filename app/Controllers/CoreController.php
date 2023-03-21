@@ -36,6 +36,37 @@ abstract class CoreController
         // else ? ==> pas besoin de else car si on ne rentre pas dans le if, ca signifie 
         // que la route n'est pas dans la liste $acl des routes à vérifier
         // cad toute le monde peut accéder librement et directement à cete route
+
+        /*
+        * Gestion du CSRF : exemple sur le form user/add
+        */ 
+        $csrfTokenToCheck = [
+            'user-create',
+        ];
+
+
+        // Si la route nécessite le check CSRF
+        if (in_array($routeName, $csrfTokenToCheck)) {
+            // On récupère le token en POST
+            $postToken = isset($_POST['token']) ? $_POST['token'] : '';
+
+            // On récupère le token de la session
+            $sessionToken = isset($_SESSION['token']) ? $_SESSION['token'] : '';
+
+            // On lève une erreur 403 s'ils sont vides ou pas égaux
+            if ($postToken !== $sessionToken || empty($postToken)) {
+                // On affiche une erreur 403
+                // => on envoie le header "403 Forbidden"
+                http_response_code(403);
+                // Puis on affiche la (nouvelle) page d'erreur 403
+                $this->show('error/err403');
+                // Enfin on arrête le script pour que la page demandée ne s'affiche pas
+                exit();
+            } else {
+                // Sinon RAS, on supprime juste le token en session
+                unset($_SESSION['token']);
+            }
+        }
     }
 
     /**
