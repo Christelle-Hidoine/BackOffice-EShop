@@ -3,6 +3,13 @@
         Bienvenue dans le backOffice <strong>Dans les shoe</strong>...
     </p>
 
+    <?php 
+    if (isset($message)) : ?>
+      <div class="alert alert-success" role="alert">
+        <?= $message ?>
+      </div>
+    <?php endif; ?>
+
     <div class="row mt-5">
         <div class="col-12 col-md-6">
             <div class="card text-white mb-3">

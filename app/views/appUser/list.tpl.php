@@ -5,6 +5,13 @@
 
     <h2>Liste des utilisateurs</h2>
 
+    <?php 
+    if (isset($error)) : ?>
+      <div class="alert alert-warning" role="alert">
+        <?= $error ?>
+      </div>
+    <?php endif; ?>
+
     <table class="table table-hover mt-4">
         <thead>
             <tr>

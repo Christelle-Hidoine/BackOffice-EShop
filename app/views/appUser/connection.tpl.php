@@ -1,8 +1,25 @@
 <div class="container my-4">
+
+    <?php       
+    if (isset($error)) : ?>
+      <div class="alert alert-warning" role="alert">
+        <?= $error ?>
+      </div>
+    <?php endif; ?> 
+
+    <?php       
+    if (isset($errorList)) : 
+        foreach ($errorList as $error) :?>
+        <div class="alert alert-warning" role="alert">
+            <?= $error ?>
+        </div>
+        <?php endforeach;
+    endif; ?> 
+
     <form action="" method="POST" class="col-3 m-auto">
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" placeholder="adresse email" aria-describedby="emailHelp">
+        <input type="email" class="form-control" id="email" name="email" placeholder="adresse email" value="<?= $user->getEmail() ?>" aria-describedby="emailHelp">
     </div>
     <div class="mb-3">
         <label for="password" class="form-label">Password</label>

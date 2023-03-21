@@ -148,7 +148,7 @@ class Category extends CoreModel
     public static function findByHomeOrder($home_order)
     {
       $pdo = Database::getPDO();
-      $sql = 'SELECT * FROM category WHERE `home_order` = :home_order';
+      $sql = 'SELECT `id`, `home_order` FROM category WHERE `home_order` = :home_order';
 
       // préparer notre requête
       $pdoStatement = $pdo->prepare($sql);

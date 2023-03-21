@@ -1,5 +1,5 @@
 <div class="container my-4">
-    <a href="#" class="btn btn-success float-end">
+    <a href="<?= $router->generate('type-add') ?>" class="btn btn-success float-end">
       Ajouter
     </a>
 
@@ -15,16 +15,16 @@
         </thead>
         <tbody>
 
-          <?php foreach($type as $typeObject) : ?>
+          <?php foreach($types as $type) : ?>
             <tr>
                 <th scope="row">
-                  <?= $typeObject->getId() ?>
+                  <?= $type->getId() ?>
                 </th>
                 <td>
-                  <?= $typeObject->getName() ?>
+                  <?= $type->getName() ?>
                 </td>
                 <td class="text-end">
-                    <a href="#" class="btn btn-sm btn-warning">
+                    <a href="<?= $router->generate('type-edit', ['id' => $type->getId()]) ?>" class="btn btn-sm btn-warning">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </a>
                     <!-- Example single danger button -->
@@ -34,7 +34,7 @@
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="<?= $router->generate('type-delete', ['id' => $type->getId()]) ?>">
                               Oui, je veux supprimer
                             </a>
                             <a class="dropdown-item" href="#" data-toggle="dropdown">

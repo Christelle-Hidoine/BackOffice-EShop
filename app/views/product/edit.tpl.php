@@ -3,7 +3,16 @@
 ?>
 <div class="container my-4">
         <a href="<?= $router->generate('product-list') ?>" class="btn btn-success float-end">Retour</a>
+
         <h2>Modifier un produit</h2>
+
+        <?php 
+        if (isset($error)) : 
+            foreach($error as $message) :?>
+            <div class="alert alert-warning" role="alert">
+            <?= $message ?>
+            </div>
+        <?php endforeach; endif; ?>         
         
         <form action="<?= $router->generate('product-edit', ['id' => $product->getId()]); ?>" method="POST" class="col-5 m-auto">
         <div class="mb-3">
@@ -16,7 +25,7 @@
             </div>
             <div class="mb-3">
                 <label for="picture" class="form-label">Image</label>
-                <input type="text" class="form-control" id="picture" name="picture" placeholder="image jpg, gif, svg, png" aria-describedby="pictureHelpBlock" value="<?= $product->getPicture() ?>"required>
+                <input type="text" class="form-control" id="picture" name="picture" placeholder="image jpg, gif, svg, png" aria-describedby="pictureHelpBlock" value="" required>
                 <small id="pictureHelpBlock" class="form-text text-muted">
                     URL relative d'une image (jpg, gif, svg ou png) fournie sur <a href="https://benoclock.github.io/S06-images/" target="_blank">cette page</a>
                 </small>
@@ -48,8 +57,8 @@
                 <label for="category_id" class="form-label">Catégorie</label>
                 <select class='form-control' name="category" id="category" value="">
                     <option value="<?=$product->getCategoryId() ?>"><?= $categoryListById[$product->getCategoryId()]->getName() ?></option>
-                    <?php foreach ($categoryList as $category): ?>
-                    <option value="<?=$category->getId() ?>"><?=$category->getName() ?></option>
+                    <?php foreach ($productList as $product): ?>
+                    <option value="<?=$product->getCategoryId() ?>"><?=$categoryListById[$product->getCategoryId()]->getName() ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>

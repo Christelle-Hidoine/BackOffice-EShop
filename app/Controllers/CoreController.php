@@ -4,17 +4,16 @@ namespace App\Controllers;
 
 abstract class CoreController
 {
-
     public function __construct()
     {
         // on définit une liste des permissions ACL (access control list)
         $acl = [
-            'user-list' => ['admin', 'catalog-manager'],
+            'user-list' => ['admin'],
             'user-add' => ['admin'],
             'user-create' => ['admin'],
             'user-edit' => ['admin'],
             'user-update' => ['admin'],
-            'user-delete' => ['admin']
+            'user-delete' => ['admin'],
         ];
 
         // on vérifie si l'url demandée (nom de la route) nécessite une autorisation ($acl)
@@ -40,10 +39,10 @@ abstract class CoreController
     }
 
     /**
-     * Méthode permettant d'afficher du code HTML en se basant sur les views
+     * Method to display templates by their names and transfer data to these views
      *
-     * @param string $viewName Nom du fichier de vue
-     * @param array $viewData Tableau des données à transmettre aux vues
+     * @param string $viewName Template name
+     * @param array $viewData Array with data
      * @return void
      */
     protected function show(string $viewName, $viewData = [])
@@ -83,7 +82,7 @@ abstract class CoreController
     }
 
     /**
-     * Méthode ("helper" = méthode public) pour vérifier les autorisations des users via les controllers
+     * Method ("helper" = public method) to check users' authorization by controllers
      *
      * @param [array] $authorizedRoles
      * @return void

@@ -16,19 +16,19 @@
         </thead>
         <tbody>
 
-          <?php foreach($category as $categoryObject) : ?>
+          <?php foreach($category as $categoryElement) : ?>
             <tr>
                 <th scope="row">
-                  <?= $categoryObject->getId() ?>
+                  <?= $categoryElement->getId() ?>
                 </th>
                 <td>
-                  <?= $categoryObject->getName() ?>
+                  <?= $categoryElement->getName() ?>
                 </td>
                 <td>
-                  <?= $categoryObject->getSubtitle() ?>
+                  <?= $categoryElement->getSubtitle() ?>
                 </td>
                 <td class="text-end">
-                    <a href="<?= $router->generate('category-edit', ['id' => $categoryObject->getId()]) ?>" class="btn btn-sm btn-warning">
+                    <a href="<?= $router->generate('category-edit', ['id' => $categoryElement->getId()]) ?>" class="btn btn-sm btn-warning">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </a>
                     <!-- Example single danger button -->
@@ -38,7 +38,7 @@
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="<?= $router->generate('category-delete', ['id' => $categoryObject->getId()]) ?>">
+                            <a class="dropdown-item" href="<?= $router->generate('category-delete', ['id' => $categoryElement->getId()]) ?>">
                               Oui, je veux supprimer
                             </a>
                             <a class="dropdown-item" href="#" data-toggle="dropdown">

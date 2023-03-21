@@ -15,6 +15,8 @@ use App\Controllers\CategoryController;
 use App\Controllers\ProductController;
 use App\Controllers\TypeController;
 
+use function PHPSTORM_META\type;
+
 /* -------------------
 --- SESSION STORAGE---
 --------------------*/
@@ -236,6 +238,61 @@ $router->map(
   ],
   'brand-list'
 );
+
+// Affiche Ajout Marque
+$router->map(
+  'GET',
+  '/brand/add',
+  [
+    'method' => 'add',
+    'controller' => BrandController::class
+  ],
+  'brand-add'
+);
+
+// Traiter Ajout Marque
+$router->map(
+  'POST',
+  '/brand/add',
+  [
+    'method' => 'createOrEdit',
+    'controller' => BrandController::class
+  ],
+  'brand-create'
+);
+
+// Afficher Modifie Marque
+$router->map(
+  'GET',
+  '/brand/add/[i:id]',
+  [
+    'method' => 'edit',
+    'controller' => BrandController::class
+  ],
+  'brand-edit'
+);
+
+// Traiter Modifie Marque
+$router->map(
+  'POST',
+  '/brand/add/[i:id]',
+  [
+    'method' => 'createOrEdit',
+    'controller' => BrandController::class
+  ],
+  'brand-update'
+);
+
+// Supprime la marque
+$router->map(
+  'GET',
+  '/brand/[i:id]/delete',
+  [
+    'method' => 'delete',
+    'controller' => BrandController::class
+  ],
+  'brand-delete'
+);
 // ---------------------------------------- Routes TYPE  -------------------------------------------
 
 // Liste des Types
@@ -247,6 +304,61 @@ $router->map(
     'controller' => TypeController::class 
   ],
   'type-list'
+);
+
+// Affiche Ajout Type
+$router->map(
+  'GET',
+  '/type/add',
+  [
+    'method' => 'add',
+    'controller' => TypeController::class
+  ],
+  'type-add'
+);
+
+// Traiter Ajout Type
+$router->map(
+  'POST',
+  '/type/add',
+  [
+    'method' => 'createOrEdit',
+    'controller' => TypeController::class
+  ],
+  'type-create'
+);
+
+// Afficher Modifie Type
+$router->map(
+  'GET',
+  '/type/add/[i:id]',
+  [
+    'method' => 'edit',
+    'controller' => TypeController::class
+  ],
+  'type-edit'
+);
+
+// Traiter Modifie Type
+$router->map(
+  'POST',
+  '/type/add/[i:id]',
+  [
+    'method' => 'createOrEdit',
+    'controller' => TypeController::class
+  ],
+  'type-update'
+);
+
+// Supprime la Type
+$router->map(
+  'GET',
+  '/type/[i:id]/delete',
+  [
+    'method' => 'delete',
+    'controller' => TypeController::class
+  ],
+  'type-delete'
 );
 
 // ---------------------------------------- Routes APP_USER  ----------------------------------------
