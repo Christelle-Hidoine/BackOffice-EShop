@@ -5,7 +5,7 @@
 
     <?php 
     if (isset($message)) : ?>
-      <div class="alert alert-success" role="alert">
+      <div class="alert alert-success col-5 m-auto text-center" role="alert">
         <?= $message ?>
       </div>
     <?php endif; ?>

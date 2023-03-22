@@ -1,25 +1,19 @@
-<?php
-    // On créé un token que l'on stocke en session ET dans une variable
-    // (pour pouvoir s'en servir dans le form)
-    $token = $_SESSION['token'] = random_bytes(5);
-    // Dump à titre de debug : pour lire le token, on doit passer par 
-    // la fonction PHP native bin2hex
-    dump(bin2hex($_SESSION['token']));
-?>
+
 <div class="container my-4">
         <a href="<?= $router->generate('product-list') ?>" class="btn btn-success float-end">Retour</a>
 
         <h2>Modifier un produit</h2>
 
-        <?php 
-        if (isset($error)) : 
-            foreach($error as $message) :?>
-            <div class="alert alert-warning" role="alert">
-            <?= $message ?>
-            </div>
-        <?php endforeach; endif; ?>         
+                 
         
         <form action="<?= $router->generate('product-edit', ['id' => $product->getId()]); ?>" method="POST" class="col-5 m-auto">
+            <?php 
+            if (isset($error)) : 
+                foreach($error as $message) :?>
+                <div class="alert alert-warning" role="alert">
+                <?= $message ?>
+                </div>
+            <?php endforeach; endif; ?>
         <div class="mb-3">
                 <label for="name" class="form-label">Nom</label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="Nom du produit" value="<?= $product->getName() ?>" required>
@@ -86,8 +80,6 @@
                 </select>
             </div>
 
-            <!-- Pour le CSRF : on ajoute cet input caché -->
-            <input type="hidden" name="token" value="<?= $token ?>">
             
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary mt-5">Valider</button>

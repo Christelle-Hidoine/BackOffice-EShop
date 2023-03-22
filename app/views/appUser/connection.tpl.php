@@ -1,31 +1,19 @@
-<?php
-  // On créé un token que l'on stocke en session ET dans une variable
-  // (pour pouvoir s'en servir dans le form)
-  $token = $_SESSION['token'] = random_bytes(5);
-  // Dump à titre de debug : pour lire le token, on doit passer par 
-  // la fonction PHP native bin2hex
-  dump(bin2hex($_SESSION['token']));
-?>
 
 <div class="container my-4">
-
-    <?php       
-    if (isset($error)) : ?>
-      <div class="alert alert-warning" role="alert">
-        <?= $error ?>
-      </div>
-    <?php endif; ?> 
-
-    <?php       
-    if (isset($errorList)) : 
-        foreach ($errorList as $error) :?>
-        <div class="alert alert-warning" role="alert">
-            <?= $error ?>
-        </div>
-        <?php endforeach;
-    endif; ?> 
-
     <form action="" method="POST" class="col-3 m-auto">
+        <?php       
+            if (isset($error)) : ?>
+            <div class="alert alert-warning" role="alert">
+                <?= $error ?>
+            </div>
+        <?php endif; ?> 
+        <?php       
+            if (isset($errorList)) : 
+                foreach ($errorList as $error) :?>
+                <div class="alert alert-warning" role="alert">
+                    <?= $error ?>
+                </div>
+        <?php endforeach; endif; ?> 
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email" class="form-control" id="email" name="email" placeholder="adresse email" value="<?= $user->getEmail() ?>" aria-describedby="emailHelp">
@@ -35,8 +23,6 @@
         <input type="password" class="form-control" id="password" name="password" placeholder="mot de passe">
     </div>
 
-    <!-- Pour le CSRF : on ajoute cet input caché -->
-    <input type="hidden" name="token" value="<?= $token ?>">
     
     <button type="submit" class="btn btn-primary">Se connecter</button>
     </form>

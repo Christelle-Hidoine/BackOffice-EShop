@@ -107,9 +107,9 @@ class BrandController extends CoreController
    */
   public function delete($id)
   {
-    $category = Brand::find($id);  
+    $brand = Brand::find($id);  
 
-    if($category->delete())
+    if($brand->delete())
     {
       header("Location: /brand/list");
       exit;

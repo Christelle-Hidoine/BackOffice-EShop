@@ -107,9 +107,9 @@ class TypeController extends CoreController
    */
   public function delete($id)
   {
-    $category = Type::find($id);  
+    $type = Type::find($id);  
 
-    if($category->delete())
+    if($type->delete())
     {
       header("Location: /type/list");
       exit;

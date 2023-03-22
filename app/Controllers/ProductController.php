@@ -341,9 +341,9 @@ class ProductController extends CoreController
   {
     $product = Product::find($id);  
 
-    if( $product->delete() )
+    if($product->delete())
     {
-      header( "Location: /product/list" );
+      header("Location: /product/list");
       exit;
     }
     else
