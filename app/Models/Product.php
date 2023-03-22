@@ -105,30 +105,8 @@ class Product extends CoreModel
       $pdo = Database::getPDO();
 
       // Ecriture de la requête INSERT INTO
-      $sql = "
-          INSERT INTO `product` (
-            name,
-            description,
-            picture,
-            price,
-            rate,
-            status,
-            brand_id,
-            category_id,
-            type_id
-          )
-          VALUES (
-            :name,
-            :description,
-            :picture,
-            :price,
-            :rate,
-            :status,
-            :brand_id,
-            :category_id,
-            :type_id
-          )
-      ";
+      $sql = "INSERT INTO `product` (name, description, picture, price, rate, status, brand_id, category_id, type_id)
+          VALUES (:name, :description, :picture, :price, :rate, :status, :brand_id, :category_id, :type_id)";
 
       // Préparation de la requête d'insertion (+ sécurisé que exec directement)
       // @see https://www.php.net/manual/fr/pdo.prepared-statements.php
@@ -140,15 +118,15 @@ class Product extends CoreModel
 
       // Execution de la requête d'insertion
       // Ou bien utiliser la méthode bindValue pour chaque token/jeton/placeholder
-      $query->bindValue(':name',        $this->name,        PDO::PARAM_STR);
+      $query->bindValue(':name', $this->name, PDO::PARAM_STR);
       $query->bindValue(':description', $this->description, PDO::PARAM_STR);
-      $query->bindValue(':picture',     $this->picture,     PDO::PARAM_STR);
-      $query->bindValue(':price',       $this->price,       PDO::PARAM_STR);
-      $query->bindValue(':rate',        $this->rate,        PDO::PARAM_INT);
-      $query->bindValue(':status',      $this->status,      PDO::PARAM_INT);
-      $query->bindValue(':brand_id',    $this->brand_id,    PDO::PARAM_INT);
+      $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
+      $query->bindValue(':price', $this->price, PDO::PARAM_STR);
+      $query->bindValue(':rate', $this->rate, PDO::PARAM_INT);
+      $query->bindValue(':status', $this->status, PDO::PARAM_INT);
+      $query->bindValue(':brand_id', $this->brand_id, PDO::PARAM_INT);
       $query->bindValue(':category_id', $this->category_id, PDO::PARAM_INT);
-      $query->bindValue(':type_id',     $this->type_id,     PDO::PARAM_INT);
+      $query->bindValue(':type_id', $this->type_id, PDO::PARAM_INT);
       
 
       // Le 3e argument permet de préciser "valeur numérique" (PDO::PARAM_STR) ou "autre" (PDO::PARAM_STR)

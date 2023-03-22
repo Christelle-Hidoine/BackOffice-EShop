@@ -61,6 +61,10 @@ class AppUserController extends CoreController
             $errorList[] = 'Merci d\'indiquer un mot de passe';
         }
 
+        if ($this->checkPassword($password) === false) {
+            $errorList[] = "Le mot de passe doit contenir au minimum 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial";
+        }
+
         // vérification de la sécurité du mot de passe
         // $check = $this->checkPassword($password);
         // if ($check === true) {
@@ -142,7 +146,7 @@ class AppUserController extends CoreController
         if (empty($password)) {
             $errorList[] = "Le mot de passe doit être indiqué";
         }
-
+        
         // si pas d'erreur de remplissage des champs du formulaire
         if (empty($errorList)) {
 
@@ -314,45 +318,25 @@ class AppUserController extends CoreController
      * Method to check password's security
      *
      * @param [string] $password
+     * @return bool
      */
-    function checkPassword($password)	
+    public function checkPassword($password)	
     { 
-        $specialChar= ['_', '-', '|', '%', '&', '*', '=', '@', '$'];
-        // vérification de la longueur > 8
-        if (strlen($password) >= 8) {
+            $lenght = strlen($password);
 
-            // vérification de chaque lettre 
-            for ($i = 0; $i < strlen($password); $i++) {
-                // sélectionne chaque lettre
-                $letter = $password[$i];
+            $oneCaps = preg_match('/[A-Z]/', $password);
 
-                // vérification minuscule
-                if ($letter>='a' && $letter<='z') {
-                    // vérification majuscule
-                    if ($letter>='A' && $letter <='Z') {
-                        // vérification chiffre
-                        if ($letter>='0' && $letter <='9') {
-                            // vérification caractères spéciaux
-                            if (array_diff($letter, $specialChar)) {
-                                return true;
-                            } else {
-                                $message = "il manque au moins un caractère spécial de type : '_', '-', '|', '%', '&', '*', '=', '@', '$' ";
-                            }
-                        } else {
-                            $message = "il manque au moins 1 chiffre";
-                        }
-                    } else {
-                        $message = "il manque au moins une lettre majuscule";
-                    }
-                } else {
-                    $message = "il manque au moins une lettre minuscule";
-                }
-            }
-        } else {
-            $message = "le mot de passe doit contenir 8 caractères minimum";
-        }
-        return $message;
+            $oneLowCase = preg_match('/[a-z]/', $password);
+
+            $oneNumber = preg_match('/\d/', $password);
+
+            $oneSpecialChar = preg_match('/[_\-|%&*=@$]/', $password);
+
+            // mdp : > 8 caractères, contient mini 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial
+            return $lenght >= 8 && $oneCaps && $oneLowCase && $oneNumber && $oneSpecialChar;
+
     }
+    
 
     /**
      * Method to delete a user from user's list

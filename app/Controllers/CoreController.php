@@ -41,7 +41,7 @@ abstract class CoreController
         * Gestion du CSRF : exemple sur le form user/add
         */ 
         $csrfTokenToCheck = [
-            'user-create',
+            // 'user-create',
             
         ];
 
