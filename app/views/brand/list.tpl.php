@@ -1,5 +1,6 @@
+
 <div class="container my-4">
-    <a href="#" class="btn btn-success float-end">
+    <a href="<?= $router->generate('brand-add') ?>" class="btn btn-success float-end">
       Ajouter
     </a>
 
@@ -15,16 +16,16 @@
         </thead>
         <tbody>
 
-          <?php foreach($brand as $brandObject) : ?>
+          <?php foreach($brand as $brandElement) : ?>
             <tr>
                 <th scope="row">
-                  <?= $brandObject->getId() ?>
+                  <?= $brandElement->getId() ?>
                 </th>
                 <td>
-                  <?= $brandObject->getName() ?>
+                  <?= $brandElement->getName() ?>
                 </td>
                 <td class="text-end">
-                    <a href="#" class="btn btn-sm btn-warning">
+                    <a href="<?= $router->generate('brand-edit', ['id' => $brandElement->getId()]) ?>" class="btn btn-sm btn-warning">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </a>
                     <!-- Example single danger button -->
@@ -34,7 +35,7 @@
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="<?= $router->generate('brand-delete',['id' => $brandElement->getId()]) ?>">
                               Oui, je veux supprimer
                             </a>
                             <a class="dropdown-item" href="#" data-toggle="dropdown">

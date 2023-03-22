@@ -1,9 +1,18 @@
+
+
 <div class="container my-4">
     <a href="<?= $router->generate('user-add') ?>" class="btn btn-success float-end">
       Ajouter
     </a>
 
     <h2>Liste des utilisateurs</h2>
+
+    <?php 
+    if (isset($error)) : ?>
+      <div class="alert alert-warning col-6 text-center" role="alert">
+        <?= $error ?>
+      </div>
+    <?php endif; ?>
 
     <table class="table table-hover mt-4">
         <thead>

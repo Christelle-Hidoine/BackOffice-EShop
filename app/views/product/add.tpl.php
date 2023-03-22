@@ -1,3 +1,5 @@
+
+
 <div class="container my-4">
 
     <a href="<?= $router->generate('product-list') ?>" class="btn btn-success float-end">
@@ -7,13 +9,20 @@
     <h2>Ajouter un produit</h2>
 
     <form action="" method="POST" class="col-3 m-auto">
+        <?php 
+        if (isset($error)) : 
+            foreach($error as $message) :?>
+            <div class="alert alert-warning" role="alert">
+            <?= $message ?>
+            </div>
+        <?php endforeach; endif; ?> 
         <div class="mb-3">
             <label for="name">Nom</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Nom du produit">
+            <input type="text" class="form-control" id="name" name="name" value="<?= $product->getName() ?>" placeholder="Nom du produit">
         </div>
         <div class="mb-3">
             <label for="description">Description</label>
-            <input type="text" class="form-control" id="description" name="description" placeholder="Description du produit" 
+            <input type="text" class="form-control" id="description" name="description" value="<?= $product->getDescription() ?>" placeholder="Description du produit" 
                 aria-describedby="descriptionHelpBlock">
         </div>
         <div class="mb-3">
@@ -26,12 +35,12 @@
         </div>
         <div class="mb-3">
             <label for="price">Prix</label>
-            <input type="number" class="form-control" step="0.01" id="price" name="price" placeholder="Prix du produit" 
+            <input type="number" class="form-control" step="0.01" id="price" name="price" value="<?= $product->getPrice() ?>" placeholder="Prix du produit" 
                 aria-describedby="priceHelpBlock">
         </div>
         <div class="mb-3">
             <label for="rate">Note</label>
-                <select class='form-control' name="rate" id="rate" required>
+                <select class='form-control' name="rate" id="rate" value="<?= $product->getRate() ?>" required>
                     <?php for ($i = 1; $i <= 5; $i++) : ?>
                     <option value="<?= $i ?>"><?= $i ?></option>
                     <?php endfor; ?>
@@ -42,19 +51,20 @@
         </div>
         <div class="mb-3">
             <label for="status">Statut</label>
-                <select class="form-control" id="status" name="status" aria-describedby="statusHelpBlock">
-                    <option value="2">Inactif</option>
-                    <option value="1">Actif</option>
+                <select class='form-control'  name="status" id="status" value="<?= $product->getStatus() ?>" required>
+                <?php for ($i = 1; $i <= 2; $i++) : ?>
+                    <option value="<?= $i ?>"><?= $i ?></option>
+                    <?php endfor; ?>
                 </select>
-            <small id="statusHelpBlock" class="form-text text-muted">
-                Le statut du produit 
-            </small>
+                <small id="subtitleHelpBlock" class="form-text text-muted">
+                    1 = Actif, 2 = Inactif
+                </small>
         </div>
         <div class="mb-3">
             <label for="category">Catégorie</label>
                 <select class='form-control' name="category" id="category" value="">
                     <?php foreach ($categoryList as $category): ?>
-                    <option value="<?=$category->getId() ?>"><?=$category->getName() ?></option>
+                        <option value="<?=$category->getId() ?>"><?=$category->getName() ?></option>
                     <?php endforeach; ?>
                 </select>
             <small id="categoryHelpBlock" class="form-text text-muted">
@@ -83,6 +93,8 @@
                 Le type de produit 
             </small>
         </div>
+
+        
         <div class="d-grid gap-2">
             <button type="submit" class="btn btn-primary mt-5">Valider</button>
         </div>

@@ -4,17 +4,16 @@ namespace App\Controllers;
 
 abstract class CoreController
 {
-
     public function __construct()
     {
         // on définit une liste des permissions ACL (access control list)
         $acl = [
-            'user-list' => ['admin', 'catalog-manager'],
+            'user-list' => ['admin'],
             'user-add' => ['admin'],
             'user-create' => ['admin'],
             'user-edit' => ['admin'],
             'user-update' => ['admin'],
-            'user-delete' => ['admin']
+            'user-delete' => ['admin'],
         ];
 
         // on vérifie si l'url demandée (nom de la route) nécessite une autorisation ($acl)
@@ -37,13 +36,45 @@ abstract class CoreController
         // else ? ==> pas besoin de else car si on ne rentre pas dans le if, ca signifie 
         // que la route n'est pas dans la liste $acl des routes à vérifier
         // cad toute le monde peut accéder librement et directement à cete route
+
+        /*
+        * Gestion du CSRF : exemple sur le form user/add
+        */ 
+        $csrfTokenToCheck = [
+            'user-create',
+            
+        ];
+
+
+        // Si la route nécessite le check CSRF
+        if (in_array($routeName, $csrfTokenToCheck)) {
+            // On récupère le token en POST
+            $postToken = isset($_POST['token']) ? $_POST['token'] : '';
+
+            // On récupère le token de la session
+            $sessionToken = isset($_SESSION['token']) ? $_SESSION['token'] : '';
+
+            // On lève une erreur 403 s'ils sont vides ou pas égaux
+            if ($postToken !== $sessionToken || empty($postToken)) {
+                // On affiche une erreur 403
+                // => on envoie le header "403 Forbidden"
+                http_response_code(403);
+                // Puis on affiche la (nouvelle) page d'erreur 403
+                $this->show('error/err403');
+                // Enfin on arrête le script pour que la page demandée ne s'affiche pas
+                exit();
+            } else {
+                // Sinon RAS, on supprime juste le token en session
+                unset($_SESSION['token']);
+            }
+        }
     }
 
     /**
-     * Méthode permettant d'afficher du code HTML en se basant sur les views
+     * Method to display templates by their names and transfer data to these views
      *
-     * @param string $viewName Nom du fichier de vue
-     * @param array $viewData Tableau des données à transmettre aux vues
+     * @param string $viewName Template name
+     * @param array $viewData Array with data
      * @return void
      */
     protected function show(string $viewName, $viewData = [])
@@ -83,7 +114,7 @@ abstract class CoreController
     }
 
     /**
-     * Méthode ("helper" = méthode public) pour vérifier les autorisations des users via les controllers
+     * Method ("helper" = public method) to check users' authorization by controllers
      *
      * @param [array] $authorizedRoles
      * @return void

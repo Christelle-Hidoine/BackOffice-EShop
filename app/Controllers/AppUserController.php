@@ -3,23 +3,25 @@
 namespace App\Controllers;
 
 use App\Models\AppUser;
+use App\Models\Category;
+use App\Models\Product;
+use AppendIterator;
 
 class AppUserController extends CoreController
 
 {
     /** 
-     * Méthode pour afficher la liste des users
+     * Method to display user's list
      *
      */
     public function list()
     {
         $users = AppUser::findAll();
-
         $this->show("appUser/list", ['users' => $users]);
     }
 
     /**
-     * Méthode pour afficher le formulaire d'ajout
+     * Method to display user's add form
      *
      */
     public function add()
@@ -28,7 +30,7 @@ class AppUserController extends CoreController
     }
 
     /**
-     * Méthode pour traiter l'ajout d'un user
+     * Method to retrieve data from user's add form
      *
      */
     public function create()
@@ -96,9 +98,10 @@ class AppUserController extends CoreController
                 $user->setPassword($passwordHashed);
                 $user->setRole($role);
                 $user->setStatus($status);
-                // Sinon, on affiche les erreurs
-                // On affiche chaque erreurs rencontrée et renvoi vers la page formulaire create
+                
+                // On affiche chaque erreurs rencontrée et renvoi vers la page formulaire create avec l'autocomplétion
                 $message = $errorList;
+                
                 $this->show("appUser/add", ['error' => $message, 'user' => $user]);
             } 
             // si le mot de passe n'est pas suffisamment sécurisé = message d'erreur  
@@ -109,21 +112,25 @@ class AppUserController extends CoreController
     }
 
     /**
-     * Méthode pour afficher la page de connexion
+     * Method to display user's connection (login)
      *
      */
     public function connect()
     {
-        $this->show("appUser/connection");
+        // on récupère l'objet user pour l'autocomplétion du formulaire si erreur dans la méthode check
+        $user = new AppUser();
+        $this->show("appUser/connection", ['user' => $user]);
     }
 
     /**
-     * Méthode pour récupérer et traiter la page de connexion
+     * Method to retrieve and check data from user's connection form
      *
      */
     public function check()
     {
         $email    = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+        // $email = filter_var($_POST["email"], FILTER_VALIDATE_EMAIL);
+        // dump($email);
         $password = filter_input(INPUT_POST, "password");
 
         $errorList = [];
@@ -141,7 +148,7 @@ class AppUserController extends CoreController
 
             // on récupère l'email correspondant dans la BDD
             $user = AppUser::findByEmail($email);
-            // dump($appUserEmail);
+            // dump($user);
 
             // on vérifie qu'il correspond à notre BDD = return true ou false
             if ($user !== false) {
@@ -153,45 +160,65 @@ class AppUserController extends CoreController
                 // Email et password associé sont bons
                 // on le compare au password saisi dans le formulaire
 
+                // on récupère les données de la $_SESSION (suite à session_start() dans l'index)
                     $_SESSION['userId'] = $user->getId();
                     $_SESSION['userObject'] = $user;
                     $_SESSION['userName'] = $user->getFirstName();
 
-                    echo "Bravo {$_SESSION['userName']}, Vous êtes bien connecté(e)";
-                    dump($user);
+                    $message = "Bienvenue {$_SESSION['userName']}, Vous êtes bien connecté(e) !";
+                    // dump($user);
+
+                    // on affiche la page home une fois connecté
+                    $category = Category::findAll();
+                    $product   = Product::findAll();
+                    $category = array_slice($category, 0, 5);
+                    $product   = array_slice($product, 0, 5);
+
+                    $this->show('main/home', ['message' => $message, "category" => $category, "product" => $product]);
 
                 } else {
-                    // si mdp différent = message d'erreur sur le mdp
-                    echo "Email et/ou mot de passe incorrect";
+                    // si mdp différent = message d'erreur
+                    $message = "Email et/ou mot de passe incorrect";
+
+                    // on récupère les infos pour autocompléter le formulaire avec les données rentrées
+                    $user = new AppUser();
+                    $user->setEmail($email);
+                    $this->show("appUser/connection", ['error' => $message, 'user' => $user]);
                 }
             } else {
                 // si user n'existe pas = message d'erreur
-                echo "Email et/ou mot de passe incorrects";
+                $message = "Email et/ou mot de passe incorrect";
+                $user= new AppUser();
+                $user->setEmail($email);
+                $this->show("appUser/connection", ['error' => $message, 'user' => $user]);
             }
         } else {
-            header('Location: /user/add');
-            foreach($errorList as $error)
-            {
-                echo "<p>{$error}</p>";
-            }
-            dump($error);
+            // on récupère la liste des erreurs et on l'affiche sur la tpl avec une boucle
+            $message = $errorList;
+            $user = new AppUser();
+            $user->setEmail($email);
+            $this->show("appUser/connection", ['errorList' => $message, 'user' => $user]);        
         }
     }
 
     /**
-     * Méthode pour afficher la page de mise à jour des users
+     * Method to display edit's user
      *
-     * @param [type] $id
+     * @param [int] $id
      * @return void
      */
     public function edit($id)
     { 
         $user = AppUser::find($id);
-
         $this->show("appUser/edit", ["user" => $user]);
     }
 
-    // Page de traitement du formulaire d'édition
+    /**
+     * Method to retrieve data from edit's user form
+     *
+     * @param [int] $id
+     * @return void
+     */
     public function update($id)
     {    
         $firstname = filter_input(INPUT_POST, "firstname", FILTER_SANITIZE_SPECIAL_CHARS);
@@ -244,7 +271,7 @@ class AppUserController extends CoreController
                 exit;
             } else {
                 $message = "Echec de la sauvegarde en BDD";
-                $this->show("appUser/add", ['error' => $message]);
+                $this->show("appUser/edit", ['error' => $message]);
             }
         } else { 
 
@@ -263,10 +290,15 @@ class AppUserController extends CoreController
             // Sinon, on affiche les erreurs
             // On affiche chaque erreur rencontrée et renvoi vers la page formulaire create
             $message = $errorList;
-            $this->show("appUser/add", ['error' => $message, 'user' => $user]);
+            $this->show("appUser/edit", ['error' => $message, 'user' => $user]);
         } 
     }
 
+    /**
+     * Method to logout and delete session 
+     *
+     * @return void
+     */
     public function logout()
     {
         if (isset($_SESSION['UserId']))
@@ -279,7 +311,7 @@ class AppUserController extends CoreController
     }
 
     /**
-     * Méthode pour vérifier la sécurité d'un password
+     * Method to check password's security
      *
      * @param [string] $password
      */
@@ -322,18 +354,27 @@ class AppUserController extends CoreController
         return $message;
     }
 
+    /**
+     * Method to delete a user from user's list
+     *
+     * @param [type] $id
+     * @return void
+     */
     public function delete($id)
-  {
-    $user = AppUser::find($id);  
+    {
+        $user = AppUser::find($id);  
 
-    if( $user->delete() )
-    {
-      header( "Location: /user/list" );
-      exit;
+        if( $user->delete() )
+        {
+            header( "Location: /user/list" );
+            exit;
+        }
+        else
+        {
+            $message = "Echec de la suppression de l'utilisateur";
+            $users = AppUser::findAll();
+    
+            $this->show("appUser/list", ['users' => $users, ['error' => $message]]);
+        }
     }
-    else
-    {
-      echo "Echec de la suppression de l'utilisateur";
-    }
-  }
 }

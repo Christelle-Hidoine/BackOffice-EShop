@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-// Si j'ai besoin du Model Category
 use App\Models\Category;
 
 class CategoryController extends CoreController
@@ -14,55 +13,49 @@ class CategoryController extends CoreController
    */
   public function list()
   {
-    // On utilise la méthode checkAuthorization() pour vérifier si le user a les droits (permissions) pour accéder à la page
-    // On doit lui passer en argument un array des roles authorisés pour cette page
-    // Ici, les rôles admin et catalog-manager auront les permissions
-    // $this->checkAuthorization(['admin', 'catalog-manager']);
-
     // Récupérer les données grace au Model
     $category = Category::findAll();
 
     // Les transmettre à la vue
     $this->show("category/list", ["category" => $category]);
-
   }
 
-  // Page d'affichage du formulaire
+  /**
+   * Method to display category's add form
+   *
+   * @return void
+   */
   public function add()
   {
-    $this->show("category/add");
+    $this->show("category/add", ['category' => new Category]);
   }
 
-  // Page de traitement du formulaire
+  /**
+   * Method to retrieve data from category's add form
+   *
+   * @return void
+   */
   public function create()
   {
-
-    // On reçoit les données du formulaire
-    // DOC : https://www.php.net/manual/fr/function.filter-input.php
-    //       https://www.php.net/manual/fr/filter.filters.sanitize.php
-    //       https://www.php.net/manual/fr/filter.filters.validate.php
-    $name     = filter_input(INPUT_POST, "name",     FILTER_SANITIZE_SPECIAL_CHARS);
+    $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_SPECIAL_CHARS);
     $subtitle = filter_input(INPUT_POST, "subtitle", FILTER_SANITIZE_SPECIAL_CHARS);
-    $picture  = filter_input(INPUT_POST, "picture",  FILTER_VALIDATE_URL);
+    $picture = filter_input(INPUT_POST, "picture", FILTER_VALIDATE_URL);
 
-    // Maintenant on vérifie les valeurs de ces variables "filtrées"
-    // Pour ça on créé un tableau qui va contenir toutes les erreurs rencontrées
+    // on crée la variable errorList pour conserver toutes les erreurs possibles à la récupération de ces données
     $errorList = [];
 
     if(empty($name)) 
     {
       $errorList[] = 'Le nom de la catégorie est vide';
     }
-
-    // Subtitle peut etre null en BDD donc on peut ne pas le vérifier
-
-    // Pour l'URL de l'image "picture", le filtre vérifie forcément sa présence aussi.
+    
+    // Pour l'URL de l'image "picture", le filtre vérifie sa présence aussi.
     if($picture === false) 
     {
-      $errorList[] = 'L\'URL d\'image est invalide';
+      $errorList[] = 'L\'URL de l\'image est invalide';
     }
 
-    // Si on a rencontré aucune erreur => si $errorList est vide donc
+    // si $errorList est vide 
     if(empty($errorList))
     {
       // On créé une nouvelle instance de Category
@@ -74,74 +67,81 @@ class CategoryController extends CoreController
       $category->setPicture($picture);
       $category->setHomeOrder(0);
 
-      // Ensuite on appelle une méthode "insert" qui va faire l'ajout en BDD
-      // elle va renvoyer un booléen selon si l'ajout a fonctionné ou non
+      // méthode "insert" qui va faire l'ajout en BDD (method save() choisi insert ou update selon que l'id existe déjà ou non)
+      // renvoi un booléen si l'ajout a fonctionné ou non
       if($category->save())
       {
         // Si la sauvegarde a fonctionné
-        // Ne peut être appellé si le moindre affichage a déjà été fait
+        // header(); Ne peut pas être appelé si le moindre affichage a déjà été fait
         // On pourrait utiliser $router->generate mais il faudrait ajouter un "global $router"
         // en haut de la méthode 
-        header( "Location: /category/list" );
+        header("Location: /category/list");
 
         // Toujours exit après une redirection pour éviter de charger le reste de la page
         exit;
       }
       else
       {
-        echo "Echec de la sauvegarde en BDD";
+        $message = "Echec de la sauvegarde en BDD";
+        $this->show("category/add", ['error' => $message]);
       }
     }
-    else // Sinon, on affiche les erreurs (tel quel, mais on pourra améliorer ça plus tard)
+    else
     {
-      // On affiche chaque erreurs rencontrée
-      foreach($errorList as $error)
-      {
-        echo $error . "<br>";
-      }
+      // On affiche chaque erreur rencontrée
+      $category = new Category; 
+      $category->setName($name);
+      $category->setSubtitle($subtitle);
+      $category->setPicture($picture);
+      $category->setHomeOrder(0);
+
+      $message = $errorList;
+      $this->show("category/add", ['category' => $category, 'error' => $message]);
     }
   }
 
-  // Page d'affichage du formulaire d'update
+  /**
+   * Method to display category's edit form
+   *
+   * @param [int] $id
+   * @return void
+   */
   public function edit($id)
   {   
-    $categoryObject = Category::find($id);
-
-    // dump($categoryObject);
-
-    $this->show("category/edit", [ 
-      "categoryObject" => $categoryObject
-    ]);
+    $category = Category::find($id);
+    // dump($category);
+    $this->show("category/edit", ["category" => $category]);
   }
 
-  // Page de traitement du formulaire d'édition
+  /**
+   * Method to retrieve data from category's edit form
+   *
+   * @param [int] $id
+   * @return void
+   */
   public function update($id)
   {    
-    $name     = filter_input(INPUT_POST, "name",     FILTER_SANITIZE_SPECIAL_CHARS);
+    $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_SPECIAL_CHARS);
     $subtitle = filter_input(INPUT_POST, "subtitle", FILTER_SANITIZE_SPECIAL_CHARS);
-    $picture  = filter_input(INPUT_POST, "picture",  FILTER_VALIDATE_URL);
+    $picture = filter_input(INPUT_POST, "picture", FILTER_VALIDATE_URL);
 
-    // Maintenant on vérifie les valeurs de ces variables "filtrées"
-    // Pour ça on créé un tableau qui va contenir toutes les erreurs rencontrées
+    // tableau qui va contenir toutes les erreurs rencontrées
     $errorList = [];
 
     if(empty($name)) 
     {
       $errorList[] = 'Le nom de la catégorie est vide';
     }
-
-    // Subtitle peut etre null en BDD donc on peut ne pas le vérifier
-
     // Pour l'URL de l'image "picture", le filtre vérifie forcément sa présence aussi.
-    if( $picture === false ) 
+    if(empty($picture) || ($picture === false)) 
     {
       $errorList[] = 'L\'URL d\'image est invalide';
     }
 
-    // Si je n'ai rencontré aucune erreur, $errorList est vide
-    if( empty( $errorList ) )
+    // Si aucune erreur, $errorList est vide
+    if(empty($errorList))
     {
-      // On commence par récupérer la catégorie actuellement en BDD
+      // On récupère la catégorie selon son id en BDD
       $category = Category::find($id);
 
       // On modifie ses propriétés grace aux setters      
@@ -150,105 +150,107 @@ class CategoryController extends CoreController
       $category->setPicture($picture);
       $category->setHomeOrder(0);
 
-      // Il nous reste a sauvegarder ces modif en BDD
+      // sauvegarde des modifs en BDD
       if($category->save())
       {
-        header( "Location: /category/list" );
+        header("Location: /category/list");
         exit;
       }
       else
       {
-        echo "Une erreur est survenue lors de l'édition de la Categorie";
+        $message = "Echec de la sauvegarde en BDD";
+        $this->show("category/edit", ['error' => $message]);
       }
     }
     else
     {
-      // On affiche chaque erreurs rencontrée
-      foreach($errorList as $error)
-      {
-        echo $error . "<br>";
-      }
+      // On affiche chaque erreur rencontrée
+      $category = new Category; 
+      $category->setName($name);
+      $category->setSubtitle($subtitle);
+      $category->setPicture($picture);
+      $category->setHomeOrder(0);
+
+      $message = $errorList;
+      $this->show("category/edit", ['category' => $category, 'errorList' => $message]);
     }
   }
 
-
-// Version factorisée de create et edit
-  // public function createOrEdit($id = 0)
-  // {
-  //   $name     = filter_input( INPUT_POST, "name",     FILTER_SANITIZE_STRING );
-  //   $subtitle = filter_input( INPUT_POST, "subtitle", FILTER_SANITIZE_STRING );
-  //   $picture  = filter_input( INPUT_POST, "picture",  FILTER_VALIDATE_URL );
-
-    // Maintenant on vérifie les valeurs de ces variables "filtrées"
-    // Pour ça on créé un tableau qui va contenir toutes les erreurs rencontrées
-  //   $errorList = [];
-
-  //   if( empty( $name ) ) 
-  //   {
-  //     $errorList[] = 'Le nom de la catégorie est vide';
-  //   }
-
-  // Subtitle peut etre null en BDD donc on peut ne pas le vérifier
-
-    // Pour l'URL de l'image "picture", le filtre vérifie forcément sa présence aussi.
-  //   if( $picture === false ) 
-  //   {
-  //     $errorList[] = 'L\'URL d\'image est invalide';
-  //   }
-
-    // Si je n'ai rencontré aucune erreur, $errorList est vide
-  //   if( empty( $errorList ) )
-  //   {
-      // On commence par récupérer la catégorie actuellement en BDD
-
-  //     if( $id > 0 )
-  //     {
-  //       $category = Category::find( $id );
-  //     }
-  //     else
-  //     {
-  //       $category = new Category();
-  //     }
-
-      // On modifie ses propriétés grace aux setters      
-  //     $category->setName( $name );
-  //     $category->setSubtitle( $subtitle );
-  //     $category->setPicture( $picture );
-  //     $category->setHomeOrder( 0 );
-
-      // Il nous reste a sauvegarder ces modif en BDD
-  //     if( $category->save() )
-  //     {
-  //       header( "Location: /category/list" );
-  //       exit;
-  //     }
-  //     else
-  //     {
-  //       echo "Une erreur est survenue lors de l'édition de la Categorie";
-  //     }
-  //   }
-  //   else
-  //   {
-      // On affiche chaque erreurs rencontrée
-  //     foreach( $errorList as $error )
-  //     {
-  //       echo $error . "<br>";
-  //     }
-  //   }
-  // }
-
+  /**
+   * Method to delete a category from category's list
+   *
+   * @param [int] $id
+   * @return void
+   */
   public function delete($id)
   {
-    $categoryObject = Category::find($id);  
+    $category = Category::find($id);  
 
-    if( $categoryObject->delete() )
+    if($category->delete())
     {
-      header( "Location: /category/list" );
+      header("Location: /category/list");
       exit;
     }
     else
     {
-      echo "Echec de la suppression de la catégorie";
+      $message = "Echec de la suppression de la catégorie";
+      $category = Category::findAll();
+      $this->show("category/list", ['category' => $category, ['error' => $message]]);
     }
+  }
+
+  /**
+   * Method to display categoryHome's list to select home_order by category
+   *
+   * @return void
+   */
+  public function homeList()
+  {
+    $homeOrder = Category::findAllHomepage();
+
+    $this->show('category/home', ['homeOrder' => $homeOrder]);
+  }
+
+  /**
+   * Method to select home_order and retrieve data from categoryHome's list
+   *
+   * @return void
+   */
+  public function homeSelect()
+  {
+    // OBJECTIF : setter toutes les home_order sur les categoryId correspondantes + update en BDD
+
+    // On récupère du form un tableau $emplacement ['key' => 'home_order à modifier'] avec value string
+    $emplacement = $_POST["emplacement"];
+    // dump($emplacement);
+
+    // tableau vide qui contiendra la liste des emplacements sélectionnés sur le form
+    $homeOrderList = [];
+
+    // filtre avec filter_var
+    foreach ($emplacement as $home_order => $categoryId) {
+        $homeOrderNumber = filter_var($categoryId, FILTER_VALIDATE_INT);
+
+        // Modification de la clé pour commencer à 1 = 1er emplacement dans le form
+        $homeOrderList[$home_order +1] = $homeOrderNumber;
+    }
+    // dump($homeOrderList);
+
+    // on parcourt le tableau en récupérant chaque categoryId correspondant à chaque emplacement
+    foreach ($homeOrderList as $home_order => $categoryId) {
+        // récupération de la category correspondante à la home_order sélectionnée avec method findByHomeOrder
+        $category = Category::find($categoryId);
+        // dump($category);
+
+        // set de la valeur avec la position indiquée dans le form
+        $category->setHomeOrder($home_order);
+        // dump($category);
+
+        // on sauvegarde dans la BDD
+        $category->save(); 
+    }
+
+    $homeOrder = Category::findAllHomepage();
+    $this->show('category/home', ['homeOrder' => $homeOrder]);
   }
 }
