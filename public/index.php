@@ -15,7 +15,7 @@ use App\Controllers\CategoryController;
 use App\Controllers\ProductController;
 use App\Controllers\TypeController;
 
-use function PHPSTORM_META\type;
+
 
 /* -------------------
 --- SESSION STORAGE---

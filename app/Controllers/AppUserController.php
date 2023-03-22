@@ -348,9 +348,9 @@ class AppUserController extends CoreController
     {
         $user = AppUser::find($id);  
 
-        if( $user->delete() )
+        if($user->delete())
         {
-            header( "Location: /user/list" );
+            header("Location: /user/list");
             exit;
         }
         else

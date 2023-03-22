@@ -223,16 +223,16 @@ class CategoryController extends CoreController
     // On récupère du form un tableau $emplacement ['key' => 'home_order à modifier'] avec value string
     $emplacement = $_POST["emplacement"];
     // dump($emplacement);
-
+    
     // tableau vide qui contiendra la liste des emplacements sélectionnés sur le form
     $homeOrderList = [];
 
     // filtre avec filter_var
     foreach ($emplacement as $home_order => $categoryId) {
-        $homeOrderNumber = filter_var($categoryId, FILTER_VALIDATE_INT);
-
+        $categoryById = filter_var($categoryId, FILTER_VALIDATE_INT);
+  
         // Modification de la clé pour commencer à 1 = 1er emplacement dans le form
-        $homeOrderList[$home_order +1] = $homeOrderNumber;
+        $homeOrderList[$home_order +1] = $categoryById;
     }
     // dump($homeOrderList);
 
