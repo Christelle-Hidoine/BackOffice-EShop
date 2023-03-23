@@ -168,6 +168,8 @@ class AppUserController extends CoreController
                     $_SESSION['userId'] = $user->getId();
                     $_SESSION['userObject'] = $user;
                     $_SESSION['userName'] = $user->getFirstName();
+                    $_SESSION['userEmail'] = $user->getEmail();
+                    $_SESSION['userRole'] = $user->getRole();
 
                     $message = "Bienvenue {$_SESSION['userName']}, Vous êtes bien connecté(e) !";
                     // dump($user);

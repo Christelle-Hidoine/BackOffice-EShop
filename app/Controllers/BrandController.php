@@ -67,10 +67,12 @@ class BrandController extends CoreController
       if($id > 0)
       {
         $brand = Brand::find($id);
+
       }
       else
       {
         $brand = new Brand();
+
       }
 
       // On modifie ses propriétés grace aux setters      

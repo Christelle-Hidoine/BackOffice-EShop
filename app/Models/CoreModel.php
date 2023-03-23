@@ -18,7 +18,6 @@ abstract class CoreModel
     abstract function update();
     abstract function delete();
 
-
     /**
      * @var int
      */

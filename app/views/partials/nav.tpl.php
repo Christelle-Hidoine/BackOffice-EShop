@@ -54,7 +54,7 @@
             </ul>
             <div class="d-flex">
               <div class="nav-item me-auto">
-                <a class="nav-link <?= $viewName === "appUser/connection" ? "active" : ""?>" href="<?= $router->generate('user-connection') ?>">
+                <a class="nav-link" href="<?= $router->generate('user-connection') ?>">
                   <button type="button" class="btn btn-primary">Login</button>
                 </a>
               </div>
