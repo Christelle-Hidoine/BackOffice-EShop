@@ -49,6 +49,13 @@ abstract class CoreController
         // Si la route nécessite le check CSRF
         if (in_array($routeName, $csrfTokenToCheck)) {
             // On récupère le token en POST
+
+            // if (isset(($_POST['token']))) {
+            //     $postToken = $_POST['token'];
+            // }
+            // else {
+            //     $postToken = "";
+            // }
             $postToken = isset($_POST['token']) ? $_POST['token'] : '';
 
             // On récupère le token de la session
@@ -101,7 +108,7 @@ abstract class CoreController
         // => la variable $assetsBaseUri existe désormais, et sa valeur est $_SERVER['BASE_URI'] . '/assets/'
         // => la variable $baseUri existe désormais, et sa valeur est $_SERVER['BASE_URI']
         // => il en va de même pour chaque élément du tableau
-
+       
         // Astuce pour voir les variables disponibles dans nos vues
         // A ne pas laisser en PROD !
         dump(get_defined_vars());

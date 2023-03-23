@@ -470,6 +470,7 @@ $router->map(
 // On demande à AltoRouter de trouver une route qui correspond à l'URL courante
 $match = $router->match();
 
+
 // Ensuite, pour dispatcher le code dans la bonne méthode, du bon Controller
 // On délègue à une librairie externe : https://packagist.org/packages/benoclock/alto-dispatcher
 // 1er argument : la variable $match retournée par AltoRouter

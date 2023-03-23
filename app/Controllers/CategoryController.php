@@ -206,7 +206,11 @@ class CategoryController extends CoreController
    */
   public function homeList()
   {
-    $homeOrder = Category::findAllHomepage();
+
+    // $homeOrder = Category::findAllHomepage();
+
+    // -------- methode pour afficher toutes les catégories (pas seulement les 5 de la bdd)----------
+    $homeOrder = Category::findAll();
 
     $this->show('category/home', ['homeOrder' => $homeOrder]);
   }
@@ -236,6 +240,17 @@ class CategoryController extends CoreController
     }
     // dump($homeOrderList);
 
+// ----------------------------------  METHODE AVEC FIND ALL pour afficher toutes les category (pas seulement les 5 de la bdd)-----------------------------------------------------------
+
+    // SI FINDALL() = > il faut passer les home_order de la BDD à 0 avant de setter les nouvelles category->homeOrder
+    $category = Category::findAll();
+    foreach ($category as $resetHomeOrder) {
+      $resetHomeOrder->setHomeOrder(0);
+      // dump($categoryElement);
+      $resetHomeOrder->save();
+    };
+// ----------------------------------  METHODE AVEC FIND ALL continue comme la méthode classique pour afficher juste le select des 5 catégories ------------------------------------------    
+
     // on parcourt le tableau en récupérant chaque categoryId correspondant à chaque emplacement
     foreach ($homeOrderList as $home_order => $categoryId) {
         // récupération de la category correspondante à la home_order sélectionnée avec method findByHomeOrder
@@ -250,7 +265,10 @@ class CategoryController extends CoreController
         $category->save(); 
     }
 
-    $homeOrder = Category::findAllHomepage();
+    // $homeOrder = Category::findAllHomepage();
+
+    // -------- methode pour afficher toutes les catégories (pas seulement les 5 de la bdd)---------
+    $homeOrder = Category::findAll();
     $this->show('category/home', ['homeOrder' => $homeOrder]);
   }
 }
