@@ -7,13 +7,13 @@
         <!-- Objectif : savoir si on est en mode create ou update -->
         <!-- En mode create, ce template ne récupère aucune donnée -->
         <!-- En mode update, ce template récupère une marque (et éventuellement une marque id) -->
-        <?php if (empty($id)) : ?>
-            <h2>Ajouter une marque</h2>
-        <?php else : ?>
+        <?php 
+        if (isset($id)) : ?>
             <h2>Modifier une marque</h2>
+        <?php
+        else : ?>
+            <h2>Ajouter une marque</h2>
         <?php endif; ?>
-
-   
   
   <form action="" method="POST" class="col-3 m-auto">
     <?php 

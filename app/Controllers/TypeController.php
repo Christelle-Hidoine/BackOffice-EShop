@@ -37,7 +37,8 @@ class TypeController extends CoreController
   public function edit($id)
   {
     $type = Type::find($id);
-    $this->show('type/add', ['type' => $type]);
+    $id = $type->getId();
+    $this->show('type/add', ['type' => $type, 'id' => $id]);
   }
 
   /**

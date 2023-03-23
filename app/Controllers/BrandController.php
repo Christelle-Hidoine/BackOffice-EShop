@@ -37,7 +37,8 @@ class BrandController extends CoreController
   public function edit($id)
   {
     $brand = Brand::find($id);
-    $this->show('brand/add', ['brand' => $brand]);
+    $id = $brand->getId();
+    $this->show('brand/add', ['brand' => $brand, 'id'=> $id]);
   }
 
   /**
