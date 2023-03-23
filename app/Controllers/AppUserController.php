@@ -26,7 +26,13 @@ class AppUserController extends CoreController
      */
     public function add()
     {
-        $this->show("appUser/add", ['user' => new AppUser]);
+        // On créé un token que l'on stocke en session ET dans une variable
+        // (pour pouvoir s'en servir dans le form)
+        $token = $_SESSION['token'] = random_bytes(5);
+        // Dump à titre de debug : pour lire le token, on doit passer par 
+        // la fonction PHP native bin2hex
+        dump(bin2hex($_SESSION['token']));
+        $this->show("appUser/add", ['user' => new AppUser, 'token' => $token]);
     }
 
     /**

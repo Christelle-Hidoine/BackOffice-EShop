@@ -41,8 +41,7 @@ abstract class CoreController
         * Gestion du CSRF : exemple sur le form user/add
         */ 
         $csrfTokenToCheck = [
-            // 'user-create',
-            
+            'user-create'
         ];
 
 
@@ -50,19 +49,20 @@ abstract class CoreController
         if (in_array($routeName, $csrfTokenToCheck)) {
             // On récupère le token en POST
 
-            // if (isset(($_POST['token']))) {
+            // if (isset($_POST['token'])) {
             //     $postToken = $_POST['token'];
             // }
             // else {
             //     $postToken = "";
             // }
-            $postToken = isset($_POST['token']) ? $_POST['token'] : '';
-
+            $postToken = !empty($_POST['token']) ? $_POST['token'] : '';
+            dump($postToken);
             // On récupère le token de la session
-            $sessionToken = isset($_SESSION['token']) ? $_SESSION['token'] : '';
-
+            $sessionToken = !empty($_SESSION['token']) ? $_SESSION['token'] : '';
+            dump($sessionToken);
+            
             // On lève une erreur 403 s'ils sont vides ou pas égaux
-            if ($postToken !== $sessionToken || empty($postToken)) {
+            if ($postToken !== $sessionToken) {
                 // On affiche une erreur 403
                 // => on envoie le header "403 Forbidden"
                 http_response_code(403);
