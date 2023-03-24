@@ -44,59 +44,51 @@ class CategoryController extends CoreController
     // on crée la variable errorList pour conserver toutes les erreurs possibles à la récupération de ces données
     $errorList = [];
 
-    if(empty($name)) 
-    {
-      $errorList[] = 'Le nom de la catégorie est vide';
+    if (empty($name)) {
+        $errorList[] = 'Le nom de la catégorie est vide';
     }
-    
+
     // Pour l'URL de l'image "picture", le filtre vérifie sa présence aussi.
-    if($picture === false) 
-    {
-      $errorList[] = 'L\'URL de l\'image est invalide';
+    if ($picture === false) {
+        $errorList[] = 'L\'URL de l\'image est invalide';
     }
 
-    // si $errorList est vide 
-    if(empty($errorList))
-    {
-      // On créé une nouvelle instance de Category
-      $category = new Category; 
+    // si $errorList est vide
+    if (empty($errorList)) {
+        // On créé une nouvelle instance de Category
+        $category = new Category();
 
-      // On met à jour ses propriétés avec les données du formulaire (nettoyées)
-      $category->setName($name);
-      $category->setSubtitle($subtitle);
-      $category->setPicture($picture);
-      $category->setHomeOrder(0);
+        // On met à jour ses propriétés avec les données du formulaire (nettoyées)
+        $category->setName($name);
+        $category->setSubtitle($subtitle);
+        $category->setPicture($picture);
+        $category->setHomeOrder(0);
 
-      // méthode "insert" qui va faire l'ajout en BDD (method save() choisi insert ou update selon que l'id existe déjà ou non)
-      // renvoi un booléen si l'ajout a fonctionné ou non
-      if($category->save())
-      {
-        // Si la sauvegarde a fonctionné
-        // header(); Ne peut pas être appelé si le moindre affichage a déjà été fait
-        // On pourrait utiliser $router->generate mais il faudrait ajouter un "global $router"
-        // en haut de la méthode 
-        header("Location: /category/list");
+        // méthode "insert" qui va faire l'ajout en BDD (method save() choisi insert ou update selon que l'id existe déjà ou non)
+        // renvoi un booléen si l'ajout a fonctionné ou non
+        if ($category->save()) {
+            // Si la sauvegarde a fonctionné
+            // header(); Ne peut pas être appelé si le moindre affichage a déjà été fait
+            // On pourrait utiliser $router->generate mais il faudrait ajouter un "global $router"
+            // en haut de la méthode
+            header("Location: /category/list");
 
-        // Toujours exit après une redirection pour éviter de charger le reste de la page
-        exit;
-      }
-      else
-      {
-        $message = "Echec de la sauvegarde en BDD";
-        $this->show("category/add", ['error' => $message]);
-      }
-    }
-    else
-    {
-      // On affiche chaque erreur rencontrée
-      $category = new Category; 
-      $category->setName($name);
-      $category->setSubtitle($subtitle);
-      $category->setPicture($picture);
-      $category->setHomeOrder(0);
+            // Toujours exit après une redirection pour éviter de charger le reste de la page
+            exit;
+        } else {
+            $message = "Echec de la sauvegarde en BDD";
+            $this->show("category/add", ['error' => $message]);
+        }
+    } else {
+        // On affiche chaque erreur rencontrée
+        $category = new Category();
+        $category->setName($name);
+        $category->setSubtitle($subtitle);
+        $category->setPicture($picture);
+        $category->setHomeOrder(0);
 
-      $message = $errorList;
-      $this->show("category/add", ['category' => $category, 'error' => $message]);
+        $message = $errorList;
+        $this->show("category/add", ['category' => $category, 'error' => $message]);
     }
   }
 

@@ -1,5 +1,10 @@
-
-
+<?php //On créé un token que l'on stocke en session ET dans une variable
+        // (pour pouvoir s'en servir dans le form)
+        $token = $_SESSION['token'] = random_bytes(5);
+        // Dump à titre de debug : pour lire le token, on doit passer par 
+        // la fonction PHP native bin2hex
+        dump(bin2hex($_SESSION['token']));
+?>
 <div class="container my-4">
   <a href="<?= $router->generate('user-list') ?>" class="btn btn-success float-end">
     Retour
@@ -47,8 +52,8 @@
             Rôle
         </label>
             <select class='form-control' name="role" id="role" value="<?= $user->getRole() ?>">
-              <option value="catalog-manager">catalog-manager</option>
-              <option value="admin">admin</option>
+              <option value="catalog-manager" <?= $user->getRole() == "catalog-manager" ? 'selected' : '' ?>>catalog-manager</option>
+              <option value="admin" <?= $user->getRole() == "admin" ? 'selected' : '' ?>>admin</option>
             </select>
         </label>
     </div>
@@ -57,8 +62,8 @@
             Statut
         </label>
           <select class='form-control' name="status" id="status" value="<?= $user->getStatus() ?>">
-              <option value="<?= $user->getStatus() ? $user->getStatus() : 1 ?>">Actif</option>
-              <option value="<?= $user->getStatus() ? $user->getStatus() : 2 ?>">Désactivé/Bloqué</option>
+              <option value="1" <?= $user->getStatus() == 1 ? 'selected' : '' ?>>Actif</option>
+              <option value="2" <?= $user->getStatus() == 1 ? 'selected' : '' ?>>Désactivé/Bloqué</option>
           </select>
     </div>
     

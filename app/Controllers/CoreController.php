@@ -41,7 +41,7 @@ abstract class CoreController
         * Gestion du CSRF : exemple sur le form user/add
         */ 
         $csrfTokenToCheck = [
-            'user-create'
+            // 'user-create'
         ];
 
 
@@ -49,12 +49,6 @@ abstract class CoreController
         if (in_array($routeName, $csrfTokenToCheck)) {
             // On récupère le token en POST
 
-            // if (isset($_POST['token'])) {
-            //     $postToken = $_POST['token'];
-            // }
-            // else {
-            //     $postToken = "";
-            // }
             $postToken = !empty($_POST['token']) ? $_POST['token'] : '';
             dump($postToken);
             // On récupère le token de la session

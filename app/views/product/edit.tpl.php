@@ -37,7 +37,7 @@
                 <label for="rate" class="form-label">Note</label>
                 <select class='form-control' name="rate" id="rate" value="<?= $product->getRate() ?>" required>
                     <?php for ($i = 1; $i <= 5; $i++) : ?>
-                    <option value="<?= $i ?>"><?= $i ?></option>
+                    <option value="<?= $i ?>" <?= $product->getRate() == $i ? 'selected' : '' ?>><?= $i ?></option>
                     <?php endfor; ?>
                 </select>
             </div>
@@ -45,7 +45,7 @@
                 <label for="status" class="form-label">Statut</label>
                 <select class='form-control'  name="status" id="status" value="<?= $product->getStatus() ?>" required>
                 <?php for ($i = 1; $i <= 2; $i++) : ?>
-                    <option value="<?= $i ?>"><?= $i ?></option>
+                    <option value="<?= $i ?>" <?= $product->getStatus() == $i ? 'selected' : '' ?>><?= $i ?></option>
                     <?php endfor; ?>
                 </select>
                 <small id="subtitleHelpBlock" class="form-text text-muted">
@@ -53,29 +53,26 @@
                 </small>
             </div>
             <div class="mb-3">
-                <label for="category_id" class="form-label">Catégorie</label>
-                <select class='form-control' name="category" id="category" value="">
-                    <option value="<?=$product->getCategoryId() ?>"><?= $categoryListById[$product->getCategoryId()]->getName() ?></option>
-                    <?php foreach ($productList as $product): ?>
-                    <option value="<?=$product->getCategoryId() ?>"><?=$categoryListById[$product->getCategoryId()]->getName() ?></option>
+                <label for="category" class="form-label">Catégorie</label>
+                <select class='form-control' name="category" id="category" value="<?= $product->getCategoryId() ?>">
+                    <?php foreach ($categoryList as $category): ?>
+                    <option value="<?=$category->getId() ?>" <?= $category->getId() == $product->getCategoryId() ? 'selected' : '' ?>><?= $category->getName() ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="brand_id" class="form-label">Marque</label>
-                <select class='form-control' name="brand" id="brand" value="">
-                    <option value="<?=$product->getBrandId() ?>"><?= $brandListById[$product->getBrandId()]->getName() ?></option>
+                <label for="brand" class="form-label">Marque</label>
+                <select class='form-control' name="brand" id="brand" value="<?= $product->getBrandId() ?>">
                     <?php foreach ($brandList as $brand): ?>
-                    <option value="<?=$brand->getId() ?>"><?=$brand->getName() ?></option>
+                        <option value="<?=$brand->getId() ?>" <?= $brand->getId() == $product->getBrandId() ? 'selected' : '' ?>><?= $brand->getName() ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="type_id" class="form-label">Type</label>
-                <select class='form-control' name="type" id="type" value="">
-                    <option value="<?=$product->getTypeId() ?>"><?= $typeListById[$product->getTypeId()]->getName() ?></option>   
+                <label for="type" class="form-label">Type</label>
+                <select class='form-control' name="type" id="type" value="<?= $product->getTypeId() ?>">
                     <?php foreach ($typeList as $type): ?>
-                    <option value="<?=$type->getId() ?>"><?=$type->getName() ?></option>
+                        <option value="<?=$type->getId() ?>" <?= $type->getId() == $product->getTypeId() ? 'selected' : '' ?>><?= $type->getName() ?></option>
                     <?php endforeach; ?> 
                 </select>
             </div>

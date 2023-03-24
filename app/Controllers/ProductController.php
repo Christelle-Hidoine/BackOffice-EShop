@@ -35,25 +35,8 @@ class ProductController extends CoreController
     $categoryList = Category::findAll();
     $typeList = Type::findAll();
 
-    $typeListById = [];
-        foreach ($typeList as $typeElement) {
-            $typeListById[$typeElement->getId()] = $typeElement;
-        }
-
-        $categoryListById = [];
-        foreach ($categoryList as $categoryElement) {
-            $categoryListById[$categoryElement->getId()] = $categoryElement;
-        }
-
-        $brandListById = [];
-        foreach ($brandList as $brandElement) {
-            $brandListById[$brandElement->getId()] = $brandElement;
-        }
-
-    $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => new Product, 'typeListById' => $typeListById, 'categoryListById' => $categoryListById, 'brandListById' => $brandListById]);
+    $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => new Product]);
   }
-
-  
   
   /**
    * Method to retrieve data from product's add form
@@ -155,24 +138,9 @@ class ProductController extends CoreController
       $categoryList = Category::findAll();
       $typeList = Type::findAll();
 
-      $typeListById = [];
-          foreach ($typeList as $typeElement) {
-              $typeListById[$typeElement->getId()] = $typeElement;
-          }
-
-          $categoryListById = [];
-          foreach ($categoryList as $categoryElement) {
-              $categoryListById[$categoryElement->getId()] = $categoryElement;
-          }
-
-          $brandListById = [];
-          foreach ($brandList as $brandElement) {
-              $brandListById[$brandElement->getId()] = $brandElement;
-          }
-
       $message = $errorList;
 
-      $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'typeListById' => $typeListById, 'categoryListById' => $categoryListById, 'brandListById' => $brandListById, 'product' => $product, 'error' => $message]);
+      $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'error' => $message]);
     }
   }
 
@@ -310,24 +278,9 @@ class ProductController extends CoreController
       $categoryList = Category::findAll();
       $typeList = Type::findAll();
 
-      $typeListById = [];
-          foreach ($typeList as $typeElement) {
-              $typeListById[$typeElement->getId()] = $typeElement;
-          }
-
-          $categoryListById = [];
-          foreach ($categoryList as $categoryElement) {
-              $categoryListById[$categoryElement->getId()] = $categoryElement;
-          }
-
-          $brandListById = [];
-          foreach ($brandList as $brandElement) {
-              $brandListById[$brandElement->getId()] = $brandElement;
-          }
-
       $message = $errorList;
 
-      $this->show('product/edit', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'typeListById' => $typeListById, 'categoryListById' => $categoryListById, 'brandListById' => $brandListById, 'product' => $product, 'error' => $message]);
+      $this->show('product/edit', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'error' => $message]);
     }
   }
 
