@@ -87,8 +87,11 @@ class AppUserController extends CoreController
                 // ajout en BDD
                 if ($user->save()) {
                     // Si la sauvegarde a fonctionné
-                    header("Location: /user/list");
+                    // header("Location: /user/list");
+
+                    header("Location: " . $this->router->generate('user-list'));
                     exit;
+
                 } else {
                     $message = "Echec de la sauvegarde en BDD";
                     $this->show("appUser/add", ['error' => $message]);
@@ -172,7 +175,6 @@ class AppUserController extends CoreController
                     $_SESSION['userEmail'] = $user->getEmail();
                     $_SESSION['userRole'] = $user->getRole();
 
-                    $message = "Bienvenue {$_SESSION['userName']}, Vous êtes bien connecté(e) !";
                     // dump($user);
 
                     // on affiche la page home une fois connecté
@@ -181,7 +183,8 @@ class AppUserController extends CoreController
                     $category = array_slice($category, 0, 5);
                     $product   = array_slice($product, 0, 5);
 
-                    $this->show('main/home', ['message' => $message, "category" => $category, "product" => $product]);
+                    header("Location: " . $this->router->generate('main-home'));
+                    exit;
 
                 } else {
                     // si mdp différent = message d'erreur
@@ -274,7 +277,9 @@ class AppUserController extends CoreController
 
             if ($user->save()) {
                 // Si la sauvegarde a fonctionné
-                header("Location: /user/list");
+                // header("Location: /user/list");
+
+                header("Location: " . $this->router->generate('user-list'));
                 exit;
             } else {
                 $message = "Echec de la sauvegarde en BDD";
@@ -353,7 +358,8 @@ class AppUserController extends CoreController
 
         if($user->delete())
         {
-            header("Location: /user/list");
+            // header("Location: /user/list");
+            header("Location: " . $this->router->generate('user-list'));
             exit;
         }
         else

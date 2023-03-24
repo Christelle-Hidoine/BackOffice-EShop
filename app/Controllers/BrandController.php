@@ -80,7 +80,8 @@ class BrandController extends CoreController
       // sauvegarder ces modif en BDD
       if($brand->save())
       {
-        header("Location: /brand/list");
+        // header("Location: /brand/list");
+        header("Location: " . $this->router->generate('brand-list'));
         exit;
       }
       else
@@ -112,7 +113,8 @@ class BrandController extends CoreController
 
     if($brand->delete())
     {
-      header("Location: /brand/list");
+      // header("Location: /brand/list");
+      header("Location: " . $this->router->generate('brand-list'));
       exit;
     }
     else

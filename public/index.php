@@ -82,4 +82,8 @@ $match = $router->match();
 // 2e argument : le "target" (controller & méthode) pour afficher la page 404
 $dispatcher = new Dispatcher($match, '\App\Controllers\ErrorController::err404');
 // Une fois le "dispatcher" configuré, on lance le dispatch qui va exécuter la méthode du controller
+
+// Cette fonction permet d'envoyer des arguments au constructeur du Controller utilisé (cf. construct du CoreController)
+$dispatcher->setControllersArguments($router, $match);
+
 $dispatcher->dispatch();

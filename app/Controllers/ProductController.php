@@ -108,7 +108,8 @@ class ProductController extends CoreController
       if($product->insert()) 
       {
         // Si la sauvegarde a fonctionné, on redirige vers la liste des produitS
-        header('Location: /product/list');
+        // header('Location: /product/list');
+        header("Location: " . $this->router->generate('product-list'));
         exit;
       }
       else 
@@ -248,7 +249,8 @@ class ProductController extends CoreController
       // Il nous reste a sauvegarder ces modif en BDD
       if($product->save())
       {
-        header( "Location: /product/list" );
+        // header( "Location: /product/list" );
+        header("Location: " . $this->router->generate('product-list'));
         exit;
       }
       else
@@ -296,7 +298,8 @@ class ProductController extends CoreController
 
     if($product->delete())
     {
-      header("Location: /product/list");
+      // header("Location: /product/list");
+      header("Location: " . $this->router->generate('product-list'));
       exit;
     }
     else

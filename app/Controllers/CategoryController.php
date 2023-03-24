@@ -71,7 +71,10 @@ class CategoryController extends CoreController
             // header(); Ne peut pas être appelé si le moindre affichage a déjà été fait
             // On pourrait utiliser $router->generate mais il faudrait ajouter un "global $router"
             // en haut de la méthode
-            header("Location: /category/list");
+            // header("Location: /category/list");
+
+            // avec l'argument $router dans le construct - et paramétré dans le dispatch - on peut utiliser $this->router->generate(+ nom de la route) dans le header();
+            header("Location: " . $this->router->generate("category-list"));
 
             // Toujours exit après une redirection pour éviter de charger le reste de la page
             exit;
@@ -145,7 +148,9 @@ class CategoryController extends CoreController
       // sauvegarde des modifs en BDD
       if($category->save())
       {
-        header("Location: /category/list");
+        // header("Location: /category/list");
+        // avec l'argument $router dans le construct - et paramétré dans le dispatch - on peut utiliser $this->router->generate(+ nom de la route) dans le header();
+        header("Location: " . $this->router->generate("category-list"));
         exit;
       }
       else
@@ -234,7 +239,7 @@ class CategoryController extends CoreController
 
 // ----------------------------------  METHODE AVEC FIND ALL pour afficher toutes les category (pas seulement les 5 de la bdd)-----------------------------------------------------------
 
-    // SI FINDALL() = > il faut passer les home_order de la BDD à 0 avant de setter les nouvelles category->homeOrder
+    // SI FINDALL() = > il faut passer toutes les home_order de la BDD à 0 avant de setter les nouvelles category->homeOrder
     $category = Category::findAll();
     foreach ($category as $resetHomeOrder) {
       $resetHomeOrder->setHomeOrder(0);

@@ -4,8 +4,15 @@ namespace App\Controllers;
 
 abstract class CoreController
 {
-    public function __construct()
+    // pour supprimer la global $router et $match on utiliser le construct = on passe les variables en paramètre
+    protected $router;
+    protected $match;
+
+    public function __construct($router, $match)
     {
+        $this->router = $router;
+        $this->match = $match;
+
         // on définit une liste des permissions ACL (access control list)
         $acl = [
             'user-list' => ['admin'],
@@ -19,9 +26,9 @@ abstract class CoreController
         // on vérifie si l'url demandée (nom de la route) nécessite une autorisation ($acl)
         // On a donc besoin de la route actuelle : $match['name']
         // ==> On doit donc récupérer $match
-        global $match;
+        // global $match;
         // On récupère le nom de la route
-        $routeName = $match['name'];
+        $routeName = $this->match['name'];
         
         // si la route existe dans $acl 
         if (array_key_exists($routeName,$acl))
@@ -81,7 +88,11 @@ abstract class CoreController
     protected function show(string $viewName, $viewData = [])
     {
         // On globalise $router car on ne sait pas faire mieux pour l'instant
-        global $router;
+        // global $router;
+
+        // avec les paramètres $router définit dans le construct, on peut appeler la propriété $router dans la méthode show sans passer par global
+
+        $viewData['router'] = $this->router;
 
         // Comme $viewData est déclarée comme paramètre de la méthode show()
         // les vues y ont accès

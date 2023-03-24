@@ -80,7 +80,8 @@ class TypeController extends CoreController
       // sauvegarder ces modif en BDD
       if($type->save())
       {
-        header("Location: /type/list");
+        // header("Location: /type/list");
+        header("Location: " . $this->router->generate('type-list'));
         exit;
       }
       else

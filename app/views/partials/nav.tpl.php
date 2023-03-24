@@ -52,6 +52,12 @@
                     </a>
                 </li>
             </ul>
+            <?php 
+            if (isset($_SESSION['userName'])) : ?>
+              <div class="alert alert-success col-2 m-auto text-center" role="alert">
+                <?= "Bienvenue {$_SESSION['userName']} !" ?>
+              </div>
+            <?php endif; ?>
             <div class="d-flex">
               <div class="nav-item me-auto">
                 <a class="nav-link" href="<?= $router->generate('user-connection') ?>">
