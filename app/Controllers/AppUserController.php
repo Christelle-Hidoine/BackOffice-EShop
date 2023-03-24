@@ -3,8 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\AppUser;
-use App\Models\Category;
-use App\Models\Product;
+
 
 class AppUserController extends CoreController
 
@@ -176,12 +175,6 @@ class AppUserController extends CoreController
                     $_SESSION['userRole'] = $user->getRole();
 
                     // dump($user);
-
-                    // on affiche la page home une fois connecté
-                    $category = Category::findAll();
-                    $product   = Product::findAll();
-                    $category = array_slice($category, 0, 5);
-                    $product   = array_slice($product, 0, 5);
 
                     header("Location: " . $this->router->generate('main-home'));
                     exit;

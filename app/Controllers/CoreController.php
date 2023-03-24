@@ -51,16 +51,15 @@ abstract class CoreController
             // 'user-create'
         ];
 
-
         // Si la route nécessite le check CSRF
         if (in_array($routeName, $csrfTokenToCheck)) {
             // On récupère le token en POST
 
             $postToken = !empty($_POST['token']) ? $_POST['token'] : '';
-            dump($postToken);
+            dump(bin2hex($postToken));
             // On récupère le token de la session
             $sessionToken = !empty($_SESSION['token']) ? $_SESSION['token'] : '';
-            dump($sessionToken);
+            dump(bin2hex($sessionToken));
             
             // On lève une erreur 403 s'ils sont vides ou pas égaux
             if ($postToken !== $sessionToken) {
