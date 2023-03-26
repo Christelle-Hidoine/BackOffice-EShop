@@ -154,7 +154,7 @@ abstract class CoreController
             }
             // si User pas connecté redirection vers page de connexion
         } else { 
-            header("Location: /user/connection");
+            header("Location: " . $this->router->generate('user-connection'));
             exit();
         }   
     }

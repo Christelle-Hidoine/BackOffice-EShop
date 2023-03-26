@@ -21,7 +21,7 @@
       <label for="name" class="form-label">
         Nom
       </label>
-      <input type="text" class="form-control" id="name" name="name" placeholder="Nom de la catégorie"value="<?= $category->getName() ?>"
+      <input type="text" class="form-control" id="name" name="name" placeholder="Nom de la catégorie" value="<?= $category->getName() ?>"
       >
     </div>
     <div class="mb-3">

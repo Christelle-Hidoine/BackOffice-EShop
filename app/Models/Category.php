@@ -47,6 +47,8 @@ class Category extends CoreModel
 
     /**
      * Get the value of subtitle
+     * 
+     * @param string $subtitle
      */
     public function getSubtitle()
     {
@@ -56,7 +58,7 @@ class Category extends CoreModel
     /**
      * Set the value of subtitle
      */
-    public function setSubtitle($subtitle)
+    public function setSubtitle(string $subtitle)
     {
         $this->subtitle = $subtitle;
     }
