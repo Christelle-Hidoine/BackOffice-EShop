@@ -143,32 +143,6 @@ class Category extends CoreModel
     }
 
     /**
-     * Méthode pour récupérer une catégorie selon son $home_order
-     * 
-     * @param int $home_order 
-     * @return Category
-     */
-    public static function findByHomeOrder($home_order)
-    {
-      $pdo = Database::getPDO();
-      $sql = 'SELECT * FROM `category` WHERE `home_order` = :home_order';
-
-      // préparer notre requête
-      $pdoStatement = $pdo->prepare($sql);
-
-      // remplacer les placeholders/étiquettes
-      $pdoStatement->bindValue(":home_order", $home_order, PDO::PARAM_INT);
-
-      // Executer la requete
-      $pdoStatement->execute();
-
-      $category = $pdoStatement->fetchObject(self::class);
-
-      // retourner le résultat
-      return $category;
-    }
-
-    /**
      * Récupérer les 5 catégories mises en avant sur la home
      *
      * @return Category[]
@@ -230,9 +204,9 @@ class Category extends CoreModel
     }
 
     /**
-     * Méthode permettant de mettre à jour un enregistrement dans la table product
+     * Méthode permettant de mettre à jour un enregistrement dans la table category
      * L'objet courant doit contenir l'id, et toutes les données à ajouter : 1 propriété => 1 colonne dans la table
-     *
+     * 
      * @return bool
      */
     public function update()
@@ -266,6 +240,33 @@ class Category extends CoreModel
         return false;
       }
     }
+
+    /**
+     * Méthode pour mettre à jour la propriété home_order sur la sélection des catégories en homepage
+     *
+     * @param array $ids Liste [ids] des catégories à mettre sur la page Sélection Accueil
+     * @return bool
+     */ 
+    public function updateHomeOrder($ids)
+    {
+      $pdo = Database::getPDO();
+
+      // marqueur anonyme pour setter l'id (?)
+      $sql = "UPDATE `category` SET `home_order` = 0;
+              UPDATE `category` SET `home_order` = 1 WHERE id = ?;
+              UPDATE `category` SET `home_order` = 2 WHERE id = ?;
+              UPDATE `category` SET `home_order` = 3 WHERE id = ?;
+              UPDATE `category` SET `home_order` = 4 WHERE id = ?;
+              UPDATE `category` SET `home_order` = 5 WHERE id = ?";
+
+      $pdoStatement = $pdo->prepare($sql);
+
+      // $ids est un array donc on peut le passer directement en argument de la méthode execute() (qui attend aussi un array)
+      $pdoStatement->execute($ids);
+
+      return ($pdoStatement->rowCount() > 0);
+    }
+    
 
     /**
      * Méthode qui va appeller insert() ou update() selon la présence d'un id
