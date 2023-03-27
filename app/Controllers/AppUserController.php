@@ -173,7 +173,7 @@ class AppUserController extends CoreController
                     $_SESSION['userName'] = $user->getFirstName();
                     $_SESSION['userEmail'] = $user->getEmail();
                     $_SESSION['userRole'] = $user->getRole();
-
+                        
                     // dump($user);
 
                     header("Location: " . $this->router->generate('main-home'));

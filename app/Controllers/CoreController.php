@@ -44,11 +44,10 @@ abstract class CoreController
         // que la route n'est pas dans la liste $acl des routes à vérifier
         // cad toute le monde peut accéder librement et directement à cete route
 
-        /*
-        * Gestion du CSRF : exemple sur le form user/add
-        */ 
+        
+        // Gestion du CSRF : exemple sur le form user/add
         $csrfTokenToCheck = [
-            // 'user-create'
+            'user-create'
         ];
         
         // Si la route nécessite le check CSRF
@@ -62,7 +61,7 @@ abstract class CoreController
             dump(bin2hex($sessionToken));
             
             // On lève une erreur 403 s'ils sont vides ou pas égaux
-            if ($postToken !== $sessionToken) {
+            if ($postToken !== $sessionToken || empty($postToken)) {
                 // On affiche une erreur 403
                 // => on envoie le header "403 Forbidden"
                 http_response_code(403);
@@ -75,6 +74,7 @@ abstract class CoreController
                 unset($_SESSION['token']);
             }
         }
+        
     }
 
     /**
