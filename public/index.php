@@ -11,7 +11,7 @@ require_once '../vendor/autoload.php';
 use App\Controllers\MainController;
 
 /* -------------------
---- SESSION STORAGE---
+--- SESSION STORAGE ---
 --------------------*/
 
 session_start();
