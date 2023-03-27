@@ -11,7 +11,7 @@ require_once '../vendor/autoload.php';
 use App\Controllers\MainController;
 
 /* -------------------
---- SESSION STORAGE---
+--- SESSION STORAGE ---
 --------------------*/
 
 session_start();
@@ -66,6 +66,7 @@ require_once __DIR__ . '/routes/brand.php';
 require_once __DIR__ . '/routes/category.php';
 require_once __DIR__ . '/routes/product.php';
 require_once __DIR__ . '/routes/type.php';
+require_once __DIR__ . '/routes/tag.php';
 
 
 /* -------------

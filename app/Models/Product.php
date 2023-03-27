@@ -94,6 +94,21 @@ class Product extends CoreModel
     }
 
     /**
+     * Method to retrieve product data from tag and product table by product_Id
+     *
+     * @param [int] $id
+     * @return Product
+     */
+    public function findTagById($id)
+    {
+      $pdo = Database::getPDO();
+      $sql = "SELECT * FROM `product` WHERE `id` IN ( SELECT `tag_id` FROM `product_has_tag` WHERE `product_id` = '. $id .')";
+      $pdoStatement = $pdo->query($sql);
+      $results = $pdoStatement->fetchObject(PDO::FETCH_CLASS, self::class);
+      return $results;
+    }
+
+    /**
      * Méthode permettant d'ajouter un enregistrement dans la table product.
      * L'objet courant doit contenir toutes les données à ajouter : 1 propriété => 1 colonne dans la table
      * 
