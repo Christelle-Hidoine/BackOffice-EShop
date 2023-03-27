@@ -50,7 +50,7 @@ abstract class CoreController
         $csrfTokenToCheck = [
             // 'user-create'
         ];
-
+        
         // Si la route nécessite le check CSRF
         if (in_array($routeName, $csrfTokenToCheck)) {
             // On récupère le token en POST

@@ -203,12 +203,7 @@ class CategoryController extends CoreController
    */
   public function homeList()
   {
-
-    // $homeOrder = Category::findAllHomepage();
-
-    // -------- methode pour afficher toutes les catégories (pas seulement les 5 de la bdd)----------
     $homeOrder = Category::findAll();
-
     $this->show('category/home', ['homeOrder' => $homeOrder]);
   }
 
@@ -222,50 +217,53 @@ class CategoryController extends CoreController
     // OBJECTIF : setter toutes les home_order sur les categoryId correspondantes + update en BDD
 
     // On récupère du form un tableau $emplacement ['key' => 'home_order à modifier'] avec value string
-    $emplacement = $_POST["emplacement"];
-    // dump($emplacement);
+    // dump($_POST);
     
     // tableau vide qui contiendra la liste des emplacements sélectionnés sur le form
-    $homeOrderList = [];
+    // $homeOrderList = [];
+
+    // possible de filtrer directement sur le tableau en passant 2 arguments
+    $emplacement = filter_input(INPUT_POST, 'emplacement', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY);
+
+    Category::updateHomeOrder($emplacement);
+    header('Location: /category/list');
+    exit;
 
     // filtre avec filter_var
-    foreach ($emplacement as $home_order => $categoryId) {
-        $categoryById = filter_var($categoryId, FILTER_VALIDATE_INT);
+    // foreach ($emplacement as $home_order => $categoryId) {
+    //     $categoryById = filter_var($categoryId, FILTER_VALIDATE_INT);
   
         // Modification de la clé pour commencer à 1 = 1er emplacement dans le form
-        $homeOrderList[$home_order +1] = $categoryById;
-    }
+    //     $homeOrderList[$home_order +1] = $categoryById;
+    // }
     // dump($homeOrderList);
 
-// ----------------------------------  METHODE AVEC FIND ALL pour afficher toutes les category (pas seulement les 5 de la bdd)-----------------------------------------------------------
-
-    // SI FINDALL() = > il faut passer toutes les home_order de la BDD à 0 avant de setter les nouvelles category->homeOrder
-    $category = Category::findAll();
-    foreach ($category as $resetHomeOrder) {
-      $resetHomeOrder->setHomeOrder(0);
+    // SI FINDALL() => il faut passer toutes les home_order de la BDD à 0 avant de setter les nouvelles category->homeOrder
+    // $category = Category::findAll();
+    // foreach ($category as $resetHomeOrder) {
+    //   $resetHomeOrder->setHomeOrder(0);
       // dump($categoryElement);
-      $resetHomeOrder->save();
-    };
-// ----------------------------------  METHODE AVEC FIND ALL continue comme la méthode classique pour afficher juste le select des 5 catégories ------------------------------------------    
+    //   $resetHomeOrder->save();
+    // };
 
     // on parcourt le tableau en récupérant chaque categoryId correspondant à chaque emplacement
-    foreach ($homeOrderList as $home_order => $categoryId) {
-        // récupération de la category correspondante à la home_order sélectionnée avec method findByHomeOrder
-        $category = Category::find($categoryId);
-        // dump($category);
+    // foreach ($homeOrderList as $home_order => $categoryId) {
+    //     // récupération de la category correspondante à la home_order sélectionnée avec method findByHomeOrder
+    //     $category = Category::find($categoryId);
+    //     // dump($category);
 
-        // set de la valeur avec la position indiquée dans le form
-        $category->setHomeOrder($home_order);
-        // dump($category);
+    //     // set de la valeur avec la position indiquée dans le form
+    //     $category->setHomeOrder($home_order);
+    //     // dump($category);
 
-        // on sauvegarde dans la BDD
-        $category->save(); 
-    }
+    //     // on sauvegarde dans la BDD
+    //     $category->save(); 
+    // }
 
     // $homeOrder = Category::findAllHomepage();
 
     // -------- methode pour afficher toutes les catégories (pas seulement les 5 de la bdd)---------
-    $homeOrder = Category::findAll();
-    $this->show('category/home', ['homeOrder' => $homeOrder]);
+    // $homeOrder = Category::findAll();
+    // $this->show('category/home', ['homeOrder' => $homeOrder]);
   }
 }
