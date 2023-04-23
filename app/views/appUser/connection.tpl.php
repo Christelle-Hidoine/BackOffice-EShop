@@ -36,4 +36,3 @@
         </a>
     </div> 
 </div>
-<?php dump(bin2hex($token)) ?>

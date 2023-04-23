@@ -47,8 +47,8 @@ abstract class CoreController
         
         // Gestion des tokens anti-CSRF pour les routes en POST: exemple sur le form user/add
         $csrfTokenToCheckInPost = [
-            'user-create',
-            'user-check',
+            // 'user-create',
+            // 'user-check',
             // 'user-update',
         ];
 
@@ -116,8 +116,8 @@ abstract class CoreController
        
         // Astuce pour voir les variables disponibles dans nos vues
         // A ne pas laisser en PROD !
-        dump(get_defined_vars());
-        dump($_SESSION);
+        // dump(get_defined_vars());
+        // dump($_SESSION);
 
         // $viewData est disponible dans chaque fichier de vue
         require_once __DIR__ . '/../views/layout/header.tpl.php';
@@ -193,7 +193,7 @@ abstract class CoreController
     {
         // génération d'un token aléatoire
         $_SESSION['token'] = random_bytes(5);
-        dump(bin2hex($_SESSION['token']));
+        // dump(bin2hex($_SESSION['token']));
         return $_SESSION['token'];
     }
 }

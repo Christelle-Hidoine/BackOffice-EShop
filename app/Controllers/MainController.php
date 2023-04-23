@@ -22,7 +22,7 @@ class MainController extends CoreController
     // Bonus : n'afficher que les 5 premiers éléments de chaque tableau
     $category = array_slice($category, 0, 5);
     $product = array_slice($product, 0, 5);
-    dump($category);
+    // dump($category);
     // Je tente d'instancier un CoreModel ce qui n'a aucun sens 
     // car ça ne correspond a aucune "vraie" entité de notre MCD
     // $pofpof = new CoreModel();

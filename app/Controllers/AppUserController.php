@@ -27,7 +27,7 @@ class AppUserController extends CoreController
     {
         $users = AppUser::findAll();
         
-        $this->show("appUser/add", ['user' => new AppUser, 'users' => $users]);
+        $this->show("appUser/add", ['user' => new AppUser, 'users' => $users, 'token' => $this->generateToken()]);
     }
 
     /**
@@ -94,7 +94,7 @@ class AppUserController extends CoreController
 
                 } else {
                     $message = "Echec de la sauvegarde en BDD";
-                    $this->show("appUser/add", ['error' => $message]);
+                    $this->show("appUser/add", ['error' => $message, 'token' => $this->generateToken()]);
                 }
             } else { 
                 $user = new AppUser();
@@ -110,7 +110,7 @@ class AppUserController extends CoreController
                 // On affiche chaque erreurs rencontrée et renvoi vers la page formulaire create avec l'autocomplétion
                 $message = $errorList;
                 
-                $this->show("appUser/add", ['error' => $message, 'user' => $user]);
+                $this->show("appUser/add", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
             } 
             // si le mot de passe n'est pas suffisamment sécurisé = message d'erreur  
         // } else {
@@ -306,7 +306,7 @@ class AppUserController extends CoreController
     {
         if (isset($_SESSION['userId']))
         {
-            return session_unset();
+            session_unset();
             header("Location: /user/connection");
         }
         session_destroy();
