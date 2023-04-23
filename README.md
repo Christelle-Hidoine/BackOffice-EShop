@@ -15,7 +15,7 @@ Model - View - Controller
 "benoclock/alto-dispatcher"
 
 <details>
-    <summary>Utilisation</summary>
+    <summary>Liste des connaissances/technologies acquises</summary>
 
 - Méthode SCRUM Agile pour gérer le projet à partir d'un Trello composé de <em>User Stories</em>.
 - Sécurisation du site par authentification selon Access Control List
@@ -27,3 +27,9 @@ Model - View - Controller
 - Templates pour les vues
 
 </details>
+
+## ScreenShot:
+- [Formulaire de Login](Login-error.png)
+- [Formulaire d'ajout d'un utilisateur](Ajout_user_error.png)
+- [Page d'accueil](Backoffice-HomePage.png)
+- [Gestion des emplacements catégories](Gestion_emplacement_categorie.png)
