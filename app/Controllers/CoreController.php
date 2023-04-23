@@ -13,7 +13,7 @@ abstract class CoreController
         $this->router = $router;
         $this->match = $match;
 
-        // on définit une liste des permissions ACL (access control list)
+        // on définit une liste des permissions ACL (access control list) nécessitant une connexion utilisateur
         $acl = [
             'user-list' => ['admin'],
             'user-add' => ['admin'],
@@ -42,39 +42,40 @@ abstract class CoreController
         
         // else ? ==> pas besoin de else car si on ne rentre pas dans le if, ca signifie 
         // que la route n'est pas dans la liste $acl des routes à vérifier
-        // cad toute le monde peut accéder librement et directement à cete route
+        // càd toute le monde peut accéder librement et directement à cete route
 
         
-        // Gestion du CSRF : exemple sur le form user/add
-        $csrfTokenToCheck = [
-            'user-create'
+        // Gestion des tokens anti-CSRF pour les routes en POST: exemple sur le form user/add
+        $csrfTokenToCheckInPost = [
+            'user-create',
+            'user-check',
+            // 'user-update',
+        ];
+
+        // Gestion des tokens anti-CSRF pour les routes en GET: exemple sur le form user/add
+        $csrfTokenToCheckInGet = [
+            // 'user-delete'
         ];
         
-        // Si la route nécessite le check CSRF
-        if (in_array($routeName, $csrfTokenToCheck)) {
+        // Si la route en POST nécessite le check CSRF
+        if (!empty($csrfTokenToCheckInPost) && in_array($routeName, $csrfTokenToCheckInPost)) {
             // On récupère le token en POST
-
-            $postToken = !empty($_POST['token']) ? $_POST['token'] : '';
-            dump(bin2hex($postToken));
-            // On récupère le token de la session
-            $sessionToken = !empty($_SESSION['token']) ? $_SESSION['token'] : '';
-            dump(bin2hex($sessionToken));
+            $token = isset($_POST['token']) ? $_POST['token'] : '';
+            // $token = filter_input(INPUT_POST, 'token');
+            // $token = $_POST['token'] ?? '';
             
-            // On lève une erreur 403 s'ils sont vides ou pas égaux
-            if ($postToken !== $sessionToken || empty($postToken)) {
-                // On affiche une erreur 403
-                // => on envoie le header "403 Forbidden"
-                http_response_code(403);
-                // Puis on affiche la (nouvelle) page d'erreur 403
-                $this->show('error/err403');
-                // Enfin on arrête le script pour que la page demandée ne s'affiche pas
-                exit();
-            } else {
-                // Sinon RAS, on supprime juste le token en session
-                unset($_SESSION['token']);
-            }
+            $this->getCsrfToken($token);
         }
-        
+          
+        // Si la route en POST nécessite le check CSRF
+        if (!empty($csrfTokenToCheckInGet) && in_array($routeName, $csrfTokenToCheckInGet)) {
+            // On récupère le token en GET
+            $token = isset($_GET['token']) ? $_GET['token'] : '';
+            // $token = filter_input(INPUT_GET, 'token');
+            // $token = $_GET['token'] ?? '';
+
+            $this->getCsrfToken($token);
+        }
     }
 
     /**
@@ -133,7 +134,7 @@ abstract class CoreController
     protected function checkAuthorization($authorizedRoles)
     {
         // vérification si user connecté
-        if (isset($_SESSION['userId'])) {
+        if (isset($_SESSION['userObject'])) {
             // récupération du User via la $_SESSION
             $user = $_SESSION['userObject'];
 
@@ -157,5 +158,42 @@ abstract class CoreController
             header("Location: " . $this->router->generate('user-connection'));
             exit();
         }   
+    }
+
+    /**
+     * Method to check if the form's token matches with session's token
+     *
+     * @param string $token
+     * @return void
+     */
+    protected function getCsrfToken(string $token)
+    {
+        // On récupère le token en SESSION
+        $sessionToken = isset($_SESSION['token']) ? $_SESSION['token'] : '';
+        // $sessionToken = $_SESSION['token'] ?? '';
+        
+        // S'ils ne sont pas égaux ou vide
+        if ($token !== $sessionToken || empty($token)) {
+            // Alors on affiche une 403
+            $this->show('error/err403');
+            exit;
+        } else { // Sinon, tout va bien
+            // On supprime le token en session
+            // Ainsi, on ne pourra pas soumettre plusieurs fois le même formulaire, ni réutiliser ce token
+            unset($_SESSION['token']);
+        }
+    }
+
+    /**
+     * Method to generate a random token
+     *
+     * @return string
+     */
+    protected function generateToken()
+    {
+        // génération d'un token aléatoire
+        $_SESSION['token'] = random_bytes(5);
+        dump(bin2hex($_SESSION['token']));
+        return $_SESSION['token'];
     }
 }

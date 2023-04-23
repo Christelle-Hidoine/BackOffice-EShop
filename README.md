@@ -1,12 +1,29 @@
-# oShop - saison 6
+# BackOffice d'un site marchand
 
-C'est l'heure de commencer le sprint suivant sur le projet oShop :tada:
+**Languages**:
+`PHP`
+`HTML`
+`SQL`
+`CSS`
 
-## Sprint Planning
+**Architecture**:
+Model - View - Controller
 
-Allons voir notre Trello pour connaître les prochaines _User Stories_ à ajouter à notre _Sprint Backlog_ :eyes:  
-Pour cela, le lien vers le Trello de chaque cockpit se trouve dans [docs/product_backlog.md](docs/product_backlog.md)
+**Dépendances** :
+"symfony/var-dumper",
+"altorouter/altorouter",
+"benoclock/alto-dispatcher"
 
-## Serveur PHP intégré
+<details>
+    <summary>Utilisation</summary>
 
-Pour faire tourner notre site cette saison, on va utiliser le serveur de développement intégré à PHP, en lieu et place de notre serveur Apache habituel. Pour bien comprendre ce que ça va changer, on vous invite à [lire la doc](docs/serveur_de_dev_php.md). :wink:
+- Méthode SCRUM Agile pour gérer le projet à partir d'un Trello composé de <em>User Stories</em>.
+- Sécurisation du site par authentification selon Access Control List
+- Sécurisation des formulaires avec des tokens anti-CSRF
+- Création, mise à jour, gestion d'une base de données avec relations many to many
+- Utilisation des namespaces selon la norme <strong>PSR-4</strong> avec l'autoload
+- Réécriture des URL avec les regex
+- CRUD pour chaque Model
+- Templates pour les vues
+
+</details>

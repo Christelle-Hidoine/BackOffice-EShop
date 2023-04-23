@@ -71,6 +71,20 @@ class Tag extends CoreModel {
     return $results;
   }
 
+  /**
+     * Method to retrieve tag data from product and tag table by product_Id
+     *
+     * @param [int] $id
+     * @return Tag
+     */
+    public static function findTagByProductId($id)
+    {
+      $pdo = Database::getPDO();
+      $sql = "SELECT * FROM `tag` WHERE `id` IN ( SELECT `tag_id` FROM `product_has_tag` WHERE `product_id` = '. $id .')";
+      $pdoStatement = $pdo->query($sql);
+      $results = $pdoStatement->fetchObject(PDO::FETCH_CLASS, self::class);
+      return $results;
+    }
 
   /**
    * Méthode permettant d'ajouter un enregistrement dans la table tag

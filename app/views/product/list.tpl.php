@@ -19,6 +19,7 @@
                 <th scope="row"><?=$product->getID()?></th>
                 <td><?=$product->getName()?></td>
                 <td><?=$product->getDescription()?></td>
+                
                 <td class="text-end">
                     <a href="<?= $router->generate('product-edit', ['id' => $product->getId()]) ?>" class="btn btn-sm btn-warning">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>

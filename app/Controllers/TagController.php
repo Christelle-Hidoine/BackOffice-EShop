@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\Product;
+use App\Models\Tag;
 
 class TagController extends CoreController 
 

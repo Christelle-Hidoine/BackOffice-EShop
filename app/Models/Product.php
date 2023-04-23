@@ -94,12 +94,12 @@ class Product extends CoreModel
     }
 
     /**
-     * Method to retrieve product data from tag and product table by product_Id
+     * Method to retrieve product data from tag and product table by tag_id
      *
      * @param [int] $id
      * @return Product
      */
-    public function findTagById($id)
+    public static function findProductByTagId($id)
     {
       $pdo = Database::getPDO();
       $sql = "SELECT * FROM `product` WHERE `id` IN ( SELECT `tag_id` FROM `product_has_tag` WHERE `product_id` = '. $id .')";

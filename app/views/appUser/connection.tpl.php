@@ -14,6 +14,10 @@
                     <?= $error ?>
                 </div>
         <?php endforeach; endif; ?> 
+
+    <!-- token hidden anti-csrf -->
+        <input type="hidden" name="token" value="<?= $token ?>">
+    
     <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input type="email" class="form-control" id="email" name="email" placeholder="adresse email" value="<?= $user->getEmail() ?>" aria-describedby="emailHelp">
@@ -32,3 +36,4 @@
         </a>
     </div> 
 </div>
+<?php dump(bin2hex($token)) ?>

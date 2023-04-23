@@ -26,6 +26,7 @@ class AppUserController extends CoreController
     public function add()
     {
         $users = AppUser::findAll();
+        
         $this->show("appUser/add", ['user' => new AppUser, 'users' => $users]);
     }
 
@@ -126,7 +127,7 @@ class AppUserController extends CoreController
     {
         // on récupère l'objet user pour l'autocomplétion du formulaire si erreur dans la méthode check
         $user = new AppUser();
-        $this->show("appUser/connection", ['user' => $user]);
+        $this->show("appUser/connection", ['user' => $user, 'token' => $this->generateToken()]);
     }
 
     /**
@@ -168,11 +169,8 @@ class AppUserController extends CoreController
                 // on le compare au password saisi dans le formulaire
 
                 // on récupère les données de la $_SESSION (suite à session_start() dans l'index)
-                    $_SESSION['userId'] = $user->getId();
                     $_SESSION['userObject'] = $user;
-                    $_SESSION['userName'] = $user->getFirstName();
-                    $_SESSION['userEmail'] = $user->getEmail();
-                    $_SESSION['userRole'] = $user->getRole();
+                    $_SESSION['userId'] = $user->getId();
                         
                     // dump($user);
 
@@ -186,21 +184,21 @@ class AppUserController extends CoreController
                     // on récupère les infos pour autocompléter le formulaire avec les données rentrées
                     $user = new AppUser();
                     $user->setEmail($email);
-                    $this->show("appUser/connection", ['error' => $message, 'user' => $user]);
+                    $this->show("appUser/connection", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
                 }
             } else {
                 // si user n'existe pas = message d'erreur
                 $message = "Email et/ou mot de passe incorrect";
                 $user= new AppUser();
                 $user->setEmail($email);
-                $this->show("appUser/connection", ['error' => $message, 'user' => $user]);
+                $this->show("appUser/connection", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
             }
         } else {
             // on récupère la liste des erreurs et on l'affiche sur la tpl avec une boucle
             $message = $errorList;
             $user = new AppUser();
             $user->setEmail($email);
-            $this->show("appUser/connection", ['errorList' => $message, 'user' => $user]);        
+            $this->show("appUser/connection", ['errorList' => $message, 'user' => $user, 'token' => $this->generateToken()]);        
         }
     }
 
@@ -306,9 +304,9 @@ class AppUserController extends CoreController
      */
     public function logout()
     {
-        if (isset($_SESSION['UserId']))
+        if (isset($_SESSION['userId']))
         {
-            return session_unset($_SESSION);
+            return session_unset();
             header("Location: /user/connection");
         }
         session_destroy();
