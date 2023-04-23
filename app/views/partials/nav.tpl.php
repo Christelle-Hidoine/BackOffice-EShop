@@ -37,7 +37,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link <?= $viewName === "tag/list" ? "active" : ""?>" href="<?= $router->generate('tag-list') ?>">
                       Tags
                     </a>
                 </li>
