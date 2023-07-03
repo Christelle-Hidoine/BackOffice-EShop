@@ -15,7 +15,7 @@ class BrandController extends CoreController
   public function list()
   {
     $brand = Brand::findAll();
-    $this->show("brand/list", ["brand" => $brand]);
+    $this->show("brand/list", ["brand" => $brand, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -25,7 +25,7 @@ class BrandController extends CoreController
    */
   public function add()
   {
-    $this->show('brand/add', ['brand' => new Brand]);
+    $this->show('brand/add', ['brand' => new Brand, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -38,7 +38,7 @@ class BrandController extends CoreController
   {
     $brand = Brand::find($id);
     $id = $brand->getId();
-    $this->show('brand/add', ['brand' => $brand, 'id'=> $id]);
+    $this->show('brand/add', ['brand' => $brand, 'id'=> $id, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -87,7 +87,7 @@ class BrandController extends CoreController
       else
       {
         $message = "Une erreur est survenue lors de l'édition de la Marque";
-        $this->show("brand/add", ['error' => $message]);
+        $this->show("brand/add", ['error' => $message, 'token' => $this->generateToken()]);
       }
     }
     else
@@ -97,7 +97,7 @@ class BrandController extends CoreController
       $brand->setName($name);
 
       $message = $errorList;
-      $this->show("brand/add", ['brand' => $brand, 'error' => $message]);
+      $this->show("brand/add", ['brand' => $brand, 'error' => $message, 'token' => $this->generateToken()]);
     }
   }
 
@@ -121,7 +121,7 @@ class BrandController extends CoreController
     {
       $message = "Echec de la suppression de la marque";
       $brand = Brand::findAll();
-      $this->show("brand/list", ['brand' => $brand, ['error' => $message]]);
+      $this->show("brand/list", ['brand' => $brand, ['error' => $message, 'token' => $this->generateToken()]]);
     }
   }
 

@@ -15,6 +15,7 @@ Model - View - Controller
 "benoclock/alto-dispatcher"
 
 <details>
+
     <summary>Liste des connaissances/technologies acquises</summary>
 
 - Méthode SCRUM Agile pour gérer le projet à partir d'un Trello composé de <em>User Stories</em>.
@@ -29,6 +30,7 @@ Model - View - Controller
 </details>
 
 ## ScreenShot:
+
 - [Formulaire de Login](Login-error.png)
 - [Formulaire d'ajout d'un utilisateur](Ajout_user_error.png)
 - [Page d'accueil](Backoffice-HomePage.png)

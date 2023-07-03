@@ -247,7 +247,7 @@ class Category extends CoreModel
      * @param array $ids Liste [ids] des catégories à mettre sur la page Sélection Accueil
      * @return bool
      */ 
-    public function updateHomeOrder($ids)
+    public static function updateHomeOrder($ids)
     {
       $pdo = Database::getPDO();
 

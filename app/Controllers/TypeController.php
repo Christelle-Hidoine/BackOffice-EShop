@@ -15,7 +15,7 @@ class TypeController extends CoreController
   public function list()
   {
     $types = Type::findAll();
-    $this->show("type/list", ["types" => $types]);
+    $this->show("type/list", ["types" => $types, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -25,7 +25,7 @@ class TypeController extends CoreController
    */
   public function add()
   {
-    $this->show('type/add', ['type' => new Type]);
+    $this->show('type/add', ['type' => new Type, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -38,7 +38,7 @@ class TypeController extends CoreController
   {
     $type = Type::find($id);
     $id = $type->getId();
-    $this->show('type/add', ['type' => $type, 'id' => $id]);
+    $this->show('type/add', ['type' => $type, 'id' => $id, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -87,7 +87,7 @@ class TypeController extends CoreController
       else
       {
         $message = "Une erreur est survenue lors de l'édition du Type";
-        $this->show("type/add", ['error' => $message]);
+        $this->show("type/add", ['error' => $message, 'token' => $this->generateToken()]);
       }
     }
     else
@@ -97,7 +97,7 @@ class TypeController extends CoreController
       $type->setName($name);
 
       $message = $errorList;
-      $this->show("type/add", ['type' => $type, 'error' => $message]);
+      $this->show("type/add", ['type' => $type, 'error' => $message, 'token' => $this->generateToken()]);
     }
   }
 
@@ -120,7 +120,7 @@ class TypeController extends CoreController
     {
       $message = "Echec de la suppression de la marque";
       $type = Type::findAll();
-      $this->show("type/list", ['type' => $type, ['error' => $message]]);
+      $this->show("type/list", ['type' => $type, ['error' => $message], 'token' => $this->generateToken()]);
     }
   }
 }

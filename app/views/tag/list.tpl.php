@@ -1,4 +1,3 @@
-
 <div class="container my-4">
     <a href="<?= $router->generate('tag-add') ?>" class="btn btn-success float-end">
       Ajouter
@@ -35,7 +34,7 @@
                             <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="<?= $router->generate('tag-delete',['id' => $tag->getId()]) ?>">
+                            <a class="dropdown-item" href="<?= $router->generate('tag-delete',['id' => $tag->getId()]) ?>?token=<?= $token ?>">
                               Oui, je veux supprimer
                             </a>
                             <a class="dropdown-item" href="#" data-toggle="dropdown">

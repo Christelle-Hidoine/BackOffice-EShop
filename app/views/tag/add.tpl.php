@@ -1,4 +1,3 @@
-
 <div class="container my-4">
   <a href="<?= $router->generate('tag-list') ?>" class="btn btn-success float-end">
     Retour
@@ -30,7 +29,8 @@
       <input type="text" class="form-control" id="name" name="name" value="<?= $tag->getName() ?>" placeholder="Nom du tag">
     </div>
 
-
+    <!-- Pour le CSRF : on ajoute cet input caché -->
+    <input type="hidden" name="token" value="<?= $token ?>">
 
     <div class="d-grid gap-2">
       <button type="submit" class="btn btn-primary mt-5">Valider</button>

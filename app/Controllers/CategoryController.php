@@ -17,7 +17,7 @@ class CategoryController extends CoreController
     $category = Category::findAll();
 
     // Les transmettre à la vue
-    $this->show("category/list", ["category" => $category]);
+    $this->show("category/list", ["category" => $category, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -27,7 +27,7 @@ class CategoryController extends CoreController
    */
   public function add()
   {
-    $this->show("category/add", ['category' => new Category]);
+    $this->show("category/add", ['category' => new Category, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -80,7 +80,7 @@ class CategoryController extends CoreController
             exit;
         } else {
             $message = "Echec de la sauvegarde en BDD";
-            $this->show("category/add", ['error' => $message]);
+            $this->show("category/add", ['error' => $message, 'token' => $this->generateToken()]);
         }
     } else {
         // On affiche chaque erreur rencontrée
@@ -91,7 +91,7 @@ class CategoryController extends CoreController
         $category->setHomeOrder(0);
 
         $message = $errorList;
-        $this->show("category/add", ['category' => $category, 'error' => $message]);
+        $this->show("category/add", ['category' => $category, 'error' => $message, 'token' => $this->generateToken()]);
     }
   }
 
@@ -105,7 +105,7 @@ class CategoryController extends CoreController
   {   
     $category = Category::find($id);
     // dump($category);
-    $this->show("category/edit", ["category" => $category]);
+    $this->show("category/edit", ["category" => $category, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -156,7 +156,7 @@ class CategoryController extends CoreController
       else
       {
         $message = "Echec de la sauvegarde en BDD";
-        $this->show("category/edit", ['error' => $message]);
+        $this->show("category/edit", ['error' => $message, 'token' => $this->generateToken()]);
       }
     }
     else
@@ -169,7 +169,7 @@ class CategoryController extends CoreController
       $category->setHomeOrder(0);
 
       $message = $errorList;
-      $this->show("category/edit", ['category' => $category, 'errorList' => $message]);
+      $this->show("category/edit", ['category' => $category, 'errorList' => $message, 'token' => $this->generateToken()]);
     }
   }
 
@@ -192,7 +192,7 @@ class CategoryController extends CoreController
     {
       $message = "Echec de la suppression de la catégorie";
       $category = Category::findAll();
-      $this->show("category/list", ['category' => $category, ['error' => $message]]);
+      $this->show("category/list", ['category' => $category, ['error' => $message, 'token' => $this->generateToken()]]);
     }
   }
 
@@ -229,41 +229,5 @@ class CategoryController extends CoreController
     header('Location: /category/list');
     exit;
 
-    // filtre avec filter_var
-    // foreach ($emplacement as $home_order => $categoryId) {
-    //     $categoryById = filter_var($categoryId, FILTER_VALIDATE_INT);
-  
-        // Modification de la clé pour commencer à 1 = 1er emplacement dans le form
-    //     $homeOrderList[$home_order +1] = $categoryById;
-    // }
-    // dump($homeOrderList);
-
-    // SI FINDALL() => il faut passer toutes les home_order de la BDD à 0 avant de setter les nouvelles category->homeOrder
-    // $category = Category::findAll();
-    // foreach ($category as $resetHomeOrder) {
-    //   $resetHomeOrder->setHomeOrder(0);
-      // dump($categoryElement);
-    //   $resetHomeOrder->save();
-    // };
-
-    // on parcourt le tableau en récupérant chaque categoryId correspondant à chaque emplacement
-    // foreach ($homeOrderList as $home_order => $categoryId) {
-    //     // récupération de la category correspondante à la home_order sélectionnée avec method findByHomeOrder
-    //     $category = Category::find($categoryId);
-    //     // dump($category);
-
-    //     // set de la valeur avec la position indiquée dans le form
-    //     $category->setHomeOrder($home_order);
-    //     // dump($category);
-
-    //     // on sauvegarde dans la BDD
-    //     $category->save(); 
-    // }
-
-    // $homeOrder = Category::findAllHomepage();
-
-    // -------- methode pour afficher toutes les catégories (pas seulement les 5 de la bdd)---------
-    // $homeOrder = Category::findAll();
-    // $this->show('category/home', ['homeOrder' => $homeOrder]);
   }
 }

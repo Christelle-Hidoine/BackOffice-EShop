@@ -16,7 +16,7 @@ class AppUserController extends CoreController
     {
         // $this->checkAuthorization('admin');
         $users = AppUser::findAll();
-        $this->show("appUser/list", ['users' => $users]);
+        $this->show("appUser/list", ['users' => $users, 'token' => $this->generateToken()]);
     }
 
     /**
@@ -66,9 +66,6 @@ class AppUserController extends CoreController
             $errorList[] = "Le mot de passe doit contenir au minimum 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial";
         }
 
-        // vérification de la sécurité du mot de passe
-        // $check = $this->checkPassword($password);
-        // if ($check === true) {
             // Si on a rencontré aucune erreur => si $errorList est vide donc
             if (empty($errorList)) {
                 $user = new AppUser();
@@ -112,11 +109,7 @@ class AppUserController extends CoreController
                 
                 $this->show("appUser/add", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
             } 
-            // si le mot de passe n'est pas suffisamment sécurisé = message d'erreur  
-        // } else {
-        //     $message = $check;
-        //     $this->show("appUser/add",['check' => $message]);
-        // }
+        
     }
 
     /**
@@ -127,6 +120,7 @@ class AppUserController extends CoreController
     {
         // on récupère l'objet user pour l'autocomplétion du formulaire si erreur dans la méthode check
         $user = new AppUser();
+
         $this->show("appUser/connection", ['user' => $user, 'token' => $this->generateToken()]);
     }
 
@@ -184,6 +178,7 @@ class AppUserController extends CoreController
                     // on récupère les infos pour autocompléter le formulaire avec les données rentrées
                     $user = new AppUser();
                     $user->setEmail($email);
+
                     $this->show("appUser/connection", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
                 }
             } else {
@@ -191,6 +186,7 @@ class AppUserController extends CoreController
                 $message = "Email et/ou mot de passe incorrect";
                 $user= new AppUser();
                 $user->setEmail($email);
+
                 $this->show("appUser/connection", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
             }
         } else {
@@ -198,6 +194,7 @@ class AppUserController extends CoreController
             $message = $errorList;
             $user = new AppUser();
             $user->setEmail($email);
+
             $this->show("appUser/connection", ['errorList' => $message, 'user' => $user, 'token' => $this->generateToken()]);        
         }
     }
@@ -211,7 +208,7 @@ class AppUserController extends CoreController
     public function edit($id)
     { 
         $user = AppUser::find($id);
-        $this->show("appUser/edit", ["user" => $user]);
+        $this->show("appUser/edit", ["user" => $user, 'token' => $this->generateToken()]);
     }
 
     /**
@@ -274,7 +271,7 @@ class AppUserController extends CoreController
                 exit;
             } else {
                 $message = "Echec de la sauvegarde en BDD";
-                $this->show("appUser/edit", ['error' => $message]);
+                $this->show("appUser/edit", ['error' => $message, 'token' => $this->generateToken()]);
             }
         } else { 
 
@@ -293,7 +290,7 @@ class AppUserController extends CoreController
             // Sinon, on affiche les erreurs
             // On affiche chaque erreur rencontrée et renvoi vers la page formulaire create
             $message = $errorList;
-            $this->show("appUser/edit", ['error' => $message, 'user' => $user]);
+            $this->show("appUser/edit", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
         } 
     }
 
@@ -336,7 +333,6 @@ class AppUserController extends CoreController
 
     }
     
-
     /**
      * Method to delete a user from user's list
      *
@@ -358,7 +354,7 @@ class AppUserController extends CoreController
             $message = "Echec de la suppression de l'utilisateur";
             $users = AppUser::findAll();
     
-            $this->show("appUser/list", ['users' => $users, ['error' => $message]]);
+            $this->show("appUser/list", ['users' => $users, ['error' => $message, 'token' => $this->generateToken()]]);
         }
     }
 }

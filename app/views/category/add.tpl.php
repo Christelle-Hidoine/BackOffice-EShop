@@ -1,5 +1,3 @@
-
-
 <div class="container my-4">
   <a href="<?= $router->generate('category-list') ?>" class="btn btn-success float-end">
     Retour
@@ -42,7 +40,8 @@
         URL relative d'une image (jpg, gif, svg ou png) fournie sur <a href="https://benoclock.github.io/S06-images/" target="_blank">cette page</a>
       </small>
     </div>
-
+    <!-- Pour le CSRF : on ajoute cet input caché -->
+    <input type="hidden" name="token" value="<?= $token ?>">
     
     <div class="d-grid gap-2">
       <button type="submit" class="btn btn-primary mt-5">Valider</button>

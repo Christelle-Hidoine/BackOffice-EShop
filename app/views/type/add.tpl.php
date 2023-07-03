@@ -1,5 +1,3 @@
-
-
 <div class="container my-4">
   <a href="<?= $router->generate('type-list') ?>" class="btn btn-success float-end">
     Retour
@@ -14,8 +12,6 @@
             <h2>Modifier un type</h2>
         <?php endif; ?>
 
-  
-  
   <form action="" method="POST" class="col-3 m-auto">
     <?php 
     if (isset($error)) : 
@@ -30,7 +26,8 @@
       </label>
       <input type="text" class="form-control" id="name" name="name" value="<?= $type->getName() ?>" placeholder="Nom du type">
     </div>
-
+    <!-- Pour le CSRF : on ajoute cet input caché -->
+    <input type="hidden" name="token" value="<?= $token ?>">
     
     <div class="d-grid gap-2">
       <button type="submit" class="btn btn-primary mt-5">Valider</button>

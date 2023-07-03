@@ -21,7 +21,7 @@ class ProductController extends CoreController
     $products = Product::findAll();
     
     // On les envoie à la vue
-    $this->show('product/list', ["products" => $products]);
+    $this->show('product/list', ["products" => $products, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -36,7 +36,7 @@ class ProductController extends CoreController
     $categoryList = Category::findAll();
     $typeList = Type::findAll();
 
-    $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => new Product]);
+    $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => new Product, 'token' => $this->generateToken()]);
   }
   
   /**
@@ -116,7 +116,7 @@ class ProductController extends CoreController
       else 
       {
         $message = "Echec de la sauvegarde en BDD";
-        $this->show("product/add", ['error' => $message]);
+        $this->show("product/add", ['error' => $message, 'token' => $this->generateToken()]);
       }
     }
     else 
@@ -142,7 +142,7 @@ class ProductController extends CoreController
 
       $message = $errorList;
 
-      $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'error' => $message]);
+      $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'error' => $message, 'token' => $this->generateToken()]);
     }
   }
 
@@ -176,7 +176,7 @@ class ProductController extends CoreController
         }
 
     $this->show("product/edit", [ 
-      "product" => $product, 'productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'typeListById' => $typeListById, 'categoryListById' => $categoryListById, 'brandListById' => $brandListById
+      "product" => $product, 'productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'typeListById' => $typeListById, 'categoryListById' => $categoryListById, 'brandListById' => $brandListById,  'token' => $this->generateToken()
     ]);
   }
 
@@ -257,7 +257,7 @@ class ProductController extends CoreController
       else
       {
         $message = "Une erreur est survenue lors de l'édition du produit";
-        $this->show("product/edit", ['error' => $message]);
+        $this->show("product/edit", ['error' => $message, 'token' => $this->generateToken()]);
       }
     }
     else
@@ -283,7 +283,7 @@ class ProductController extends CoreController
 
       $message = $errorList;
 
-      $this->show('product/edit', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'error' => $message]);
+      $this->show('product/edit', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'error' => $message, 'token' => $this->generateToken()]);
     }
   }
 
@@ -308,7 +308,7 @@ class ProductController extends CoreController
       $message = "Echec de la suppression du produit";
       $product = Product::findAll();
     
-      $this->show("product/list", ['product' => $product, ['error' => $message]]);
+      $this->show("product/list", ['product' => $product, ['error' => $message, 'token' => $this->generateToken()]]);
     }
   }
 }

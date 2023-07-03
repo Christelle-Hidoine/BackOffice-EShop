@@ -1,13 +1,9 @@
-
-
 <div class="container my-4">
   <a href="<?= $router->generate('category-list') ?>" class="btn btn-success float-end">
     Retour
   </a>
 
   <h2>Modifier une catégorie</h2>
-  
-  
 
   <form action="<?= $router->generate('category-edit', ['id' => $category->getId()]); ?>" method="POST" class="col-3 m-auto">
     <?php 
@@ -45,7 +41,8 @@
       </small>
     </div>
 
-   
+    <!-- Pour le CSRF : on ajoute cet input caché -->
+    <input type="hidden" name="token" value="<?= $token ?>">
     
     <div class="d-grid gap-2">
       <button type="submit" class="btn btn-primary mt-5">Valider</button>

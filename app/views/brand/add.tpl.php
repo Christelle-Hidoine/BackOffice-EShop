@@ -29,8 +29,8 @@
       </label>
       <input type="text" class="form-control" id="name" name="name" value="<?= $brand->getName() ?>" placeholder="Nom de la marque">
     </div>
-
-
+    <!-- Pour le CSRF : on ajoute cet input caché -->
+    <input type="hidden" name="token" value="<?= $token ?>">
 
     <div class="d-grid gap-2">
       <button type="submit" class="btn btn-primary mt-5">Valider</button>

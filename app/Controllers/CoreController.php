@@ -15,18 +15,54 @@ abstract class CoreController
 
         // on définit une liste des permissions ACL (access control list) nécessitant une connexion utilisateur
         $acl = [
+    
+            // USER 
             'user-list' => ['admin'],
             'user-add' => ['admin'],
             'user-create' => ['admin'],
             'user-edit' => ['admin'],
             'user-update' => ['admin'],
             'user-delete' => ['admin'],
+            // BRAND
+            'brand-list' => ['catalog-manager', 'admin'],
+            'brand-add' => ['catalog-manager', 'admin'],
+            'brand-create' => ['catalog-manager', 'admin'],
+            'brand-edit' => ['catalog-manager', 'admin'],
+            'brand-update' => ['catalog-manager', 'admin'],
+            'brand-delete' => ['catalog-manager', 'admin'],
+            // CATEGORY
+            'category-list' => ['catalog-manager', 'admin'],
+            'category-add' => ['catalog-manager', 'admin'],
+            'category-create' => ['catalog-manager', 'admin'],
+            'category-edit' => ['catalog-manager', 'admin'],
+            'category-update' => ['catalog-manager', 'admin'],
+            'category-delete' => ['catalog-manager', 'admin'],
+            // PRODUCT
+            'product-list' => ['catalog-manager', 'admin'],
+            'product-add' => ['catalog-manager', 'admin'],
+            'product-create' => ['catalog-manager', 'admin'],
+            'product-edit' => ['catalog-manager', 'admin'],
+            'product-update' => ['catalog-manager', 'admin'],
+            'product-delete' => ['catalog-manager', 'admin'],
+            // TAG
+            'tag-list' => ['catalog-manager', 'admin'],
+            'tag-add' => ['catalog-manager', 'admin'],
+            'tag-create' => ['catalog-manager', 'admin'],
+            'tag-edit' => ['catalog-manager', 'admin'],
+            'tag-update' => ['catalog-manager', 'admin'],
+            'tag-delete' => ['catalog-manager', 'admin'],
+            // TYPE
+            'type-list' => ['catalog-manager', 'admin'],
+            'type-add' => ['catalog-manager', 'admin'],
+            'type-create' => ['catalog-manager', 'admin'],
+            'type-edit' => ['catalog-manager', 'admin'],
+            'type-update' => ['catalog-manager', 'admin'],
+            'type-delete' => ['catalog-manager', 'admin'],
         ];
 
         // on vérifie si l'url demandée (nom de la route) nécessite une autorisation ($acl)
         // On a donc besoin de la route actuelle : $match['name']
         // ==> On doit donc récupérer $match
-        // global $match;
         // On récupère le nom de la route
         $routeName = $this->match['name'];
         
@@ -42,32 +78,49 @@ abstract class CoreController
         
         // else ? ==> pas besoin de else car si on ne rentre pas dans le if, ca signifie 
         // que la route n'est pas dans la liste $acl des routes à vérifier
-        // càd toute le monde peut accéder librement et directement à cete route
+        // càd toute le monde peut accéder librement et directement à cette route
 
         
-        // Gestion des tokens anti-CSRF pour les routes en POST: exemple sur le form user/add
+        // Gestion des tokens anti-CSRF pour les routes en POST
         $csrfTokenToCheckInPost = [
-            // 'user-create',
-            // 'user-check',
-            // 'user-update',
+            'user-create',
+            'user-check',
+            'user-update',
+            'brand-create',
+            'brand-update',
+            'category-homeSelect',
+            'category-create',
+            'category-update',
+            'product-create',
+            'product-update',
+            'tag-create',
+            'tag-update',
+            'type-create',
+            'type-update'
         ];
-
-        // Gestion des tokens anti-CSRF pour les routes en GET: exemple sur le form user/add
+        
+        // Gestion des tokens anti-CSRF pour les routes en GET
         $csrfTokenToCheckInGet = [
-            // 'user-delete'
+            'user-delete',
+            'brand-delete',
+            'category-delete',
+            'product-delete',
+            'tag-delete',
+            'type-delete',
         ];
         
         // Si la route en POST nécessite le check CSRF
         if (!empty($csrfTokenToCheckInPost) && in_array($routeName, $csrfTokenToCheckInPost)) {
             // On récupère le token en POST
             $token = isset($_POST['token']) ? $_POST['token'] : '';
+
             // $token = filter_input(INPUT_POST, 'token');
             // $token = $_POST['token'] ?? '';
-            
+
             $this->getCsrfToken($token);
         }
           
-        // Si la route en POST nécessite le check CSRF
+        // Si la route en GET nécessite le check CSRF
         if (!empty($csrfTokenToCheckInGet) && in_array($routeName, $csrfTokenToCheckInGet)) {
             // On récupère le token en GET
             $token = isset($_GET['token']) ? $_GET['token'] : '';
@@ -116,8 +169,8 @@ abstract class CoreController
        
         // Astuce pour voir les variables disponibles dans nos vues
         // A ne pas laisser en PROD !
-        // dump(get_defined_vars());
-        // dump($_SESSION);
+        dump(get_defined_vars());
+
 
         // $viewData est disponible dans chaque fichier de vue
         require_once __DIR__ . '/../views/layout/header.tpl.php';
@@ -192,8 +245,7 @@ abstract class CoreController
     protected function generateToken()
     {
         // génération d'un token aléatoire
-        $_SESSION['token'] = random_bytes(5);
-        // dump(bin2hex($_SESSION['token']));
+        $_SESSION['token'] = bin2hex(random_bytes(10));
         return $_SESSION['token'];
     }
 }

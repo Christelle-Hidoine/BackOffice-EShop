@@ -15,7 +15,7 @@ class TagController extends CoreController
   public function list()
   {
     $tags = Tag::findAll();
-    $this->show("tag/list", ["tags" => $tags]);
+    $this->show("tag/list", ["tags" => $tags, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -25,7 +25,7 @@ class TagController extends CoreController
    */
   public function add()
   {
-    $this->show('tag/add', ['tag' => new Tag]);
+    $this->show('tag/add', ['tag' => new Tag, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -38,7 +38,7 @@ class TagController extends CoreController
   {
     $tag = Tag::find($id);
     $id = $tag->getId();
-    $this->show('tag/add', ['tag' => $tag, 'id'=> $id]);
+    $this->show('tag/add', ['tag' => $tag, 'id'=> $id, 'token' => $this->generateToken()]);
   }
 
   /**
@@ -87,7 +87,7 @@ class TagController extends CoreController
       else
       {
         $message = "Une erreur est survenue lors de l'édition du tag";
-        $this->show("tag/add", ['error' => $message]);
+        $this->show("tag/add", ['error' => $message, 'token' => $this->generateToken()]);
       }
     }
     else
@@ -97,7 +97,7 @@ class TagController extends CoreController
       $tag->setName($name);
 
       $message = $errorList;
-      $this->show("tag/add", ['tag' => $tag, 'error' => $message]);
+      $this->show("tag/add", ['tag' => $tag, 'error' => $message, 'token' => $this->generateToken()]);
     }
   }
 
@@ -121,7 +121,7 @@ class TagController extends CoreController
     {
       $message = "Echec de la suppression du tag";
       $tag = Tag::findAll();
-      $this->show("tag/list", ['tag' => $tag, ['error' => $message]]);
+      $this->show("tag/list", ['tag' => $tag, ['error' => $message, 'token' => $this->generateToken()]]);
     }
   }
 }

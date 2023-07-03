@@ -1,6 +1,3 @@
-
- 
-
 <div class="container my-4">
   <a href="<?= $router->generate('user-list') ?>" class="btn btn-success float-end">
     Retour
@@ -62,7 +59,9 @@
                 <option value="2" <?= $user->getStatus() === "2" ? 'selected' : '' ?>>Désactivé/Bloqué</option>
             </select>
     </div>
-
+    
+    <!-- Pour le CSRF : on ajoute cet input caché -->
+    <input type="hidden" name="token" value="<?= $token ?>">
 
     <div class="d-grid gap-2">
       <button type="submit" class="btn btn-primary mt-5">Valider</button>
