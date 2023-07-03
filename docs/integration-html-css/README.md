@@ -1,6 +1,6 @@
-# Intégration HTML/CSS BackOffice oShop
+# Intégration HTML/CSS BackOffice eShop
 
-On a eu le temps de commencer le code HTML/CSS du BackOffice d'oShop.
+On a eu le temps de commencer le code HTML/CSS du BackOffice d'eShop.
 
 Il est basé sur le framework Bootstrap version 5.1, dont voici [la documentation](https://getbootstrap.com/docs/5.1/getting-started/introduction/).
 

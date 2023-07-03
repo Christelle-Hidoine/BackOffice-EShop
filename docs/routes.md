@@ -4,7 +4,7 @@
 
 | URL | HTTP Method | Controller | Method | Title | Content | Comment |
 |--|--|--|--|--|--|--|
-| `/` | `GET` | `MainController` | `home` | Backoffice oShop | Backoffice dashboard | - |
+| `/` | `GET` | `MainController` | `home` | Backoffice eShop | Backoffice dashboard | - |
 | `/category/list` | `GET`| `CategoryController` | `list` | Liste des catégories | Categories list | - |
 | `/category/add` | `GET`| `CategoryController` | `add` | Ajouter une catégorie | Form to add a category | - |
 | `/category/add` | `POST`| `CategoryController` | `create` | Ajouter une catégorie | Form to add a category | - |

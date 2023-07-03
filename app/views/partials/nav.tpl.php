@@ -1,7 +1,7 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?= $router->generate('main-home') ?>">
-          oShop
+        eShop
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
