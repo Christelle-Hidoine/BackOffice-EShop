@@ -50,9 +50,6 @@ class TagController extends CoreController
   public function createOrEdit($id = null)
   {
     $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_SPECIAL_CHARS);
-
-    // on vérifie les valeurs de ces variables "filtrées"
-    // tableau avec toutes les erreurs rencontrées
     $errorList = [];
 
     if(empty($name)) 
@@ -60,11 +57,8 @@ class TagController extends CoreController
       $errorList[] = 'Le nom du tag est vide';
     }
 
-    // Si aucune erreur, $errorList est vide
     if(empty($errorList))
     {
-      // On récupère le tag actuellement en BDD
-
       if($id > 0)
       {
         $tag = Tag::find($id);
@@ -73,11 +67,9 @@ class TagController extends CoreController
       {
         $tag = new Tag();
       }
-
-      // On modifie ses propriétés grace aux setters      
+     
       $tag->setName($name);
-      
-      // sauvegarder ces modif en BDD
+
       if($tag->save())
       {
         // header("Location: /brand/list");
@@ -92,7 +84,6 @@ class TagController extends CoreController
     }
     else
     {
-      // On affiche chaque erreurs rencontrée
       $tag= new Tag;
       $tag->setName($name);
 

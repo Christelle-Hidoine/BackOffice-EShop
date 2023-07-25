@@ -3,7 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\AppUser;
-
+use Dispatcher;
 
 class AppUserController extends CoreController
 
@@ -66,14 +66,11 @@ class AppUserController extends CoreController
             $errorList[] = "Le mot de passe doit contenir au minimum 8 caractères, 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial";
         }
 
-            // Si on a rencontré aucune erreur => si $errorList est vide donc
             if (empty($errorList)) {
                 $user = new AppUser();
 
-                // on hash le mdp
                 $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
 
-                // On met à jour ses propriétés avec les données du formulaire (nettoyées)
                 $user->setFirstName($firstname);
                 $user->setLastName($lastname);
                 $user->setEmail($email);
@@ -81,11 +78,8 @@ class AppUserController extends CoreController
                 $user->setRole($role);
                 $user->setStatus($status);
 
-                // ajout en BDD
                 if ($user->save()) {
-                    // Si la sauvegarde a fonctionné
                     // header("Location: /user/list");
-
                     header("Location: " . $this->router->generate('user-list'));
                     exit;
 
@@ -104,12 +98,10 @@ class AppUserController extends CoreController
                 $user->setRole($role);
                 $user->setStatus($status);
                 
-                // On affiche chaque erreurs rencontrée et renvoi vers la page formulaire create avec l'autocomplétion
                 $message = $errorList;
                 
                 $this->show("appUser/add", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
             } 
-        
     }
 
     /**
@@ -118,7 +110,6 @@ class AppUserController extends CoreController
      */
     public function connect()
     {
-        // on récupère l'objet user pour l'autocomplétion du formulaire si erreur dans la méthode check
         $user = new AppUser();
 
         $this->show("appUser/connection", ['user' => $user, 'token' => $this->generateToken()]);
@@ -131,8 +122,6 @@ class AppUserController extends CoreController
     public function check()
     {
         $email    = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
-        // $email = filter_var($_POST["email"], FILTER_VALIDATE_EMAIL);
-        // dump($email);
         $password = filter_input(INPUT_POST, "password");
 
         $errorList = [];
@@ -144,45 +133,34 @@ class AppUserController extends CoreController
         if (empty($password)) {
             $errorList[] = "Le mot de passe doit être indiqué";
         }
-        
-        // si pas d'erreur de remplissage des champs du formulaire
+
         if (empty($errorList)) {
 
-            // on récupère l'email correspondant dans la BDD
             $user = AppUser::findByEmail($email);
-            // dump($user);
 
-            // on vérifie qu'il correspond à notre BDD = return true ou false
             if ($user !== false) {
 
-                // V2 : on doit modifier le if précédent car à présent tous les password sont hashés
                 // https://www.php.net/manual/fr/function.password-verify.php
                 if (password_verify($password, $user->getPassword())) {
 
-                // Email et password associé sont bons
-                // on le compare au password saisi dans le formulaire
-
-                // on récupère les données de la $_SESSION (suite à session_start() dans l'index)
                     $_SESSION['userObject'] = $user;
                     $_SESSION['userId'] = $user->getId();
-                        
-                    // dump($user);
+                    $_SESSION['userName'] = $user->getFirstname();
 
                     header("Location: " . $this->router->generate('main-home'));
                     exit;
 
                 } else {
-                    // si mdp différent = message d'erreur
+
                     $message = "Email et/ou mot de passe incorrect";
 
-                    // on récupère les infos pour autocompléter le formulaire avec les données rentrées
                     $user = new AppUser();
                     $user->setEmail($email);
 
                     $this->show("appUser/connection", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
                 }
             } else {
-                // si user n'existe pas = message d'erreur
+
                 $message = "Email et/ou mot de passe incorrect";
                 $user= new AppUser();
                 $user->setEmail($email);
@@ -190,7 +168,7 @@ class AppUserController extends CoreController
                 $this->show("appUser/connection", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
             }
         } else {
-            // on récupère la liste des erreurs et on l'affiche sur la tpl avec une boucle
+
             $message = $errorList;
             $user = new AppUser();
             $user->setEmail($email);
@@ -226,8 +204,6 @@ class AppUserController extends CoreController
         $role = filter_input(INPUT_POST, "role");
         $status = filter_input(INPUT_POST, "status", FILTER_VALIDATE_INT);
 
-        // Maintenant on vérifie les valeurs de ces variables "filtrées"
-        // Pour ça on créé un tableau qui va contenir toutes les erreurs rencontrées
         $errorList = [];
 
         if (empty($firstname)) {
@@ -246,15 +222,12 @@ class AppUserController extends CoreController
             $errorList[] = 'Merci d\'indiquer un mot de passe';
         }
 
-        // Si je n'ai rencontré aucune erreur, $errorList est vide
         if(empty($errorList))
         {
-            // On commence par récupérer la catégorie actuellement en BDD
             $user = AppUser::find($id);
 
             $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
-
-            // On modifie ses propriétés grace aux setters      
+  
             $user->setFirstName($firstname);
             $user->setLastName($lastname);
             $user->setEmail($email);
@@ -264,9 +237,8 @@ class AppUserController extends CoreController
 
 
             if ($user->save()) {
-                // Si la sauvegarde a fonctionné
-                // header("Location: /user/list");
 
+                // header("Location: /user/list");
                 header("Location: " . $this->router->generate('user-list'));
                 exit;
             } else {
@@ -278,8 +250,7 @@ class AppUserController extends CoreController
             $user = AppUser::find($id);
 
             $passwordHashed = password_hash($password, PASSWORD_BCRYPT);
-
-            // On modifie ses propriétés grace aux setters      
+    
             $user->setFirstName($firstname);
             $user->setLastName($lastname);
             $user->setEmail($email);
@@ -287,8 +258,6 @@ class AppUserController extends CoreController
             $user->setRole($role);
             $user->setStatus($status);
 
-            // Sinon, on affiche les erreurs
-            // On affiche chaque erreur rencontrée et renvoi vers la page formulaire create
             $message = $errorList;
             $this->show("appUser/edit", ['error' => $message, 'user' => $user, 'token' => $this->generateToken()]);
         } 
@@ -316,7 +285,7 @@ class AppUserController extends CoreController
      * @param [string] $password
      * @return bool
      */
-    public function checkPassword($password)	
+    public static function checkPassword($password)	
     { 
             $lenght = strlen($password);
 
@@ -328,7 +297,6 @@ class AppUserController extends CoreController
 
             $oneSpecialChar = preg_match('/[_\-|%&*=@$]/', $password);
 
-            // mdp : > 8 caractères, contient mini 1 minuscule, 1 majuscule, 1 chiffre et 1 caractère spécial
             return $lenght >= 8 && $oneCaps && $oneLowCase && $oneNumber && $oneSpecialChar;
 
     }

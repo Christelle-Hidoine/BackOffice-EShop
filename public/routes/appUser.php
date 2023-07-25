@@ -4,7 +4,7 @@ use App\Controllers\AppUserController;
 
 // ---------------------------------------- Routes APP_USER  ----------------------------------------
 
-// Liste des Users
+// Users list
 $router->map(
     'GET',
     '/user/list',
@@ -15,7 +15,7 @@ $router->map(
     'user-list'
   );
   
-  // Affiche Connexion User
+  // User login
   $router->map(
     'GET',
     '/user/connection',
@@ -26,7 +26,7 @@ $router->map(
     'user-connection'
   );
   
-  // Traite Connexion User
+  // User login handling
   $router->map(
     'POST',
     '/user/connection',
@@ -38,7 +38,7 @@ $router->map(
   );
   
   
-  // Affiche Ajout User
+  // Display User add
   $router->map(
     'GET',
     '/user/add',
@@ -49,7 +49,7 @@ $router->map(
     'user-add'
   );
   
-  // Traite Ajout User
+  // Handle User add
   $router->map(
     'POST',
     '/user/add',
@@ -60,7 +60,7 @@ $router->map(
     'user-create'
   );
   
-  // Affiche Modifie User
+  // Display User Update
   $router->map(
     'GET',
     '/user/[i:id]/update',
@@ -71,7 +71,7 @@ $router->map(
     'user-edit'
   );
   
-  // Traite Modifie User
+  // Handle User update
   $router->map(
     'POST',
     '/user/[i:id]/update',
@@ -82,7 +82,7 @@ $router->map(
     'user-update'
   );
   
-  // Traite Supprime User
+  // Handle User delete
   $router->map(
     'GET',
     '/user/[i:id]/delete',
@@ -93,7 +93,7 @@ $router->map(
     'user-delete'
   );
   
-  // Deconnecte le User
+  // User Logout
   $router->map(
     'GET',
     '/user/logout',

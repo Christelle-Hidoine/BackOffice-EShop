@@ -4,7 +4,7 @@ use App\Controllers\TagController;
 
 // -------------------------------- Routes Tag ---------------------------------------
 
-// Afficher la List
+// Tags list
 $router->map(
     'GET',
     '/tag/list',
@@ -15,7 +15,7 @@ $router->map(
     'tag-list'
 );
 
-// Affiche Ajout Tag
+// Display Tag add
 $router->map(
     'GET',
     '/tag/add',
@@ -26,7 +26,7 @@ $router->map(
     'tag-add'
   );
   
-  // Traiter Ajout Tag
+  // handle Tag add
   $router->map(
     'POST',
     '/tag/add',
@@ -37,7 +37,7 @@ $router->map(
     'tag-create'
   );
   
-  // Afficher Modifie Tag
+  // Display Tag add
   $router->map(
     'GET',
     '/tag/add/[i:id]',
@@ -48,7 +48,7 @@ $router->map(
     'tag-edit'
   );
   
-  // Traiter Modifie Tag
+  // Handle Tag add
   $router->map(
     'POST',
     '/tag/add/[i:id]',
@@ -59,7 +59,7 @@ $router->map(
     'tag-update'
   );
   
-  // Supprime le Tag
+  // delete Tag
   $router->map(
     'GET',
     '/tag/[i:id]/delete',

@@ -4,7 +4,7 @@ use App\Controllers\TypeController;
 
 // ---------------------------------------- Routes TYPE  -------------------------------------------
 
-// Liste des Types
+// Type list
 $router->map(
     'GET',
     '/type/list',
@@ -15,7 +15,7 @@ $router->map(
     'type-list'
   );
   
-  // Affiche Ajout Type
+  // Display Type add
   $router->map(
     'GET',
     '/type/add',
@@ -26,7 +26,7 @@ $router->map(
     'type-add'
   );
   
-  // Traiter Ajout Type
+  // Handle Type add
   $router->map(
     'POST',
     '/type/add',
@@ -37,7 +37,7 @@ $router->map(
     'type-create'
   );
   
-  // Afficher Modifie Type
+  // Display Type update
   $router->map(
     'GET',
     '/type/add/[i:id]',
@@ -48,7 +48,7 @@ $router->map(
     'type-edit'
   );
   
-  // Traiter Modifie Type
+  // Handle Type update
   $router->map(
     'POST',
     '/type/add/[i:id]',
@@ -59,7 +59,7 @@ $router->map(
     'type-update'
   );
   
-  // Supprime la Type
+  // Delete type
   $router->map(
     'GET',
     '/type/[i:id]/delete',

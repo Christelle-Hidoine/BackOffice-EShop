@@ -50,9 +50,6 @@ class TypeController extends CoreController
   public function createOrEdit($id = null)
   {
     $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_SPECIAL_CHARS);
-
-    // on vérifie les valeurs de ces variables "filtrées"
-    // tableau avec toutes les erreurs rencontrées
     $errorList = [];
 
     if(empty($name)) 
@@ -60,11 +57,8 @@ class TypeController extends CoreController
       $errorList[] = 'Le nom du type est vide';
     }
 
-    // Si aucune erreur, $errorList est vide
     if(empty($errorList))
     {
-      // On récupère le type actuellement en BDD
-
       if($id > 0)
       {
         $type = Type::find($id);
@@ -73,11 +67,9 @@ class TypeController extends CoreController
       {
         $type = new Type();
       }
-
-      // On modifie ses propriétés grace aux setters      
+     
       $type->setName($name);
       
-      // sauvegarder ces modif en BDD
       if($type->save())
       {
         // header("Location: /type/list");
@@ -92,7 +84,6 @@ class TypeController extends CoreController
     }
     else
     {
-      // On affiche chaque erreur rencontrée
       $type= new Type;
       $type->setName($name);
 

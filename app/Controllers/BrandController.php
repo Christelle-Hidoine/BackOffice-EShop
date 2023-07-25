@@ -51,8 +51,6 @@ class BrandController extends CoreController
   {
     $name = filter_input(INPUT_POST, "name", FILTER_SANITIZE_SPECIAL_CHARS);
 
-    // on vérifie les valeurs de ces variables "filtrées"
-    // tableau avec toutes les erreurs rencontrées
     $errorList = [];
 
     if(empty($name)) 
@@ -60,11 +58,8 @@ class BrandController extends CoreController
       $errorList[] = 'Le nom de la marque est vide';
     }
 
-    // Si aucune erreur, $errorList est vide
     if(empty($errorList))
     {
-      // On récupère la marque actuellement en BDD
-
       if($id > 0)
       {
         $brand = Brand::find($id);
@@ -73,11 +68,9 @@ class BrandController extends CoreController
       {
         $brand = new Brand();
       }
-
-      // On modifie ses propriétés grace aux setters      
+    
       $brand->setName($name);
-      
-      // sauvegarder ces modif en BDD
+
       if($brand->save())
       {
         // header("Location: /brand/list");
@@ -92,7 +85,6 @@ class BrandController extends CoreController
     }
     else
     {
-      // On affiche chaque erreurs rencontrée
       $brand= new Brand;
       $brand->setName($name);
 

@@ -17,10 +17,9 @@ class ProductController extends CoreController
    */
   public function list()
   {
-    // On récupère tous les produits
+
     $products = Product::findAll();
-    
-    // On les envoie à la vue
+
     $this->show('product/list', ["products" => $products, 'token' => $this->generateToken()]);
   }
 
@@ -35,8 +34,9 @@ class ProductController extends CoreController
     $brandList = Brand::findAll();
     $categoryList = Category::findAll();
     $typeList = Type::findAll();
+    $tagList = Tag::findAll();
 
-    $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => new Product, 'token' => $this->generateToken()]);
+    $this->show('product/add', ['productList' => $productList, 'tagList' =>$tagList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => new Product, 'token' => $this->generateToken()]);
   }
   
   /**
@@ -46,7 +46,6 @@ class ProductController extends CoreController
    */
   public function create()
   {
-    // On récupère les données venant du formulaire.
     $name        = filter_input(INPUT_POST, 'name',        FILTER_SANITIZE_SPECIAL_CHARS);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
     $picture     = filter_input(INPUT_POST, 'picture',     FILTER_VALIDATE_URL);
@@ -56,8 +55,16 @@ class ProductController extends CoreController
     $brand_id    = filter_input(INPUT_POST, 'brand',       FILTER_VALIDATE_INT);
     $category_id = filter_input(INPUT_POST, 'category',    FILTER_VALIDATE_INT);
     $type_id     = filter_input(INPUT_POST, 'type',        FILTER_VALIDATE_INT);
+    
+    $tag_ids = []; 
+    foreach ($_POST['tag'] as $tag_id)
+      {
+        $tag_id = filter_var($tag_id, FILTER_VALIDATE_INT);
+        if ($tag_id !== false) {
+          $tag_ids[] = $tag_id;
+        }
+      }
 
-    // On vérifie l'existence et la validité de ces données (gestion d'erreur).
     $errorList = [];
 
     if (empty($name)) {
@@ -87,14 +94,14 @@ class ProductController extends CoreController
     if ($type_id === false) {
         $errorList[] = 'Le type est invalide';
     }
+    if ($tag_id === false) {
+      $errorList[] = 'Le tag est invalide';
+    }
   
-    // Si aucune erreur 
     if(empty($errorList)) 
     {
-      // On instancie un nouveau modèle de type Product
       $product = new Product();
 
-      // On met à jour les propriétés de l'instance
       $product->setName($name);
       $product->setDescription($description);
       $product->setPicture($picture);
@@ -105,10 +112,15 @@ class ProductController extends CoreController
       $product->setCategoryId($category_id);
       $product->setTypeId($type_id);
 
-      // On sauvegarde dans la BDD
       if($product->insert()) 
       {
-        // Si la sauvegarde a fonctionné, on redirige vers la liste des produitS
+        $product_id = $product->getId();
+        foreach ($tag_ids as $tag_id) {
+          $product->setTagId($tag_id);
+          $product->setProductId($product_id);
+          $product->insertTagProduct();
+        }
+
         // header('Location: /product/list');
         header("Location: " . $this->router->generate('product-list'));
         exit;
@@ -121,10 +133,8 @@ class ProductController extends CoreController
     }
     else 
     {
-      // On affiche chaque erreurs rencontrée
       $product = new Product();
 
-      // On met à jour les propriétés de l'instance pour l'affichage dans le formulaire
       $product->setName($name);
       $product->setDescription($description);
       $product->setPicture($picture);
@@ -139,10 +149,11 @@ class ProductController extends CoreController
       $brandList = Brand::findAll();
       $categoryList = Category::findAll();
       $typeList = Type::findAll();
+      $tagList = Tag::findAll();
 
       $message = $errorList;
 
-      $this->show('product/add', ['productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'error' => $message, 'token' => $this->generateToken()]);
+      $this->show('product/add', ['productList' => $productList, 'tagList' => $tagList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'product' => $product, 'error' => $message, 'token' => $this->generateToken()]);
     }
   }
 
@@ -159,24 +170,29 @@ class ProductController extends CoreController
     $brandList = Brand::findAll();
     $categoryList = Category::findAll();
     $typeList = Type::findAll();
+    $tagList = Tag::findAll();
 
     $typeListById = [];
         foreach ($typeList as $typeElement) {
             $typeListById[$typeElement->getId()] = $typeElement;
         }
 
-        $categoryListById = [];
+    $categoryListById = [];
         foreach ($categoryList as $categoryElement) {
             $categoryListById[$categoryElement->getId()] = $categoryElement;
         }
 
-        $brandListById = [];
+    $brandListById = [];
         foreach ($brandList as $brandElement) {
             $brandListById[$brandElement->getId()] = $brandElement;
         }
+    $tagListById = [];
+        foreach ($tagList as $tagElement) {
+          $tagListById[$tagElement->getId()] = $tagElement;
+        }
 
     $this->show("product/edit", [ 
-      "product" => $product, 'productList' => $productList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'typeListById' => $typeListById, 'categoryListById' => $categoryListById, 'brandListById' => $brandListById,  'token' => $this->generateToken()
+      "product" => $product, 'productList' => $productList, 'tagList' => $tagList, 'brandList' => $brandList, 'categoryList' => $categoryList, 'typeList' => $typeList, 'tagListById' => $tagListById, 'typeListById' => $typeListById, 'categoryListById' => $categoryListById, 'brandListById' => $brandListById,  'token' => $this->generateToken()
     ]);
   }
 
@@ -199,7 +215,15 @@ class ProductController extends CoreController
     $category_id = filter_input(INPUT_POST, 'category', FILTER_VALIDATE_INT);
     $type_id = filter_input(INPUT_POST, 'type', FILTER_VALIDATE_INT);
 
-    // On vérifie l'existence et la validité de ces données (gestion d'erreur).
+    $tag_ids = []; 
+    foreach ($_POST['tag'] as $tag_id)
+      {
+        $tag_id = filter_var($tag_id, FILTER_VALIDATE_INT);
+        if ($tag_id !== false) {
+          $tag_ids[] = $tag_id;
+        }
+      }
+
     $errorList = [];
 
     if (empty($name)) {
@@ -229,14 +253,14 @@ class ProductController extends CoreController
     if ($type_id === false) {
         $errorList[] = 'Le type est invalide';
     }
+    if ($tag_id === false) {
+      $errorList[] = 'Le tag est invalide';
+    }
 
-    // Si aucune erreur dans les données
     if(empty($errorList)) 
     {
-      // On récupère le produit actuellement en BDD
       $product = Product::find($id);
 
-      // On met à jour les propriétés de l'instance.
       $product->setName($name);
       $product->setDescription($description);
       $product->setPicture($picture);
@@ -247,9 +271,30 @@ class ProductController extends CoreController
       $product->setCategoryId($category_id);
       $product->setTypeId($type_id);
 
-      // Il nous reste a sauvegarder ces modif en BDD
+      $product_tag = $product->findTagsByProductId($id);
+      $tagsInProduct = [];
+      foreach ($product_tag as $tag)
+      {
+        if ($tag !== false) {
+          $tagsInProduct[] = $tag->getId();
+        }
+      }
+      
       if($product->save())
       {
+        $tagsToAdd = array_diff($tag_ids, $tagsInProduct);
+        $tagsToRemove = array_diff($tagsInProduct, $tag_ids);
+
+        foreach ($tagsToAdd as $tag_id) {
+          $product->setProductId($id);
+          $product->setTagId($tag_id);
+          $product->insertTagProduct();
+        }
+        foreach ($tagsToRemove as $tag_id) {
+          $product->setTagId($tag_id);
+          $product->setProductId($id);
+          $product->deleteTagProduct();
+      }
         // header( "Location: /product/list" );
         header("Location: " . $this->router->generate('product-list'));
         exit;
@@ -262,10 +307,9 @@ class ProductController extends CoreController
     }
     else
     {
-      // On affiche chaque erreurs rencontrée
+
       $product = new Product();
 
-      // On met à jour les propriétés de l'instance pour l'affichage dans le formulaire
       $product->setName($name);
       $product->setDescription($description);
       $product->setPicture($picture);
@@ -299,6 +343,7 @@ class ProductController extends CoreController
 
     if($product->delete())
     {
+      $product->deleteTagProduct();
       // header("Location: /product/list");
       header("Location: " . $this->router->generate('product-list'));
       exit;

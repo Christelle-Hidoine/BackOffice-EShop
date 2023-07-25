@@ -4,7 +4,7 @@ use App\Controllers\ProductController;
 
 // ---------------------------------------- Routes PRODUCT  ----------------------------------------
 
-// Liste des produits
+// Products list
 
 $router->map(
     'GET',
@@ -16,7 +16,7 @@ $router->map(
     'product-list'
   );
   
-  // Affiche Ajout produit
+  // Display Product add
   $router->map(
     'GET',
     '/product/add',
@@ -27,7 +27,7 @@ $router->map(
     'product-add'
   );
   
-  // Traite Ajout produit
+  // Handle Product add
   $router->map(
     'POST',
     '/product/add',
@@ -38,7 +38,7 @@ $router->map(
     'product-create'
   );
   
-  // Affiche Modifie Produit
+  // Display Product update
   $router->map(
     'GET',
     '/product/[i:id]/update',
@@ -49,7 +49,7 @@ $router->map(
     'product-edit'
   );
   
-  // Traite Modifie Produit
+  // Handle Product update
   $router->map(
     'POST',
     '/product/[i:id]/update',
@@ -60,7 +60,7 @@ $router->map(
     'product-update'
   );
   
-  // Traite Supprime Produit
+  // Product delete
   $router->map(
     'GET',
     '/product/[i:id]/delete',

@@ -96,40 +96,27 @@ class Category extends CoreModel
     }
 
     /**
-     * Méthode permettant de récupérer un enregistrement de la table Category en fonction d'un id donné
+     * Method to retrieve a category according to his id
      *
-     * @param int $categoryId ID de la catégorie
+     * @param int $categoryId category id
      * @return Category
      */
     public static function find($id)
     {
-        // se connecter à la BDD
         $pdo = Database::getPDO();
 
-        // écrire notre requête
         $sql = 'SELECT * FROM `category` WHERE `id` = :id';
 
-        // préparer notre requête
         $pdoStatement = $pdo->prepare($sql);
-
-        // remplacer les placeholders/étiquettes
         $pdoStatement->bindValue(":id", $id, PDO::PARAM_INT);
-
-        // Executer la requete
         $pdoStatement->execute();
 
-        // un seul résultat => fetchObject
-        // self fait ici référence au nom de la classe actuelle, ici Category
-        // ::class fait lui réference au FQCN de cette classe
-        // Au final, on aura "App\Models\Category" passé en argument
-        $category = $pdoStatement->fetchObject(self::class);
+        return $pdoStatement->fetchObject(self::class);
 
-        // retourner le résultat
-        return $category;
     }
 
     /**
-     * Méthode permettant de récupérer tous les enregistrements de la table category
+     * Methode to retrieve all categories
      *
      * @return Category[]
      */
@@ -143,7 +130,7 @@ class Category extends CoreModel
     }
 
     /**
-     * Récupérer les 5 catégories mises en avant sur la home
+     * Method to retrieve categories list from the homepage
      *
      * @return Category[]
      */
@@ -163,7 +150,11 @@ class Category extends CoreModel
         return $categories;
     }
 
-    // Fonction qui se charge d'ajouter en base de données l'instance actuelle de Category
+    /**
+     * Method to add a new category
+     *
+     * @return bool
+     */
     public function insert()
     {
       $pdo = Database::getPDO();
@@ -171,41 +162,28 @@ class Category extends CoreModel
       $sql = "INSERT INTO `category` (`name`, `subtitle`, `picture`, `home_order`)
               VALUES (:name, :subtitle, :picture, :home_order)";
 
-      // On stocke notre requete préparée (attention à ce stade elle n'est pas encore executée !)
       $pdoStatement = $pdo->prepare($sql);
 
-      // Ensuite, je vais remplacer chaque "valeur" précédée d'un : par sa vraie valeur
-      // En quelque sorte, les :name, :subtitle etc.. sont juste des "emplacements" pour les valeurs
       $pdoStatement->bindValue(":name",        $this->name,        PDO::PARAM_STR);
       $pdoStatement->bindValue(":subtitle",    $this->subtitle,    PDO::PARAM_STR);
       $pdoStatement->bindValue(":picture",     $this->picture,     PDO::PARAM_STR);
       $pdoStatement->bindValue(":home_order",  $this->home_order,  PDO::PARAM_INT);
 
-      // On execute la requete une fois qu'elle est préparée
       $pdoStatement->execute();
 
-      // On vérifie le nombre d'enregistrements affectés par la requete
-      // Ici c'est un insert, on doit donc avoir un enregistrement affecté => celui ajouté
       if($pdoStatement->rowCount() === 1)
       {
-        // On utilise la méthode lastInsertId de PDO pour récupérerle dernier ID
-        // autoincrémenté, ici celui de notre nouvelle catégorie
         $this->id = $pdo->lastInsertId();
-
-        // L'ajout a bien fonctionné on peut retourner true
         return true;
       }
       else
       {
-        // Si l'ajout a échoué, on return false, ce qui déclenchera l'affichage du message
-        // d'erreur dans la condition du controller
         return false;
       }
     }
 
     /**
-     * Méthode permettant de mettre à jour un enregistrement dans la table category
-     * L'objet courant doit contenir l'id, et toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+     * Method to update a category
      * 
      * @return bool
      */
@@ -242,16 +220,15 @@ class Category extends CoreModel
     }
 
     /**
-     * Méthode pour mettre à jour la propriété home_order sur la sélection des catégories en homepage
+     * Method to update displaying 5 categories on the homepage
      *
-     * @param array $ids Liste [ids] des catégories à mettre sur la page Sélection Accueil
+     * @param array $ids categories list [ids] to display on homepage
      * @return bool
      */ 
     public static function updateHomeOrder($ids)
     {
       $pdo = Database::getPDO();
 
-      // marqueur anonyme pour setter l'id (?)
       $sql = "UPDATE `category` SET `home_order` = 0;
               UPDATE `category` SET `home_order` = 1 WHERE id = ?;
               UPDATE `category` SET `home_order` = 2 WHERE id = ?;
@@ -260,34 +237,13 @@ class Category extends CoreModel
               UPDATE `category` SET `home_order` = 5 WHERE id = ?";
 
       $pdoStatement = $pdo->prepare($sql);
-
-      // $ids est un array donc on peut le passer directement en argument de la méthode execute() (qui attend aussi un array)
       $pdoStatement->execute($ids);
 
       return ($pdoStatement->rowCount() > 0);
     }
-    
-
+        
     /**
-     * Méthode qui va appeller insert() ou update() selon la présence d'un id
-     *
-     * @return void
-     */
-    public function save()
-    {
-      if($this->id)
-      {
-        return $this->update();
-      }
-      else
-      {
-        return $this->insert();
-      }
-    }
-
-    
-    /**
-     * Méthode qui supprime un enregistrement de la table
+     * Method to delete a category
      *
      * @return bool
      */
@@ -299,23 +255,10 @@ class Category extends CoreModel
 
       $pdoStatement = $pdo->prepare($sql);
 
-      // Version alternative a binvalue + execute
-      // Fait le bindValue et le execute en une ligne en passant un tableau
-      // en premier argument de
       $pdoStatement->execute([
         ":id" => $this->id
       ]);
 
-      if($pdoStatement->rowCount() === 1)
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
-
-      // Version raccourcie du bloc if/else du dessus
       return $pdoStatement->rowCount() === 1;
     }
 }

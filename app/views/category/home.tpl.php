@@ -1,10 +1,10 @@
 
 <div class="container my-4">
-  <a href="<?= $router->generate('main-home') ?>" class="btn btn-success float-end">
-    Retour
-  </a>
-
-  <h2>Gestion de la page d'accueil</h2>
+    
+    <h2>Gestion de la page d'accueil</h2>
+    <a href="<?= $router->generate('main-home') ?>" class="btn btn-success">
+      Retour
+    </a>
 
     <form action="" method="POST" class="mt-5">
         <div class="row">
@@ -59,8 +59,10 @@
                 </div>
             </div>
         </div>
+        
+        <!-- token hidden anti-csrf -->
+        <input type="hidden" name="token" value="<?= $token ?>">
 
-    
         <button type="submit" class="btn btn-primary btn-block mt-5">Valider</button>
     </form>
 </div>

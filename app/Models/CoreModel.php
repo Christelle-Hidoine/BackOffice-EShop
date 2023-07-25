@@ -2,16 +2,8 @@
 
 namespace App\Models;
 
-// Classe mère de tous les Models
-// On centralise ici toutes les propriétés et méthodes utiles pour TOUS les Models
-// La classe est définie comme abstract => il est INTERDIT de l'instancier sinon fatal error
 abstract class CoreModel
 {
-
-    // J'indique que toute classe qui hérite de CoreModel DOIT IMPERATIVEMENT
-    // implémenter une méthode find qui doit etre statique
-    // Attention, elle n'oblige rien au niveau du CONTENU de la méthode
-
     abstract static function find($id);
     abstract static function findAll();
     abstract function insert();
@@ -60,5 +52,21 @@ abstract class CoreModel
     public function getUpdatedAt(): string
     {
         return $this->updated_at;
+    }
+
+    /**
+     * Method to insert in DB if there is an Id, if not = update
+     *
+     */
+    public function save()
+    {
+      if($this->id)
+      {
+        return $this->update();
+      }
+      else
+      {
+        return $this->insert();
+      }
     }
 }

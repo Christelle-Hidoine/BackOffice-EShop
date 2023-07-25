@@ -7,8 +7,6 @@ use PDO;
 
 class AppUser extends CoreModel
 {
-    private $name;
-
     /**
      * @var string
      */
@@ -40,36 +38,30 @@ class AppUser extends CoreModel
     private $status;
 
     /**
-     * Méthode permettant de récupérer un enregistrement de la table app_user en fonction d'un id donné
+     * Method to retrieve all data about one user according to his id
      *
-     * @param int $id ID du user
+     * @param int $id user id
      * @return AppUser
      */
     public static function find($id)
     {
-        // se connecter à la BDD
         $pdo = Database::getPDO();
 
-        // écrire notre requête
         $sql = '
             SELECT *
             FROM app_user
             WHERE id = ' . $id;
 
         $pdoStatement = $pdo->prepare($sql);
-
         $pdoStatement->bindValue(":id", $id, PDO::PARAM_INT);
-
         $pdoStatement->execute();
 
-        $result = $pdoStatement->fetchObject(AppUser::class);
+        return $pdoStatement->fetchObject(AppUser::class);
 
-        // retourner le résultat
-        return $result;
     }
 
     /**
-     * Méthode permettant de récupérer tous les enregistrements de la table app_user
+     * Method to retrieve all data from User entity
      *
      * @return AppUser[]
      */
@@ -78,46 +70,33 @@ class AppUser extends CoreModel
         $pdo = Database::getPDO();
         $sql = 'SELECT * FROM `app_user`';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, AppUser::class);
+        return $pdoStatement->fetchAll(PDO::FETCH_CLASS, AppUser::class);
 
-        return $results;
     }
 
-
     /**
-     * Méthode qui récupère les données d'un utilisateur selon son email
+     * Method to retrieve data from a user according to his email
      *
-     * @param [string] $email email du user
+     * @param [string] $email user emal
      * @return AppUser
      */
     public static function findByEmail($email)
     {
         $pdo = Database::getPDO();
         
-        // on prépare la requête avec un marqueur
         $sql = "SELECT * FROM `app_user` WHERE `email` = :email";
 
         $pdoStatement = $pdo->prepare($sql);
 
-        // si static function = on récupère la propriété elle-même = pas $this->email donc $email
         $pdoStatement->execute([':email' => $email]);
 
         $user = $pdoStatement->fetchObject(AppUser::class);
 
-        if ($user)
-        {
-          return $user;
-        } else {
-          return false;
-        }
-
-        // condition en ternaire
-        // return ($user) ? $user : false;
+        return ($user) ? $user : false;
     }
 
     /**
-     * Méthode permettant d'ajouter un enregistrement dans la table app_user
-     * L'objet courant doit contenir toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+     * Method to add a user in DB
      *
      * @return bool
      */
@@ -128,10 +107,8 @@ class AppUser extends CoreModel
       $sql = "INSERT INTO `app_user` (`email`, `password`, `firstname`,`lastname`, `role`, `status`)
               VALUES (:email, :password, :firstname, :lastname, :role, :status)";
 
-      // On stocke notre requete préparée 
       $pdoStatement = $pdo->prepare($sql);
 
-      // remplacer chaque "valeur" précédée d'un : par sa vraie valeur
       $pdoStatement->bindValue(":email",       $this->email,       PDO::PARAM_STR);
       $pdoStatement->bindValue(":password",    $this->password,    PDO::PARAM_STR);
       $pdoStatement->bindValue(":firstname",   $this->firstname,   PDO::PARAM_STR);
@@ -139,31 +116,22 @@ class AppUser extends CoreModel
       $pdoStatement->bindValue(":role",        $this->role,        PDO::PARAM_STR);
       $pdoStatement->bindValue(":status",      $this->status,      PDO::PARAM_INT);
 
-      // On execute la requete une fois qu'elle est préparée
       $pdoStatement->execute();
 
-      // On vérifie le nombre d'enregistrements affectés par la requete
-      // Ici c'est un insert, on doit donc avoir un enregistrement affecté => celui ajouté
       if($pdoStatement->rowCount() === 1)
       {
-        // On utilise la méthode lastInsertId de PDO pour récupérerle dernier ID
-        // autoincrémenté, ici celui de notre nouvelle catégorie
         $this->id = $pdo->lastInsertId();
 
-        // L'ajout a bien fonctionné on peut retourner true
         return true;
       }
       else
       {
-        // Si l'ajout a échoué, on return false, ce qui déclenchera l'affichage du message
-        // d'erreur dans la condition du controller
         return false;
       }
     }
 
     /**
-     * Méthode permettant de mettre à jour un enregistrement dans la table app_user
-     * L'objet courant doit contenir l'id, et toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+     * Method to update a user in DB
      *
      * @return bool
      */
@@ -197,23 +165,7 @@ class AppUser extends CoreModel
     }
 
     /**
-     * Méthode qui va appeller insert() ou update() selon la présence d'un id
-     *
-     */
-    public function save()
-    {
-      if($this->id)
-      {
-        return $this->update();
-      }
-      else
-      {
-        return $this->insert();
-      }
-    }
-
-    /**
-     * Méthode qui supprime un enregistrement de la table
+     * Method to delete a user in DB
      *
      * @return bool
      */
@@ -225,24 +177,22 @@ class AppUser extends CoreModel
 
       $pdoStatement = $pdo->prepare($sql);
 
-      // Version alternative a binvalue + execute
-      // Fait le bindValue et le execute en une ligne en passant un tableau
-      // en premier argument de
       $pdoStatement->execute([
         ":id" => $this->id
       ]);
 
-      if($pdoStatement->rowCount() === 1)
-      {
-        return true;
-      }
-      else
-      {
-        return false;
-      }
-
-      // Version raccourcie du bloc if/else du dessus
       return $pdoStatement->rowCount() === 1;
+    }
+
+    /**
+     * Method to check if a user has admin role
+     *
+     * @return boolean
+     */
+    public function isAdmin()
+    {
+      return $this->role === "admin";
+
     }
     
     /**

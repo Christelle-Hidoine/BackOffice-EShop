@@ -8,6 +8,8 @@ use PDO;
 class Tag extends CoreModel {
 
     private $name;
+    private $product_id;
+    private $tag_id;
 
     /**
      * Get the value of name
@@ -29,35 +31,29 @@ class Tag extends CoreModel {
         return $this;
     }
 
-    /**
-   * Méthode permettant de récupérer un enregistrement de la table Tag en fonction d'un id donné
+  /**
+   * Method to retrieve one tag according to his id
    *
-   * @param int $tagId ID du tag
+   * @param int $tagId tag id
    * @return Tag
    */
   public static function find($id)
   {
-    // se connecter à la BDD
     $pdo = Database::getPDO();
 
-    // écrire notre requête
     $sql = '
             SELECT *
             FROM tag
             WHERE id = ' . $id;
 
-    // exécuter notre requête
     $pdoStatement = $pdo->query($sql);
-
-    // un seul résultat => fetchObject
     $tag = $pdoStatement->fetchObject(Tag::class);
 
-    // retourner le résultat
     return $tag;
   }
 
   /**
-   * Méthode permettant de récupérer tous les enregistrements de la table tag
+   * Method to retrieve all tag
    *
    * @return Tag[]
    */
@@ -87,8 +83,7 @@ class Tag extends CoreModel {
     }
 
   /**
-   * Méthode permettant d'ajouter un enregistrement dans la table tag
-   * L'objet courant doit contenir toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+   * Method to add a new tag
    *
    * @return bool
    */
@@ -99,35 +94,21 @@ class Tag extends CoreModel {
     $sql = "INSERT INTO `tag` (`name`)
               VALUES (:name)";
 
-    // On stocke notre requete préparée (attention à ce stade elle n'est pas encore executée !)
     $pdoStatement = $pdo->prepare($sql);
-
-    // Ensuite, je vais remplacer chaque "valeur" précédée d'un : par sa vraie valeur
-    // En quelque sorte, les :name, :subtitle etc.. sont juste des "emplacements" pour les valeurs
     $pdoStatement->bindValue(":name",        $this->name,        PDO::PARAM_STR);
-
-    // On execute la requete une fois qu'elle est préparée
     $pdoStatement->execute();
 
-    // On vérifie le nombre d'enregistrements affectés par la requete
-    // Ici c'est un insert, on doit donc avoir un enregistrement affecté => celui ajouté
     if ($pdoStatement->rowCount() === 1) {
-      // On utilise la méthode lastInsertId de PDO pour récupérerle dernier ID
-      // autoincrémenté, ici celui de notre nouvelle catégorie
-      $this->id = $pdo->lastInsertId();
 
-      // L'ajout a bien fonctionné on peut retourner true
+      $this->id = $pdo->lastInsertId();
       return true;
     } else {
-      // Si l'ajout a échoué, on return false, ce qui déclenchera l'affichage du message
-      // d'erreur dans la condition du controller
       return false;
     }
   }
 
   /**
-   * Méthode permettant de mettre à jour un enregistrement dans la table tag
-   * L'objet courant doit contenir l'id, et toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+   * Method to update a tag
    *
    * @return bool
    */
@@ -155,44 +136,81 @@ class Tag extends CoreModel {
   }
 
   /**
-   * Méthode qui va appeller insert() ou update() selon la présence d'un id
+   * Method to delete association between tag and product id
    *
+   * @return bool
    */
-  public function save()
+  public function deleteTagProduct()
   {
-    if ($this->id) {
-      return $this->update();
-    } else {
-      return $this->insert();
-    }
+      $pdo = Database::getPDO();
+
+      $sql = "DELETE FROM `product_has_tag` WHERE `product_id` = :product_id OR `tag_id` = :tag_id";
+
+      $query = $pdo->prepare($sql);
+      $query->bindValue(':product_id', $this->product_id, PDO::PARAM_INT);
+      $query->bindValue(':tag_id', $this->tag_id, PDO::PARAM_INT);
+
+      $query->execute();
+
+      return $query->rowCount() > 0;
   }
 
   /**
-   * Méthode qui supprime un enregistrement de la table
+   * Method to delete a tag
    *
    * @return bool
    */
   public function delete()
   {
+    $this->deleteTagProduct();
     $pdo = Database::getPDO();
 
     $sql = "DELETE FROM `tag` WHERE `id` = :id";
 
     $pdoStatement = $pdo->prepare($sql);
-
-    // Version alternative a binvalue + execute
-    // Fait le bindValue et le execute en une ligne en passant un tableau
-    // en premier argument de
     $pdoStatement->execute([":id" => $this->id]);
 
-    if ($pdoStatement->rowCount() === 1) {
-      return true;
-    } else {
-      return false;
-    }
-
-    // Version raccourcie du bloc if/else du dessus
     return $pdoStatement->rowCount() === 1;
   }
 
+
+    /**
+     * Get the value of product_id
+     */ 
+    public function getProductId()
+    {
+        return $this->product_id;
+    }
+
+    /**
+     * Set the value of product_id
+     *
+     * @return  self
+     */ 
+    public function setProductId($product_id)
+    {
+        $this->product_id = $product_id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of tag_id
+     */ 
+    public function getTagId()
+    {
+        return $this->tag_id;
+    }
+
+    /**
+     * Set the value of tag_id
+     *
+     * @return  self
+     */ 
+    public function setTagId($tag_id)
+    {
+        $this->tag_id = $tag_id;
+
+        return $this;
+    }
 }

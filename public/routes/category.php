@@ -4,7 +4,7 @@ use App\Controllers\CategoryController;
 
 // ---------------------------------------- Routes CATEGORY  ----------------------------------------
 
-// Liste les catégories
+// Categories list
 $router->map(
     'GET',
     '/category/list',
@@ -15,7 +15,7 @@ $router->map(
     'category-list'
   );
   
-  // Affiche sélection Catégorie Home
+  // Display Category selection homepage
   $router->map(
     'GET',
     '/category/home',
@@ -26,7 +26,7 @@ $router->map(
     'category-home'
   );
   
-  // Traite sélection Catégorie Home
+  // Handle Category selection homepage
   $router->map(
     'POST',
     '/category/home',
@@ -37,7 +37,7 @@ $router->map(
     'category-homeSelect'
   );
   
-  // Affiche Ajout Catégorie
+  // Display Category add
   $router->map(
     'GET',
     '/category/add',
@@ -48,7 +48,7 @@ $router->map(
     'category-add'
   );
   
-  // Traite Ajout Catégorie
+  // Handle Category add
   $router->map(
     'POST',
     '/category/add',
@@ -59,7 +59,7 @@ $router->map(
     'category-create'
   );
   
-  // Affiche Modifie Catégorie
+  // Display Category update
   $router->map(
     'GET',
     '/category/[i:id]/update',
@@ -70,7 +70,7 @@ $router->map(
     'category-edit'
   );
   
-  // Traite Modifie Catégorie
+  // Handle Category Update
   $router->map(
     'POST',
     '/category/[i:id]/update',
@@ -81,7 +81,7 @@ $router->map(
     'category-update'
   );
   
-  // Traite Supprime Catégorie
+  // Delete category
   $router->map(
     'GET',
     '/category/[i:id]/delete',

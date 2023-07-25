@@ -4,7 +4,7 @@ use App\Controllers\BrandController;
 
 // ---------------------------------------- Routes BRAND -------------------------------------------
 
-// Liste des Marques
+// Brandslist
 $router->map(
     'GET',
     '/brand/list',
@@ -15,7 +15,7 @@ $router->map(
     'brand-list'
   );
   
-  // Affiche Ajout Marque
+  // Display Brand add
   $router->map(
     'GET',
     '/brand/add',
@@ -26,7 +26,7 @@ $router->map(
     'brand-add'
   );
   
-  // Traiter Ajout Marque
+  // Handle Brand add
   $router->map(
     'POST',
     '/brand/add',
@@ -37,7 +37,7 @@ $router->map(
     'brand-create'
   );
   
-  // Afficher Modifie Marque
+  // Display Brand update
   $router->map(
     'GET',
     '/brand/add/[i:id]',
@@ -48,7 +48,7 @@ $router->map(
     'brand-edit'
   );
   
-  // Traiter Modifie Marque
+  // Handle Brand update
   $router->map(
     'POST',
     '/brand/add/[i:id]',
@@ -59,7 +59,7 @@ $router->map(
     'brand-update'
   );
   
-  // Supprime la marque
+  // Delete a brand
   $router->map(
     'GET',
     '/brand/[i:id]/delete',

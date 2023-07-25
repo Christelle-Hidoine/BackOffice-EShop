@@ -30,7 +30,7 @@
                                     <a href="<?= $router->generate('category-edit', ['id' => $categoryObject->getId()]) ?>" class="btn btn-sm btn-warning">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </a>
-                                    <!-- Example single danger button -->
+                                    
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-danger dropdown-toggle"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -70,18 +70,26 @@
                         <tbody>                            
 
                           <?php foreach($product as $productObject) : ?>
+                            <?php $labels= explode (",", $productObject->getTags()) ?>
                             <tr>
                                 <th scope="row">
                                   <?= $productObject->getId() ?>
                                 </th>
-                                <td>
+                                <td class="flex-wrap justify-content-between">
                                   <?= $productObject->getName() ?>
+                                  <div class="d-flex flex-wrap">
+                                  <?php foreach ($labels as $label) : ?>
+                                    <div class="text-center rounded-pill border bg-secondary text-white text-center small px-3">
+                                        <span><?= $label ?><span>
+                                    </div>    
+                                <?php endforeach ?>
+                                  </div>
                                 </td>
                                 <td class="text-end">
                                     <a href="<?= $router->generate('product-edit', ['id' => $productObject->getId()]) ?>" class="btn btn-sm btn-warning">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </a>
-                                    <!-- Example single danger button -->
+                                    
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-sm btn-danger dropdown-toggle"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

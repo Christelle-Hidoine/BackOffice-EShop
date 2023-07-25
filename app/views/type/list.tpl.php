@@ -1,11 +1,12 @@
 <div class="container my-4">
-    <a href="<?= $router->generate('type-add') ?>" class="btn btn-success float-end">
-      Ajouter
-    </a>
+  
+  <h2>Liste des types</h2>
+  <a href="<?= $router->generate('type-add') ?>" class="btn btn-success">
+    Ajouter
+  </a>
 
-    <h2>Liste des types</h2>
-
-    <table class="table table-hover mt-4">
+    <div class="table-responsive">
+      <table class="table table-hover table-sm mt-4">
         <thead>
             <tr>
                 <th scope="col">#</th>
@@ -27,7 +28,7 @@
                     <a href="<?= $router->generate('type-edit', ['id' => $type->getId()]) ?>" class="btn btn-sm btn-warning">
                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </a>
-                    <!-- Example single danger button -->
+                    
                     <div class="btn-group">
                         <button type="button" class="btn btn-sm btn-danger dropdown-toggle"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -47,5 +48,7 @@
           <?php endforeach; ?>
 
         </tbody>
-    </table>
+      </table>
+    </div>
+    
 </div>

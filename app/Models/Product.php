@@ -2,16 +2,11 @@
 
 namespace App\Models;
 
-use App\Utils\Database;
 use PDO;
+use App\Utils\Database;
 
-/**
- * Une instance de Product = un produit dans la base de données
- * Product hérite de CoreModel
- */
 class Product extends CoreModel
 {
-
     /**
      * @var string
      */
@@ -50,51 +45,68 @@ class Product extends CoreModel
     private $type_id;
 
     /**
-     * Méthode permettant de récupérer un enregistrement de la table Product en fonction d'un id donné
+     * @var string tag name for product_has_tag table
+     */
+    private $tags;
+
+    /**
+     * @var string tag ids for product_has_tag table
+     */
+    private $tag_ids;
+
+    /**
+     * @var string tag id for product_has_tag table
+     */
+    private $tag_id;
+
+    /**
+     * @var int product id for product_has_tag table
+     */
+    private $product_id;
+
+    /**
+     * Method to retrieve a product according to his id
      *
      * @param int $productId ID du produit
      * @return Product
      */
     public static function find($id)
     {
-        // récupérer un objet PDO = connexion à la BDD
         $pdo = Database::getPDO();
 
-        // on écrit la requête SQL pour récupérer le produit
-        $sql = '
-            SELECT *
-            FROM product
-            WHERE id = ' . $id;
+        $sql = 'SELECT *, product.name AS `name`, product.id AS id, GROUP_CONCAT(tag.name) AS tags, GROUP_CONCAT(tag.id) AS tag_ids
+        FROM product 
+        INNER JOIN product_has_tag ON product.id = product_has_tag.product_id 
+        JOIN tag ON tag.id = product_has_tag.tag_id 
+        WHERE product.id = ' . $id;
 
-        // query ? exec ?
-        // On fait de la LECTURE = une récupration => query()
-        // si on avait fait une modification, suppression, ou un ajout => exec
         $pdoStatement = $pdo->query($sql);
 
-        // fetchObject() pour récupérer un seul résultat
-        // si j'en avais eu plusieurs => fetchAll
-        $result = $pdoStatement->fetchObject(self::class);
+        return $pdoStatement->fetchObject(self::class);
 
-        return $result;
     }
 
     /**
-     * Méthode permettant de récupérer tous les enregistrements de la table product
+     * Method to retrieve all product
      *
      * @return Product[]
      */
     public static function findAll()
     {
         $pdo = Database::getPDO();
-        $sql = 'SELECT * FROM `product`';
+        $sql = 'SELECT *, product.id, product.name, GROUP_CONCAT(tag.name) AS tags
+        FROM product
+        INNER JOIN product_has_tag ON product.id = product_has_tag.product_id
+        INNER JOIN tag ON tag.id = product_has_tag.tag_id
+        GROUP BY product.id
+        ORDER BY product.id';
         $pdoStatement = $pdo->query($sql);
-        $results = $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
+        return $pdoStatement->fetchAll(PDO::FETCH_CLASS, self::class);
 
-        return $results;
     }
 
     /**
-     * Method to retrieve product data from tag and product table by tag_id
+     * Method to retrieve all tags and product data according to product id
      *
      * @param [int] $id
      * @return Product
@@ -104,35 +116,23 @@ class Product extends CoreModel
       $pdo = Database::getPDO();
       $sql = "SELECT * FROM `product` WHERE `id` IN ( SELECT `tag_id` FROM `product_has_tag` WHERE `product_id` = '. $id .')";
       $pdoStatement = $pdo->query($sql);
-      $results = $pdoStatement->fetchObject(PDO::FETCH_CLASS, self::class);
-      return $results;
+      return $pdoStatement->fetchObject(PDO::FETCH_CLASS, self::class);
     }
 
     /**
-     * Méthode permettant d'ajouter un enregistrement dans la table product.
-     * L'objet courant doit contenir toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+     * Method to add a product
      * 
      * @return bool
      */
     public function insert()
     {
-      // Récupération de l'objet PDO représentant la connexion à la DB
       $pdo = Database::getPDO();
 
-      // Ecriture de la requête INSERT INTO
       $sql = "INSERT INTO `product` (name, description, picture, price, rate, status, brand_id, category_id, type_id)
           VALUES (:name, :description, :picture, :price, :rate, :status, :brand_id, :category_id, :type_id)";
 
-      // Préparation de la requête d'insertion (+ sécurisé que exec directement)
-      // @see https://www.php.net/manual/fr/pdo.prepared-statements.php
-
-      // Permet de lutter contre les injections SQL
-      // @see https://portswigger.net/web-security/sql-injection (exemples avec SELECT)
-      // @see https://stackoverflow.com/questions/681583/sql-injection-on-insert (exemples avec INSERT INTO)
       $query = $pdo->prepare($sql);
 
-      // Execution de la requête d'insertion
-      // Ou bien utiliser la méthode bindValue pour chaque token/jeton/placeholder
       $query->bindValue(':name', $this->name, PDO::PARAM_STR);
       $query->bindValue(':description', $this->description, PDO::PARAM_STR);
       $query->bindValue(':picture', $this->picture, PDO::PARAM_STR);
@@ -142,30 +142,83 @@ class Product extends CoreModel
       $query->bindValue(':brand_id', $this->brand_id, PDO::PARAM_INT);
       $query->bindValue(':category_id', $this->category_id, PDO::PARAM_INT);
       $query->bindValue(':type_id', $this->type_id, PDO::PARAM_INT);
-      
 
-      // Le 3e argument permet de préciser "valeur numérique" (PDO::PARAM_STR) ou "autre" (PDO::PARAM_STR)
-      // Puis exécuter la requête SQL préparée
       $query->execute();
 
-      // Si au moins une ligne ajoutée
       if( $query->rowCount() > 0 ) 
       {
-        // Alors on récupère l'id auto-incrémenté généré par MySQL
         $this->id = $pdo->lastInsertId();
-
-        // On retourne VRAI car l'ajout a parfaitement fonctionné
         return true;
-        // => l'interpréteur PHP sort de cette fonction car on a retourné une donnée
       }
-      
-      // Si on arrive ici, c'est que quelque chose n'a pas bien fonctionné => FAUX
       return false;
     }
 
     /**
-     * Méthode permettant de mettre à jour un enregistrement dans la table product
-     * L'objet courant doit contenir l'id, et toutes les données à ajouter : 1 propriété => 1 colonne dans la table
+     * Method to add a relation in product_has_tag.
+     * 
+     * @return bool
+     */
+    public function insertTagProduct()
+    {
+      $pdo = Database::getPDO();
+
+      $sql = "INSERT INTO `product_has_tag` (`product_id`, `tag_id`) VALUES (:product_id, :tag_id)";
+
+      $query = $pdo->prepare($sql);
+      $query->bindValue(':product_id', $this->product_id, PDO::PARAM_INT);
+      $query->bindValue(':tag_id', $this->tag_id, PDO::PARAM_INT);    
+
+      $query->execute();
+
+      if( $query->rowCount() > 0 ) 
+      {
+        $this->id = $pdo->lastInsertId();
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * Method to delete association between tag and product id
+     *
+     * @return bool
+     */
+    public function deleteTagProduct()
+    {
+        $pdo = Database::getPDO();
+
+        $sql = "DELETE FROM `product_has_tag` WHERE `product_id` = :product_id OR `tag_id` = :tag_id";
+
+        $query = $pdo->prepare($sql);
+        $query->bindValue(':product_id', $this->product_id, PDO::PARAM_INT);
+        $query->bindValue(':tag_id', $this->tag_id, PDO::PARAM_INT);
+
+        $query->execute();
+
+        return $query->rowCount() > 0;
+    }
+
+    /**
+     * Method to retrieve all tags from product_has_tag table according to product id
+     *
+     * @param int $id product id
+     * @return void
+     */
+    public function findTagsByProductId($id)
+    {
+      $pdo = Database::getPDO();
+
+      $sql = "SELECT * 
+            FROM `product_has_tag` 
+            INNER JOIN `tag` ON tag.id = product_has_tag.tag_id
+            WHERE product_id =" . $id;
+
+      $pdoStatement = $pdo->query($sql);
+      return $pdoStatement->fetchAll(PDO::FETCH_CLASS, Tag::class);
+    }
+ 
+    /**
+     * Method to update a product
      *
      * @return bool
      */
@@ -211,57 +264,26 @@ class Product extends CoreModel
         return false;
       }
     }
-
-    /**
-     * Méthode qui va appeller insert() ou update() selon la présence d'un id
-     *
-     * @return void
-     */
-    public function save()
-    {
-      if($this->id)
-      {
-        return $this->update();
-      }
-      else
-      {
-        return $this->insert();
-      }
-    }
-
      
     /**
-     * Méthode qui supprime un enregistrement de la table
+     * Method to delete a product
      *
      * @return bool
      */
-     public function delete()
-     {
-       $pdo = Database::getPDO();
- 
-       $sql = "DELETE FROM `product` WHERE `id` = :id";
- 
-       $pdoStatement = $pdo->prepare($sql);
- 
-       // Version alternative a binvalue + execute
-       // Fait le bindValue et le execute en une ligne en passant un tableau
-       // en premier argument de
-       $pdoStatement->execute([
-         ":id" => $this->id
-       ]);
- 
-       if($pdoStatement->rowCount() === 1)
-       {
-         return true;
-       }
-       else
-       {
-         return false;
-       }
- 
-       // Version raccourcie du bloc if/else du dessus
-       return $pdoStatement->rowCount() === 1;
-     }
+    public function delete()
+    {
+        $this->deleteTagProduct();
+        $pdo = Database::getPDO();
+    
+        $sql = "DELETE FROM `product` WHERE `id` = :id";
+    
+        $pdoStatement = $pdo->prepare($sql);
+        $pdoStatement->execute([
+            ":id" => $this->id
+        ]);
+    
+        return $pdoStatement->rowCount() === 1;
+    }
 
 
     /**
@@ -442,5 +464,102 @@ class Product extends CoreModel
     public function setTypeId(int $type_id)
     {
         $this->type_id = $type_id;
+    }
+
+    /**
+     * Get product id for product_has_tag table
+     *
+     * @return  int
+     */ 
+    public function getProductId()
+    {
+        return $this->product_id;
+    }
+
+    /**
+     * Set product id for product_has_tag table
+     *
+     * @param  int  $product_id  product id for product_has_tag table
+     *
+     * @return  self
+     */ 
+    public function setProductId(int $product_id)
+    {
+        $this->product_id = $product_id;
+
+        return $this;
+    }
+
+
+    /**
+     * Get tag name for product_has_tag table
+     *
+     * @return  string
+     */ 
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Set tag name for product_has_tag table
+     *
+     * @param  string  $tags  tag name for product_has_tag table
+     *
+     * @return  self
+     */ 
+    public function setTags(string $tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    /**
+     * Get tag ids for product_has_tag table
+     *
+     * @return  string
+     */ 
+    public function getTagIds()
+    {
+        return $this->tag_ids;
+    }
+
+    /**
+     * Set tag ids for product_has_tag table
+     *
+     * @param  string  $tag_ids  tag ids for product_has_tag table
+     *
+     * @return  self
+     */ 
+    public function setTagIds(string $tag_ids)
+    {
+        $this->tag_ids = $tag_ids;
+
+        return $this;
+    }
+
+    /**
+     * Get tag id for product_has_tag table
+     *
+     * @return  string
+     */ 
+    public function getTagId()
+    {
+        return $this->tag_id;
+    }
+
+    /**
+     * Set tag id for product_has_tag table
+     *
+     * @param  string  $tag_id  tag id for product_has_tag table
+     *
+     * @return  self
+     */ 
+    public function setTagId(string $tag_id)
+    {
+        $this->tag_id = $tag_id;
+
+        return $this;
     }
 }
